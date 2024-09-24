@@ -1,0 +1,170 @@
+<app-nueva-op>
+
+</app-nueva-op>
+<div class="container_ mt-5">
+    <div class="card">
+        <div class="card-content darker">
+            <div class="card mt-5 title_">
+                <!-- <span class="red-bar"></span> -->
+                <div class="card-content">
+                  <h1 class="title blancas">
+                    Ordenes de producción
+                  </h1>
+                  <h2 class="subtitle description blancas">
+                    Descripción
+                  </h2>
+                </div>
+                <div class="iconos">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+            </div>
+            <br>
+            <div class="card">
+                <div class="card-content">
+                    <span class="title">Producto</span>
+                    <hr>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <label class="label">Cliente:</label>
+                            <div class="select">
+                                <select [(ngModel)]="OP.cliente" (change)="findOC()">
+                                    <option value="{{cliente._id}}" *ngFor="let cliente of clientes.clientes">{{cliente.nombre}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="label">OC:</label>
+                            <div class="select">
+                                <select [(ngModel)]="OP.oc" (change)="findProducts()">
+                                    <option value="{{ordenes._id}}" *ngFor="let ordenes of Ordenes">{{ordenes.orden}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="label">Producto:</label>
+                            <div class="select">
+                                <select>
+                                    <option value="" *ngFor="let producto of productos">E-{{producto.producto.identificacion.cliente.codigo}}-{{producto.producto.identificacion.codigo}}-{{producto.producto.identificacion.version}} {{producto.producto.identificacion.producto}} {{producto.solicitud | date:'dd/MM/yyyy'}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="card">
+                <div class="card-content">
+                    <span class="title">Maquinas</span>
+                    <hr>
+                    <span class="subtitles">Cantidades</span> <br>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <label class="label">Cantidad:</label>
+                            <input type="number" class="input">
+                        </div>
+                        <div class="control">
+                            <label class="label">Demasia (Und):</label>
+                            <input type="number" class="input">
+                        </div>
+                        <div class="control">
+                            <label class="label">Fecha Solicitada:</label>
+                            <input type="date" class="input">
+                        </div>
+                        <div class="control">
+                            <label for="" class="label">Montaje:</label>
+                            <div class="select">
+                                <select>
+                                    <option value="">Montaje A</option>
+                                    <option value="">Montaje B</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label for="" class="label">.</label>
+                            <input type="checkbox" name="" id=""> Estándar de colores
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="columns">
+                        <div class="column is-3">
+                            <span class="subtitles">Maquinas</span>
+                            <div cdkDropList
+                             #maquinas_="cdkDropList" 
+                             cdkDropListLockAxis='x'
+                             [cdkDropListData]="maquinas.maquinas"
+                             [cdkDropListConnectedTo]="[needed]"
+                             (cdkDropListDropped)="onDrop($event)" class="maquinas">
+                                <div *ngFor="let maquina of maquinas.maquinas" cdkDrag class="item">{{ maquina.nombre }}</div>
+                            </div>
+                        </div>
+                        <div class="column is-3">
+                            <span class="subtitles">Maquinas a utilizar:</span>
+                            <div cdkDropList 
+                            [cdkDropListConnectedTo]="[maquinas_]" 
+                            [cdkDropListData]="maquinasDestino"
+                            #needed = "cdkDropList" 
+                            (cdkDropListDropped)="onDrop($event)"
+                            class="maquinas-need">
+                              <div *ngFor="let maquina of maquinasDestino" cdkDrag class="item">{{ maquina.nombre }}</div>
+                            </div>
+                        </div>
+                        <div class="column is-3">
+                            <span class="subtitles">Fases de la orden:</span>
+                            <ng-container *ngFor="let maquina of maquinasDestino; let i = index">
+                                <ng-container *ngFor="let fase of maquina.fases; let j = index">
+                                    <span class="tag is-success" *ngIf="!fase.borrado">
+                                        {{ maquina.nombre }} - {{ fase.nombre }}
+                                        <button class="delete is-small" (click)="eliminarFase(i,j)"></button>
+                                    </span>
+                                    <span class="tag is-danger" *ngIf="fase.borrado">
+                                        {{ maquina.nombre }} - {{ fase.nombre }}
+                                        <button class="delete is-small" (click)="eliminarFase(i,j)"></button>
+                                    </span>
+                                    <br>
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="card">
+                <div class="card-content">
+                    <span class="title">Tiempos</span>
+                    <hr>
+                    <ng-container *ngFor="let maquina of maquinasDestino;index as x">
+                        <ng-container *ngFor="let fase of maquina.fases;index as y">
+                            <ng-container *ngIf="!fase.borrado">
+                                <span class="subtitles">{{fase.nombre}}</span>
+                                <div class="field is-grouped">
+                                    <div class="control">
+                                        <label class="label">Inicio:</label>
+                                        <input type="datetime-local" name="" id="" class="input" >
+                                    </div>
+                                    <div class="control">
+                                        <label class="label">Final:</label>
+                                        <input type="datetime-local" name="" id="" class="input">
+                                    </div>
+                                </div>
+                                <br>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                    <hr>
+                    <div class="timeline">
+                        <ng-container *ngFor="let maquina of maquinasDestino;index as x">
+                            <ng-container *ngFor="let fase of maquina.fases; index as y">
+                                <ng-container *ngIf="!fase.borrado">
+                                    <div class="process" [style.background-color]="getColor(y)">
+                                        <div class="hours">3 horas</div> <!-- Agregar esta línea -->
+                                        {{fase.nombre}}
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

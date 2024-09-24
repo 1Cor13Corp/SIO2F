@@ -1,0 +1,221 @@
+<div class="container_ mt-5 ">
+    <div class="card">
+      <div class="card-content darker">
+        <div class="card mt-5 title_">
+          <!-- <span class="red-bar"></span> -->
+          <div class="card-content">
+            <h1 class="title blancas">
+              Clasificación de defectos
+            </h1>
+            <h2 class="subtitle blancas">
+              Descripción
+            </h2>
+          </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-content dark">
+                <!-- <span class="subtitles">Nuevo</span> -->
+                <div class="field is-grouped">
+                    <div class="control">
+                        <label class="label">Cliente:</label>
+                        <div class="select">
+                            <select [(ngModel)]="cliente_">
+                                <option value="{{cliente._id}}" *ngFor="let cliente of clientes.clientes">{{cliente.nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control" *ngIf="cliente_">
+                        <label class="label">Categoría</label>
+                        <div class="select">
+                            <select [(ngModel)]="categoria_" (change)="BuscarDefectosAlmacenados()">
+                                <option value="{{categoria._id}}" *ngFor="let categoria of categorias.categorias">{{categoria.nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="columns" *ngIf="categoria_">
+            <div class="column">
+                <div class="card tag_ unshadow" [ngClass]="{'azul':Tags[0] || !edicion_general, 'unselected':!Tags[0] && edicion_general}" (click)="seleccionTag(0)">
+                    <div class="card-content">
+                        <span class="__titulo">
+                            Menores
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="card tag_ unshadow" [ngClass]="{'amarillo':Tags[1] || !edicion_general, 'unselected':!Tags[1] && edicion_general }" (click)="seleccionTag(1)">
+                    <div class="card-content">
+                        <span class="__titulo">
+                            Mayores
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="card tag_ unshadow" [ngClass]="{'rojo':Tags[2] || !edicion_general, 'unselected':!Tags[2] && edicion_general}" (click)="seleccionTag(2)">
+                    <div class="card-content">
+                        <span class="__titulo">
+                            Críticos
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card unshadow bodies" *ngIf="categoria_">
+            <div class="card-content">
+                <div class="info_sinEdicion" *ngIf="!edicion_general">
+                    <div class="columns">
+                        <div class="column">
+                            <span class="__title">
+                                AQL: {{aqls[0]}}%
+                            </span>
+                            <hr>
+                            <table class="table is-fullwidth is-striped">
+                                <tbody>
+                                    <tr *ngFor="let menor of defectos.menores">
+                                        <td style="font-size: small;">
+                                            <span class="vineta">
+                                                {{menor}}
+                                            </span> 
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="column lbb">
+                            <span class="__title">
+                                AQL: {{aqls[1]}}%
+                            </span>
+                            <hr>
+                            <table class="table is-fullwidth is-striped">
+                                <tbody>
+                                    <tr *ngFor="let mayor of defectos.mayores">
+                                        <td style="font-size: small;">
+                                            <span class="vineta">
+                                                {{mayor}}
+                                            </span> 
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="column lbb">
+                            <span class="__title">
+                                AQL: {{aqls[2]}}%
+                            </span>
+                            <hr>
+                            <table class="table is-fullwidth is-striped">
+                                <tbody>
+                                    <tr *ngFor="let criticos of defectos.criticos">
+                                        <td style="font-size: small;">
+                                            <span class="vineta">
+                                                {{criticos}}
+                                            </span> 
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <button class="button is-success" (click)="habilitarEdicion()">
+                        <span class="icon"><i class="far fa-edit"></i></span>
+                        <span>
+                            Editar
+                        </span>
+                    </button>
+                </div>
+                <div class="columns" *ngIf="edicion_general">
+                    <div class="column">
+                        <div class="card aqlInfo" >
+                            <div class="card-content">
+                                <div class="Informacion">
+        
+                                    <span class="__title">
+                                        <div class="columns">
+                                            <div class="column">
+                                                <span class="aql">
+                                                    AQL 
+                                                </span>
+                                            </div>
+                                            <div class="column">
+                                                <span class="acronimo">
+                                                    Acceptable <br>
+                                                    Quality <br>
+                                                    Level
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </span>
+                                    <div class="slidecontainer">
+                                        <input type="range" step=".05" min="0" max="5" class="slider" id="myRange" [(ngModel)]="valor" (change)="GuardandoCambios($event.target)">
+                                    </div>                              
+                                    <span class="value">
+                                        {{valor}}%
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="formulario">
+                                    <span class="subtitles">Descripción de defecto</span> <br>
+                                    <div class="field">
+                                        <div class="control" *ngIf="!edicion">
+                                            <textarea class="textarea" style="resize: none;" rows="2" columns="7" [(ngModel)]="defecto" width="80%" (keydown.enter)="$event.preventDefault(); onEnterPress()"></textarea>
+                                            <div style="position: absolute; bottom: 5px; right: 5px; color: #888;font-size: xx-small;">Presione Enter para agregar defecto</div>
+                                        </div>
+                                        <div class="control" *ngIf="edicion">
+                                            <textarea class="textarea" id="edition" style="resize: none;" rows="2" columns="7" [(ngModel)]="defectos[tipo][n]" width="80%" (keydown.enter)="$event.preventDefault(); edicion = false"></textarea>
+                                            <div style="position: absolute; bottom: 5px; right: 5px; color: #888;font-size: xx-small;">Presione Enter para editar defecto</div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="contenedor">
+                                        <table class="table is-fullwidth is-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th width="60px"></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody *ngIf="Tags[0]">
+                                                <tr *ngFor="let defectos of defectos.menores;index as i" [ngClass]="{'elemento-a-desintegrar':clases[i]}">
+                                                    <td style="font-size: small;"><i class="far fa-edit green" style="cursor: pointer;" (click)="editar(i,'menores')"></i>  <i class="fas fa-trash-alt red" (click)="deleteDefecto('menores',i)" style="cursor: pointer;"></i></td>
+                                                    <td style="font-size: small;">{{defectos}}</td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody *ngIf="Tags[1]">
+                                                <tr *ngFor="let defectos of defectos.mayores;index as i">
+                                                    <td style="font-size: small;"><i class="far fa-edit green" style="cursor: pointer;" (click)="editar(i,'mayores')"></i>  <i class="fas fa-trash-alt red" (click)="deleteDefecto('mayores',i)" style="cursor: pointer;"></i></td>
+                                                    <td style="font-size: small;">{{defectos}}</td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody *ngIf="Tags[2]">
+                                                <tr *ngFor="let defectos of defectos.criticos;index as i">
+                                                    <td style="font-size: small;"><i class="far fa-edit green" style="cursor: pointer;" (click)="editar(i,'criticos')"></i>  <i class="fas fa-trash-alt red" (click)="deleteDefecto('criticos',i)" style="cursor: pointer;"></i></td>
+                                                    <td style="font-size: small;">{{defectos}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <button class="button is-success" (click)="edicion_general = false; guardarCambios()">
+                                            <span class="icon"><i class="fas fa-save"></i></span>
+                                            <span>Guardar</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

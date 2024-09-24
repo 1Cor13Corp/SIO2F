@@ -1,0 +1,126 @@
+<app-nueva-recepcion
+[nueva]="nueva"
+(onCloseModal)="nueva = false">
+</app-nueva-recepcion>
+
+<app-detalles-recepcion
+[detalle]="detalle"
+[lista]="Material_selected"
+[n]="n_word"
+(onCloseModal)="detalle = false"
+>
+</app-detalles-recepcion>
+
+<app-edicion-recepcion
+[edicion]="edicion"
+[lista]="Material_selected"
+[n]="n_word"
+(onCloseModal)="edicion = false"
+>
+</app-edicion-recepcion>
+
+<app-comentarios
+[comentarios]="comentarios"
+[recepcion_id]="recepcion_id"
+(onCloseModal)="comentarios = false">
+
+</app-comentarios>
+
+<div class="container_ mt-5">
+    <div class="card">
+        <div class="card-content darker">
+            <div class="card mt-5 title_">
+                <!-- <span class="red-bar"></span> -->
+                <div class="card-content">
+                  <h1 class="title blancas">
+                    Recepción de materiales
+                  </h1>
+                  <h2 class="subtitle description blancas">
+                    Descripción
+                  </h2>
+                </div>
+            </div>
+            <br>
+            <button class="button is-info" (click)="NuevaRecepcion()">
+                <span class="icon">
+                  <i class="fas fa-plus-circle"></i>
+                </span>
+                <span>Recepción</span>
+              </button>
+              <br><br>
+              <ng-container *ngIf="api.recepciones && api.recepciones.length < 1">
+                  <div class="columns is-centered">
+                    <div class="column is-half">
+                      <div class="custom-card">
+                        <p class="message">No hay nuevas recepciones</p>
+                      </div>
+                    </div>
+                  </div>
+              </ng-container>
+                <ng-container *ngIf="api.recepciones && api.recepciones.length > 0">
+                    <ng-container *ngFor="let recepcion of api.recepciones;index as index">
+                        <div class="card animate__animated animate__fadeInUp">
+                            <div class="card-header dark">
+                                <p class="card-header-title">
+                                    <strong class="fuente">Documento Nº: </strong>{{recepcion.documento}} - {{recepcion.proveedor.nombre}} - 
+                                        <span class="tag is-danger" *ngIf='recepcion.status === "Por notificar"'>{{recepcion.status}}</span> 
+                                        <span class='tag is-info' *ngIf='recepcion.status === "Notificado"'>{{recepcion.status}}</span> 
+                                        <span class='tag is-warning' *ngIf='recepcion.status === "En observacion"'>{{recepcion.status}}</span> 
+                                        <i class="fas fa-bell shake_button" (click)="notificar(recepcion._id)" *ngIf=' recepcion.status === "Por notificar"'></i>
+                                        <i class="fas fa-check blue_" (click)="checkar(recepcion._id)" *ngIf='recepcion.status == "Notificado"'></i>
+                                        <i class="fas fa-download" *ngIf='recepcion.status === "En observacion"' (click)="DescargarFormato(recepcion)" style="cursor: pointer;"></i>
+                                    </p>
+                                <button class="card-header-icon" aria-label="more options" [ngClass]="{'clicked':clicked[index]}" (click)="showInfo(index)">
+                                    <span class="icon">
+                                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="card-content info" [ngClass]="{'hidden': !clicked[index], 'show': clicked[index]}">
+                                <table class="table is-fullwidth is-striped" *ngIf="clicked[index]">
+                                    <thead>
+                                        <tr>
+                                            <th>OC</th>
+                                            <th>Lote</th>
+                                            <th>Material</th>
+                                            <th>Detalles</th>
+                                            <th>Acciones</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let materiales of recepcion.materiales;index as i">
+                                            <td>{{materiales[0].oc.numero}}</td>
+                                            <td>{{materiales[0].lote}}</td>
+                                            <td>
+                                                <div class="circle_"></div>
+                                                {{materiales[0].material.nombre}} ({{materiales[0].material.fabricante.alias}})
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    {{sumarNetos(materiales)}}{{materiales[0].unidad}}
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-info-circle blue_" (click)="EdicionDeMaterial(index,i)"></i>
+                                                     <i class="fas fa-edit green" (click)="publicMaterial(index,i)"></i>
+                                                     <i class="fas fa-comment" style="cursor: pointer;" (click)="comentarios = true; recepcionID(recepcion._id, i)"></i>
+                                            </td>
+                                            <td>
+                                                 <button class="button is-danger" (click)="EnviarAlmacen(index, i)" *ngIf="materiales[0].material.grupo.otro || poseeAnalisis(materiales[0].lote)">
+                                                <span class="icon"><i class="fas fa-plus"></i></span>
+                                                <span>Inventario</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <br><br>
+                    </ng-container>
+                </ng-container>
+            <br>
+        </div>
+    </div>
+</div>
