@@ -15,6 +15,7 @@ import { AlmacenadoComponent } from './almacenado/almacenado.component';
 import { InventarioComponent } from './almacenado/inventario/inventario.component';
 import { ComentariosComponent } from './recepcion/comentarios/comentarios.component';
 import { InventariosComponent } from './almacenado/inventarios/inventarios.component';
+import { NoConformeComponent } from './recepcion/no-conforme/no-conforme.component';
 
 
 
@@ -30,7 +31,8 @@ import { InventariosComponent } from './almacenado/inventarios/inventarios.compo
     AlmacenadoComponent,
     InventarioComponent,
     ComentariosComponent,
-    InventariosComponent
+    InventariosComponent,
+    NoConformeComponent
   ],
   imports: [
     CommonModule,

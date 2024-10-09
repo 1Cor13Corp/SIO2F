@@ -569,7 +569,19 @@ export class AnalisisComponent {
 
   Analizar(recepcion:any, material:any, index_recepcion:number, index_material:number){
 
-    if(material[0].material.grupo.nombre === 'Tintas' || material[0].material.grupo.nombre === 'Barniz s/impresión'){
+
+    
+    if(material[0].material.grupo.trato === true){
+      console.log(material[0].material.grupo)
+      this.Sustrato = true;
+      this.Recepcion_selected = recepcion;
+      this.Material_selected = material;
+      this.index_material = index_material;
+      if(this.analisis.buscarAnalisisSustratoPorID(material[0].analisis)){
+        this.analisisSustrato = this.analisis.buscarAnalisisSustratoPorID(material[0].analisis)
+      }
+      return
+    }else if(material[0].material.grupo.nombre === 'Tintas' || material[0].material.grupo.nombre === 'Barniz s/impresión'){
       this.Tinta = true;
       this.Recepcion_selected = recepcion;
       this.Material_selected = material;

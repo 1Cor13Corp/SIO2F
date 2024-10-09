@@ -7,6 +7,7 @@ import { Cell, Img, PdfMakeWrapper, Stack, Table, Txt } from 'pdfmake-wrapper';
 import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import * as moment from 'moment';
 import { AlmacenService } from 'src/app/services/almacen.service';
+import { RecepcionService } from 'src/app/services/recepcion.service';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class AnalisisTintaComponent{
 
   constructor(public api:AnalisisService,
               public subirImagen_:SubirArchivosService,
-              public almacen:AlmacenService){
+              public almacen:AlmacenService,
+              public recepcion:RecepcionService){
 
   }
 
@@ -979,19 +981,27 @@ export class AnalisisTintaComponent{
     GenerarCertificado()
     this.api.EnvarAnalisis(this.Analisis, this.Recepcion, this.Index);
     setTimeout(() => {
-      async function EnviarAlmacen(materiales, recepcion, almacen) {
-        let materiales_ = materiales;
-        for (let material of materiales_) {
-          material.oc = material.oc._id;
-          material.material = material.material._id;
-          material.recepcion = recepcion._id; // Asegúrate de que `recepcion` está accesible en este contexto
+
+      if(this.Analisis.resultado.resultado === 'APROBADO'){
+        async function EnviarAlmacen(materiales, recepcion, almacen) {
+          let materiales_ = materiales;
+          for (let material of materiales_) {
+            material.oc = material.oc._id;
+            material.material = material.material._id;
+            material.recepcion = recepcion._id; // Asegúrate de que `recepcion` está accesible en este contexto
+          }
+          almacen.GuardarAlmacen(materiales); // Guarda los materiales en el almacé
         }
-        console.log(materiales_);
-        almacen.GuardarAlmacen(materiales); // Guarda los materiales en el almacé
+        recepcion.resultados[this.Index] = 'Aprobado';
+        this.recepcion.GuardarRecepcion(recepcion)
+        EnviarAlmacen(this.Materiales, recepcion, this.almacen);
+      }else{
+        recepcion.resultados[this.Index] = 'Rechazado';
+        recepcion.observacion[this.Index] = this.Analisis.resultado.observacion;
+        this.recepcion.GuardarRecepcion(recepcion)
       }
-    
-      EnviarAlmacen(this.Materiales, recepcion, this.almacen);
     }, 2000);
+    
     this.onCloseModal.emit()
   }
 

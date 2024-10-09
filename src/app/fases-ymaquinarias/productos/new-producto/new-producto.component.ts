@@ -36,6 +36,39 @@ export class NewProductoComponent {
     moveItemInArray(this.producto.impresion.secuencia[i], event.previousIndex, event.currentIndex);
   }
 
+  numeroIncrementalBase = 5; // Siempre empieza en 5 para secuencias desconocidas
+  numeroPorSecuencia = new Map<string, number>([
+    ['cyan', 2],
+    ['negro', 1],
+    ['magenta', 3],
+    ['amarillo', 4]
+  ]);
+  
+  getNumeroPorSecuencia(secuencias: string[], secuencia: string): number {
+    // Resetea el número incremental y mapa
+    let numeroIncremental = this.numeroIncrementalBase;
+  
+    // Map temporal para los valores de las secuencias dinámicas
+    const numeroSecuenciasMap = new Map<string, number>();
+  
+    // Recorre todas las secuencias para recalcular los números
+    for (const sec of secuencias) {
+      const secLower = sec.toLowerCase();
+  
+      if (this.numeroPorSecuencia.has(secLower)) {
+        // Si es una secuencia predefinida (cyan, negro, etc.), la usa
+        numeroSecuenciasMap.set(sec, this.numeroPorSecuencia.get(secLower)!);
+      } else {
+        // Si no es predefinida, asigna el siguiente número incremental
+        if (!numeroSecuenciasMap.has(sec)) {
+          numeroSecuenciasMap.set(sec, numeroIncremental++);
+        }
+      }
+    }
+  
+    return numeroSecuenciasMap.get(secuencia)!;
+  }
+
 
   @Input() nuevo:any;
   @Input() producto!:Producto_
@@ -106,6 +139,7 @@ export class NewProductoComponent {
     {title: 'Identificación del producto', content: 'Contenido 1'},
     {title: 'Dimensiones del producto', content: 'Contenido 1'},
     {title: 'Materia prima', content: 'Contenido 1'},
+    {title: 'Películas del producto', content: 'Contentido'},
     {title: 'Pre-impresión', content: 'Contenido 1'},
     {title: 'Impresión', content: 'Contenido 1'},
     {title: 'Post-impresión', content: 'Contenido 1'},
@@ -381,6 +415,97 @@ export class NewProductoComponent {
   // Reiniciar las propiedades de la variable tinta_selected
   this.tinta_selected.cantidad = 0;
   this.tinta_selected.tinta = '';
+  }
+
+
+  public SecuenciaDeColores:any = []
+  onCheckboxChange(event: Event, color:string, index): void {
+    const inputElement = event.target as HTMLInputElement; // Convierte el target en un elemento de tipo input
+    const isChecked = inputElement.checked; // Verifica si el checkbox está seleccionado o no
+    console.log('Checkbox is checked:', isChecked); // Imprime true o false
+    if(isChecked){
+      if(!this.SecuenciaDeColores[index]){
+        this.SecuenciaDeColores[index] = {color:color}
+        console.log(this.SecuenciaDeColores)
+      }
+    }else{
+      // Si el checkbox no está marcado, elimina el color
+      const index = this.SecuenciaDeColores.findIndex(s => s.color === color);
+      console.log(index)
+      if (index > -1) {
+        this.SecuenciaDeColores.splice(index, 1); // Elimina el color del array
+        console.log(this.SecuenciaDeColores)
+      }
+    }
+  }
+
+  BuscarEnSecuencia(color: string): boolean {
+    if (color.length > 0) {
+      return this.SecuenciaDeColores.some(s => s && s.color === color);
+      // "some" devuelve true si encuentra un elemento que cumple con la condición
+    } else {
+      return false;
+    }
+  }
+
+  AnadirPantone(event: any): void {
+    const index = +event.target.dataset.index; // Obtén el índice del Pantone desde el atributo data-index
+    const color = event.target.value;
+
+    if(color){
+      if (this.SecuenciaDeColores[index]) {
+        // Si ya existe un Pantone en esa posición, actualízalo
+        this.SecuenciaDeColores[index].color = color;
+      } else {
+        // Si no existe, añade uno nuevo
+        this.SecuenciaDeColores[index] = { color: color };
+      }
+    }else{
+      this.SecuenciaDeColores[index] = undefined
+    }
+  
+  }
+
+
+  AddTintas(color, cantidad,index){
+    console.log(color)
+    let colores = color.split('&')
+
+    if(!this.SecuenciaDeColores[index].tintas){
+      this.SecuenciaDeColores[index].tintas = []
+    }
+
+    this.SecuenciaDeColores[index].tintas.push(
+      {
+        tinta:colores[0],
+        nombre:colores[1],
+        cantidad:cantidad
+      }
+    )
+
+    console.log(this.SecuenciaDeColores)
+  }
+
+
+
+  borrarSecuencia(i){
+    Swal.fire({
+      title: "¿Seguro que quieres eliminar este color de la secuencia?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Eliminar",
+      denyButtonText: `Mantener`,
+      confirmButtonColor:'#f03a5f',
+      denyButtonColor:'#48c78e'
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.producto.impresion.secuencia[0].splice(i, 1)
+      } else if (result.isDenied) {
+        // Swal.fire("Changes are not saved", "", "info");
+        return
+      }
+    });
   }
 
   add_barniz(){

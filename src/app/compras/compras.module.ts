@@ -18,6 +18,8 @@ import { NuevoMaterialComponent } from './grupos/nuevo-material/nuevo-material.c
 import { DetallesProveedoresComponent } from './proveedores/detalles-proveedores/detalles-proveedores.component';
 import { OrdenesComponent } from './ordenes/ordenes.component';
 import { NuevoOrdenComponent } from './ordenes/nuevo-orden/nuevo-orden.component';
+import { NoConformidadesComponent } from './no-conformidades/no-conformidades.component';
+import { NuevaConformidadComponent } from './no-conformidades/nueva-conformidad/nueva-conformidad.component';
 
 
 
@@ -36,7 +38,9 @@ import { NuevoOrdenComponent } from './ordenes/nuevo-orden/nuevo-orden.component
     NuevoMaterialComponent,
     DetallesProveedoresComponent,
     OrdenesComponent,
-    NuevoOrdenComponent
+    NuevoOrdenComponent,
+    NoConformidadesComponent,
+    NuevaConformidadComponent
   ],
   imports: [
     CommonModule,

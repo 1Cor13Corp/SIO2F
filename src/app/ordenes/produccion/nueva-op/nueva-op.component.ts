@@ -5,6 +5,7 @@ import { OcompraService } from 'src/app/services/ocompra.service';
 import { CdkDragDrop, CdkDragEnd, CdkDragMove, CdkDragStart, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ResizeEvent } from 'angular-resizable-element';
 import * as moment from 'moment'
+import { AlmacenService } from 'src/app/services/almacen.service';
 
 @Component({
   selector: 'app-nueva-op',
@@ -20,12 +21,14 @@ export class NuevaOPComponent implements OnInit{
   constructor(
               public clientes:ClientesService,
               public oc:OcompraService,
-              public maquinas:MaquinasService
+              public maquinas:MaquinasService,
+              public almacen:AlmacenService
   ){
 
 
   }
 
+  public almacenado = 0;
   public producto:any;
   public OP ={
     cliente: '',
@@ -34,8 +37,18 @@ export class NuevaOPComponent implements OnInit{
       materia_prima:{
         sustrato:[]
       }
-    }
+    },
+    cantidad:0,
+    demasia:0,
+    montaje:'',
+    hojas:0,
+    sustrato:''
+
   }
+
+  public color_selected;
+  public tintas_added:any = [];
+
   public Ordenes:any
   public productos:any
   public colorIndex = 0;
@@ -114,6 +127,73 @@ test2 = '2024-06-12'
 mostrarTooltip: boolean = false;
 
 currentDate!: string;
+
+agregarColor(){
+  this.tintas_added.push(this.producto.materia_prima.tintas[this.color_selected])
+  console.log(this.tintas_added)
+}
+
+BuscarEnAlmacen(e){
+  this.almacenado = this.almacen.BuscarCantidadEnAlmacen(e.value)
+}
+
+ToNumber_(number){
+  return Number(number)
+}
+
+calcularHojas(){
+  console.log(this.producto,' - ', this.OP.cantidad)
+  console.log(this.producto.pre_impresion.tamano_sustrato.montajes[this.OP.montaje].ejemplares)
+  this.OP.hojas = Math.ceil(this.OP.cantidad / this.producto.pre_impresion.tamano_sustrato.montajes[this.OP.montaje].ejemplares)
+  
+
+}
+
+calcularTinta(cantidad){
+  let hojas_totales = Number(this.OP.hojas) + Number(this.OP.demasia)
+  let total = (hojas_totales * cantidad) / 1000;
+  total = Number(total.toFixed(2))
+  return total
+}
+
+calcularDesmasia(){
+  const porcentajeDemasia = (this.OP.demasia / this.OP.hojas) * 100;
+  return porcentajeDemasia.toFixed(2); // Retorna el porcentaje de demasía
+}
+
+ShowLetter(i){
+  return String.fromCharCode(65 + i)
+}
+
+
+
+// Función para convertir el color Hex a RGB
+hexToRgb(hex: string): { r: number, g: number, b: number } {
+  // Eliminar el signo # si está presente
+  hex = hex.replace(/^#/, '');
+
+  // Si es un color hexadecimal de 3 dígitos, se convierte a 6 dígitos
+  if (hex.length === 3) {
+    hex = hex.split('').map(char => char + char).join('');
+  }
+
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  return { r, g, b };
+}
+
+// Función para decidir el color del texto en base al Hex
+getTextColorFromHex(hex: string): string {
+  const { r, g, b } = this.hexToRgb(hex); // Convertir Hex a RGB
+
+  // Cálculo de luminosidad percibida
+  const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+
+  // Si la luminosidad es alta, el texto será negro, de lo contrario será blanco
+  return luminance > 186 ? 'black' : 'white';
+}
 
 
   toggleTooltip() {
@@ -257,6 +337,8 @@ crearLargos(maquinasDestino) {
            // Convertimos el objeto en un arreglo de proveedores
            const arregloCategorizado:any = Object.entries(TintasPorColor);
            this.Tintas = arregloCategorizado;
+
+           console.log(this.Tintas)
 
   }
 

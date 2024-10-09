@@ -7,6 +7,7 @@ import { GruposComponent } from './grupos/grupos.component';
 import { FabricantesComponent } from './fabricantes/fabricantes.component';
 import { ProveedoresComponent } from './proveedores/proveedores.component';
 import { OrdenesComponent } from './ordenes/ordenes.component';
+import { NoConformidadesComponent } from './no-conformidades/no-conformidades.component';
 
 
 const routes: Routes =[
@@ -33,6 +34,10 @@ const routes: Routes =[
       {
         path:'ordenes',
         component:OrdenesComponent
+      },
+      {
+        path:'ncc',
+        component:NoConformidadesComponent
       }
     ]
 }]

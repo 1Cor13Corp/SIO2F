@@ -11,11 +11,13 @@ export class RecepcionService {
 
   public mensaje!: Mensaje;
   public recepciones: any;
+  public reclamos:any;
   public comentarios: any;
   public topFive = []
   constructor(public socket: WebSocketService) {
     this.BuscarRecepciones();
     this.BuscarComentarios();
+    this.BuscarReclamos();
   }
 
 
@@ -66,6 +68,19 @@ export class RecepcionService {
       console.log(this.recepciones)
     })
       this.buscarTop5();
+  }
+
+  BuscarReclamos() {
+    this.socket.io.emit('CLIENTE:BuscarReclamos')
+
+    this.socket.io.on('SERVER:Reclamos', (Reclamos) => {
+      this.reclamos = Reclamos
+      console.log(this.reclamos)
+    })
+  }
+
+  GuardarReclamos(data:any) {
+    this.socket.io.emit('CLIENTE:NuevoReclamo', data)
   }
 
   GuardarRecepcion(data: any) {
@@ -175,6 +190,20 @@ filtrarMaterialesporFecha(desde, hasta){
     }
   })
   return materialesFiltrados;
+}
+
+
+buscarUltimoReclamoPorRecepcion(recepcion) {
+  // Filtra los reclamos que coinciden con la recepcion dada
+  const reclamosFiltrados = this.reclamos.filter(reclamo => reclamo.recepcion === recepcion);
+  
+  // Si no se encuentran reclamos, retorna null
+  if (reclamosFiltrados.length === 0) {
+    return null;
+  }
+
+  // Retorna el último reclamo encontrado en la lista filtrada
+  return reclamosFiltrados[reclamosFiltrados.length - 1];
 }
 
 }

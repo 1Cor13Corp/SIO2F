@@ -1,6 +1,6 @@
 <div class="modal" [ngClass]="{'is-active':otro}">
     <div class="modal-background"></div>
-    <div class="modal-card longer">
+    <div class="modal-card longer" *ngIf="otro">
         <div class="modal-card-head">
             <p class="modal-card-title fuente">
                Material Nombre

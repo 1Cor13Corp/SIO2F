@@ -24,7 +24,11 @@
                 <!-- Textarea for adding new messages -->
                 <div class="message-input">
                     <textarea [(ngModel)]="newMessage" placeholder="Escribe deja un comentario..." (keydown.enter)="sendMessage(); $event.preventDefault();"></textarea>
-                    <button class="button is-info" (click)="sendMessage()">Enviar</button>
+                    <button class="button is-info" (click)="sendMessage()">
+                        <span class="icon">
+                            <i class="far fa-paper-plane"></i>
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>

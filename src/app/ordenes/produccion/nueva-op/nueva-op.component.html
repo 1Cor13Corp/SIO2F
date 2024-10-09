@@ -43,31 +43,30 @@
                         <input type="date" class="input">
                     </div>
                 </div>
-                <div class="field is-grouped">
-                    <div class="control">
-                        <label class="label">Cantidad (Producto):</label>
-                        <input type="number" class="input">
-                    </div>
+                <div class="field is-grouped" *ngIf="producto">
                     <div class="control">
                         <label for="" class="label">Montaje:</label>
                         <div class="select">
-                            <select>
-                                <option value="">Montaje A</option>
-                                <option value="">Montaje B</option>
+                            <select [(ngModel)]="OP.montaje">
+                                <option value="{{i}}" *ngFor="let montaje of [].constructor(ToNumber_(producto.pre_impresion.montajes));index as i">Montaje {{ ShowLetter(i) }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="control">
+                        <label class="label">Cantidad (Producto):</label>
+                        <input type="number" class="input" [(ngModel)]="OP.cantidad" (change)="calcularHojas()">
+                    </div>
+                    <div class="control">
                         <label class="label">Hojas:</label>
-                        <input type="number" class="input short" disabled>
+                        <input type="number" class="input short" disabled [value]="OP.hojas + OP.demasia">
                     </div>
                     <div class="control">
                         <label class="label">Demasia (hojas):</label>
-                        <input type="number" class="input short">
+                        <input type="number" class="input short" [(ngModel)]="OP.demasia">
                     </div>
                     <div class="control">
                         <label class="label">Demasia (%):</label>
-                        <input type="number" class="input short" [(ngModel)]="demasia" disabled>
+                        <input type="number" class="input short" [value]="calcularDesmasia()" disabled>
                     </div>
                 </div>
                 <div class="field is-grouped">
@@ -83,8 +82,8 @@
                     <div class="control" *ngIf="producto">
                         <label class="label">Sustrato:</label>
                         <div class="select">
-                            <select>
-                                <option value="" *ngFor="let sustrato of producto.materia_prima.sustrato">{{sustrato.nombre}} ({{sustrato.serie}}) {{sustrato.origen}} {{sustrato.gramaje}}g {{sustrato.calibre}}pt</option>
+                            <select [(ngModel)]="OP.sustrato" (change)="BuscarEnAlmacen($event.target)">
+                                <option value="{{sustrato._id}}" *ngFor="let sustrato of producto.materia_prima.sustrato">{{sustrato.nombre}} ({{sustrato.serie}}) {{sustrato.origen}} {{sustrato.gramaje}}g {{sustrato.calibre}}pt</option>
                             </select>
                         </div>
                     </div>
@@ -99,23 +98,63 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>15.000</td>
-                            <td>25.000</td>
-                            <td>10.000</td>
+                            <td>{{OP.hojas | number}}</td>
+                            <td>{{almacenado | number}}</td>
+                            <td>{{almacenado - OP.hojas | number}}</td>
                         </tr>
                     </tbody>
                 </table>
             </span>
             <span class="content" *ngIf="i === 2">
-                <div class="field is-grouped">
-                    <div class="control" *ngFor="let tinta of Tintas">
+                <!-- <div class="select">
+                    <select>
+                        <option value="" *ngFor="let tinta of producto.materia_prima.tintas;index as i"></option>
+                    </select>
+                </div> -->
+
+                <div class="field is-grouped" *ngIf="producto">
+                    <div class="control">
+                        <div class="select">
+                            <select [(ngModel)]="color_selected">
+                                <option value="{{i}}" *ngFor="let tinta of producto.materia_prima.tintas;index as i">{{tinta.tinta.nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <button class="button" style="background-color: transparent; border:none;color: #3e8ed0;" (click)="agregarColor()">
+                            <span class="icon"><i class="fas fa-plus"></i></span>
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Tinta</th>
+                                <th>En almacen</th>
+                                <th>Necesario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let tinta of tintas_added;index as i">
+                                <td><span class="tinta__" [ngStyle]="{'background-color': tinta.tinta.rgb, 'color': getTextColorFromHex(tinta.tinta.rgb)}">{{tinta.tinta.nombre}}</span></td>
+                                <td></td>
+                                <td>{{calcularTinta(tinta.cantidad)}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr>
+                <!-- <div class="field is-grouped">
+                    <div class="control" *ngFor="let tinta of Tintas;index as i">
                         <div class="pantone-card" *ngIf="tinta[0] != 'P'">
                             <label class="label pantone-title" *ngIf="tinta[0] === 'A'">Amarillo</label>
                             <label class="label pantone-title" *ngIf="tinta[0] === 'M'">Magenta</label>
                             <label class="label pantone-title" *ngIf="tinta[0] === 'C'">Cyan</label>
                             <label class="label pantone-title" *ngIf="tinta[0] === 'K'">Negro</label>
                             <span class="pantone-color" [ngStyle]="{'background-color': coloresHex[tinta[0]]}">
-                                <span class="pantone-necesario"></span>
+                                <span class="pantone-necesario">{{calcularTinta(i) | number}}</span>
                             </span>
                             <span class="pantone-add">
                                 <i class="fa-solid fa-circle-plus green"></i>
@@ -126,7 +165,7 @@
                                 <label class="label pantone-title">{{pantone.codigo}}</label>
                                 
                                 <span class="pantone-color" [ngStyle]="{'background-color': pantone.rgb}">
-                                    <span class="pantone-necesario"></span>
+                                    <span class="pantone-necesario">{{calcularTinta(i) | number}}</span>
                                 </span>
                                 <span class="pantone-add">
                                     <i class="fa-solid fa-circle-plus green"></i>
@@ -144,6 +183,7 @@
                         </div>
                     </div>
                 </div>
+                <hr> -->
             </span>
             <span class="content" *ngIf="i === 3">
                 <div class="columns">

@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import * as moment from 'moment';
 import { Cell, Img, PdfMakeWrapper, Table, Txt } from 'pdfmake-wrapper';
 import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import { AlmacenService } from 'src/app/services/almacen.service';
 import { RecepcionService } from 'src/app/services/recepcion.service';
+import Swal from 'sweetalert2';
 import Swall from 'sweetalert2'
 @Component({
   selector: 'app-recepcion',
@@ -34,6 +36,70 @@ poseeAnalisis(lote){
   return this.almacen.buscarPorLote(lote); // Retorna la información del análisis del lote
 }
 
+noConforme = async(recepcion, i) => {
+  const { value: formValues } = await Swal.fire({
+    title: "Descripción del reclamo",
+    html:
+      '<textarea id="swal-input1" class="swal2-textarea" placeholder="Describe el motivo de la no conformidad"></textarea>' +
+      '<select id="swal-input2" class="swal2-select" style="margin-top: 10px;">' +
+      '<option value="Por analizar">Por analizar</option>' +
+      '<option value="Rechazado">Rechazado</option>' +
+      '<option value="Revisión">Revisión</option>' +
+      '</select>',
+    showCancelButton: true,
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Guardar',
+    confirmButtonColor: '#48c78e',
+    cancelButtonColor: '#f14668',
+    preConfirm: () => {
+      const textElement = document.getElementById('swal-input1') as HTMLTextAreaElement | null;
+      const statusElement = document.getElementById('swal-input2') as HTMLSelectElement | null;
+
+      if (textElement && statusElement) {
+        const text = textElement.value;
+        const status = statusElement.value;
+
+        if (!text) {
+          Swal.showValidationMessage("Por favor, ingresa una descripción");
+          return null;
+        }
+        return { text, status };
+      } else {
+        Swal.showValidationMessage("Error al obtener los campos de entrada");
+        return null;
+      }
+    }
+  });
+
+  if (formValues) {
+    let data = {
+      status:formValues.status,
+      observacion:formValues.text,
+      recepcion:`${recepcion._id}_${i}`
+    }
+    recepcion.resultados[i] = formValues.status;
+    this.api.GuardarReclamos(data);
+    this.api.GuardarRecepcion(recepcion)
+
+    Swal.fire({
+      title: 'Se generó reclamo',
+      icon: 'success',
+      toast: true,
+      position: 'top-end',
+      timer: 5000,
+      timerProgressBar: true,
+      showConfirmButton: false
+    });
+  }
+};
+
+buscarUltimoReclamoPorRecepcion(recepcion, i){
+  let recepcion_ = `${recepcion}_${i}`;
+  return this.api.buscarUltimoReclamoPorRecepcion(recepcion_)
+}
+
+
+
 // Función asincrónica para enviar materiales al almacén
 EnviarAlmacen = async(index: number, i: number) =>{
   const materiales = this.api.recepciones[index].materiales[i];
@@ -56,6 +122,14 @@ showInfo(i) {
   } else {
     this.clicked[i] = false; // Si ya se hizo clic, oculta la información adicional
   }
+}
+
+showObservacion(observacion){
+  Swal.fire({
+    title:'Motivo',
+    text:observacion,
+    showConfirmButton:false,
+  })
 }
 
 // Función para mostrar el detalle de una recepción
@@ -104,6 +178,147 @@ checkar(id: string) {
   console.log(id); // Imprime el ID en consola
   this.api.checkearRecepcion(id); // Realiza la verificación de la recepción con el ID proporcionado
 }
+
+  ProductoNoConforme(recepcion, materiales, observacion){
+
+    console.log(recepcion)
+    let reception = moment(recepcion.recepcion).format('DD/MM/YYYY')
+    
+    const pdf = new PdfMakeWrapper();
+    PdfMakeWrapper.setFonts(pdfFonts);
+    pdf.pageOrientation('portrait');
+    pdf.pageSize('A4');
+
+    async function generarPDF(){
+      pdf.add(
+        new Table([
+          [
+            new Cell(await new Img('../../assets/poli_cintillo.png').width(60).margin([0, 5,0,0]).build()).alignment('center').rowSpan(4).end,
+            new Cell(new Txt(`
+            FORMATO DE NO CONFORMIDAD \n DEL MATERIAL RECIBIDO
+            `).bold().end).alignment('center').fontSize(9).rowSpan(4).end,
+            new Cell(new Txt('Código: FAL-002').end).fillColor('#dedede').fontSize(5).alignment('center').end,
+          ],
+          [
+            new Cell(new Txt('').end).end,
+            new Cell(new Txt('').end).end,
+            new Cell(new Txt('N° de Revisión: 1').end).fillColor('#dedede').fontSize(5).alignment('center').end,
+          ],
+          [
+            new Cell(new Txt('').end).end,
+            new Cell(new Txt('').end).end,
+            new Cell(new Txt('Fecha de Revisión: 03/08/2023').end).fillColor('#dedede').fontSize(5).alignment('center').end,
+          ],
+          [
+            new Cell(new Txt('').end).end,
+            new Cell(new Txt('').end).end,
+            new Cell(new Txt('Página: 1 de 1').end).fillColor('#dedede').fontSize(5).alignment('center').end,
+          ],
+        ]).widths(['25%','50%','25%']).end
+      )
+
+
+      pdf.add(
+        pdf.ln(1)
+      )
+
+      pdf.add(
+        new Table([
+          [
+            new Cell(new Txt('').end).alignment('center').border([false,false]).end,
+            new Cell(new Txt('Nº NO CONFORMIDAD').end).alignment('center').color('#FFFFFF').fillColor('#000000').fontSize(8).end,
+          ]
+        ]).widths(['80%','20%']).end
+      )
+      pdf.add(
+        new Table([
+          [
+            new Cell(new Txt('').end).alignment('center').border([false,false]).end,
+            new Cell(new Txt(`NCC-24-${observacion.numero}`).end).alignment('center').end,
+          ]
+        ]).widths(['80%','20%']).end
+      )
+
+      pdf.add(
+        pdf.ln(1)
+      )
+
+      pdf.add(
+        new Table([
+          [
+            new Cell(new Txt('DETALLES DEL PRODUCTO').end).alignment('center').color('#FFFFFF').fillColor('#000000').fontSize(8).end,
+          ]
+        ]).widths(['100%']).end
+      )
+
+      pdf.add(
+        new Table([
+          [
+            new Cell(new Txt('').end).end
+          ]
+        ]).layout('noBorders').widths(['100%']).end
+      )
+
+      pdf.add(
+        new Table([
+          [
+            new Cell(new Txt('Proveedor').end).fillColor('#d3d3d3').end,
+            new Cell(new Txt(`${recepcion.proveedor.nombre}`).end).end,
+            new Cell(new Txt('Documento').end).fillColor('#d3d3d3').end,
+            new Cell(new Txt(recepcion.documento).end).end
+          ],
+          [
+            new Cell(new Txt('Producto').end).fillColor('#d3d3d3').end,
+            new Cell(new Txt(`${materiales[0].material.nombre} (${materiales[0].material.fabricante.alias})`).end).end,
+            new Cell(new Txt('Lote').end).fillColor('#d3d3d3').end,
+            new Cell(new Txt(materiales[0].lote).end).end
+          ],
+          [
+            new Cell(new Txt('Fecha').end).fillColor('#d3d3d3').end,
+            new Cell(new Txt(reception).end).end,
+            new Cell(new Txt('Orden Nº').end).fillColor('#d3d3d3').end,
+            new Cell(new Txt(materiales[0].oc.numero).end).end
+          ]
+        ]).widths(['15%','35%','15%','35%']).end
+      )
+
+      pdf.add(
+        new Table([
+          [
+            new Cell(new Txt('').end).end
+          ]
+        ]).layout('noBorders').widths(['100%']).end
+      )
+
+      pdf.add(
+        new Table([
+          [
+            new Cell(new Txt('DETALLES DE LA NO CONFORMIDAD').end).alignment('center').color('#FFFFFF').fillColor('#000000').fontSize(8).end,
+          ]
+        ]).widths(['100%']).end
+      )
+
+      pdf.add(
+        new Table([
+          [
+            new Cell(new Txt('').end).end
+          ]
+        ]).layout('noBorders').widths(['100%']).end
+      )
+
+      pdf.add(
+        new Table([
+          [
+            new Cell(new Txt(observacion.observacion).end).border([false, false]).end
+          ]
+        ]).widths(['100%']).end
+      )
+
+
+      pdf.create().download(`${materiales[0].material.nombre}(${materiales[0].material.fabricante.alias})_${materiales[0].lote}`)
+    }
+    generarPDF();
+  }
 
   DescargarFormato(informacion:any){
 

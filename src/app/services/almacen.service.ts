@@ -32,4 +32,13 @@ export class AlmacenService {
   buscarPorLote(lote:any){
     return this.Almacen.some((x) => x.lote === lote);
   }
+
+
+  BuscarCantidadEnAlmacen(material: string) {
+    const totalNeto = this.Almacen
+      .filter(item => item.material._id === material) // Filtrar los materiales que coinciden con el _id
+      .reduce((sum, item) => sum + Number(item.neto), 0); // Sumar los valores de neto
+    
+    return totalNeto; // Retorna el total sumado
+  }
 }

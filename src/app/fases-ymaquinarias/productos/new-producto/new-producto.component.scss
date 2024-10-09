@@ -291,3 +291,58 @@ color{
     background-color: rgb(249, 249, 162);
     padding: 5px;
   }
+
+
+  .custom-checkbox {
+    display: inline-block;
+    position: relative;
+    padding-left: 35px; /* Espacio a la izquierda para el checkbox */
+    cursor: pointer;
+    font-size: 18px; /* Tamaño del texto */
+    user-select: none; /* Evita que se seleccione el texto cuando se hace click */
+  }
+  
+  .custom-checkbox input {
+    position: absolute;
+    opacity: 0; /* Esconde el input checkbox por defecto */
+    cursor: pointer;
+  }
+  
+  .custom-checkbox .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px; /* Altura del checkbox */
+    width: 25px; /* Ancho del checkbox */
+    background-color: #ccc; /* Color de fondo del checkbox */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-checkbox:hover input ~ .checkmark {
+    background-color: #bbb; /* Cambia el color al hacer hover */
+  }
+  
+  .custom-checkbox input:checked ~ .checkmark {
+    background-color: #4caf50; /* Color verde cuando está seleccionado */
+  }
+  
+  .custom-checkbox .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  .custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  .custom-checkbox .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg); /* Rotación de la marca */
+  }

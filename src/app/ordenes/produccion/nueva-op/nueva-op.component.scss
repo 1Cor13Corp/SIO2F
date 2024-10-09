@@ -147,9 +147,11 @@ margin: 3px;
 
 .pantone-necesario{
     font-family:  'Gilroy';
-    font-size: x-large;
-    color: white;
-    text-shadow: 2px 2px 3px rgba(3,3,3,0.59);
+    font-size: large;
+    color: black;
+    background-color: white;
+    border-radius: 8px;
+    padding: 3px;
 }
 
 .pantone-add{
@@ -460,4 +462,11 @@ cursor:auto;
   .mostrada{
     position: absolute;
     bottom: 5px;
+  }
+
+  .tinta__{
+    display: block;
+    padding:3px;
+    border-radius: 5px;
+
   }
