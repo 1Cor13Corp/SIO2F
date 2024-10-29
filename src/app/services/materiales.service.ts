@@ -66,11 +66,19 @@ export class MaterialesService {
 }
 
   filtrarPorGrupoConEspecificacion(id: any): Materiales[] {
-    console.log(id,'>>>>>>>>>>>>>>>>',this.materiales)
     return this.materiales.filter((material: any) => 
         material.grupo._id === id && (material.especificacion || material.especificacion2)
     );
 }
+
+
+buscarCajasYmetros(nombre) {
+  nombre = nombre.replace(/\s*\([^)]*\)/g, '')
+  let caja = this.materiales.find(m => m.nombre.includes(nombre));
+  return caja;
+}
+
+
 
 
 

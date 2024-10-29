@@ -133,7 +133,7 @@
                         </i>
                     </div>
                 </div>
-                <div class="field is-grouped">
+                <!-- <div class="field is-grouped">
                     <div class="control">
                         <label for="" class="label">Tintas aprobadas (marca):</label>
                         <div class="select">
@@ -161,7 +161,7 @@
                             <span class="notification" *ngIf="producto.materia_prima.tintas.length > 0">{{producto.materia_prima.tintas.length}}</span>
                         </i>
                     </div>
-                </div>
+                </div> -->
                 <div class="field is-grouped">
                     <div class="control">
                         <label for="" class="label">Barnices aprobados:</label>
@@ -227,7 +227,7 @@
                     </div>
                     <div class="control" *ngIf="SecuenciaDeColores[0].tintas">
                         <label for="" class="label"> </label>
-                        <i class="fas fa-info-circle blue_" style="cursor: pointer;">
+                        <i class="fas fa-info-circle blue_" style="cursor: pointer;" (click)="showDetail('modal_tintas',0)">
                             <span class="notification" *ngIf="SecuenciaDeColores[0].tintas.length > 0">{{SecuenciaDeColores[0].tintas.length}}</span>
                         </i>
                     </div>
@@ -267,7 +267,7 @@
                     </div>
                     <div class="control" *ngIf="SecuenciaDeColores[1].tintas">
                         <label for="" class="label"> </label>
-                        <i class="fas fa-info-circle blue_" style="cursor: pointer;">
+                        <i class="fas fa-info-circle blue_" style="cursor: pointer;" (click)="showDetail('modal_tintas',1)">
                             <span class="notification" *ngIf="SecuenciaDeColores[1].tintas.length > 0">{{SecuenciaDeColores[1].tintas.length}}</span>
                         </i>
                     </div>
@@ -307,7 +307,7 @@
                     </div>
                     <div class="control" *ngIf="SecuenciaDeColores[2].tintas">
                         <label for="" class="label"> </label>
-                        <i class="fas fa-info-circle blue_" style="cursor: pointer;">
+                        <i class="fas fa-info-circle blue_" style="cursor: pointer;" (click)="showDetail('modal_tintas',2)">
                             <span class="notification" *ngIf="SecuenciaDeColores[2].tintas.length > 0">{{SecuenciaDeColores[2].tintas.length}}</span>
                         </i>
                     </div>
@@ -347,7 +347,7 @@
                     </div>
                     <div class="control" *ngIf="SecuenciaDeColores[3].tintas">
                         <label for="" class="label"> </label>
-                        <i class="fas fa-info-circle blue_" style="cursor: pointer;">
+                        <i class="fas fa-info-circle blue_" style="cursor: pointer;" (click)="showDetail('modal_tintas',3)">
                             <span class="notification" *ngIf="SecuenciaDeColores[3].tintas.length > 0">{{SecuenciaDeColores[3].tintas.length}}</span>
                         </i>
                     </div>
@@ -384,7 +384,7 @@
                     </div>
                     <div class="control" *ngIf="SecuenciaDeColores[4].tintas">
                         <label for="" class="label"> </label>
-                        <i class="fas fa-info-circle blue_" style="cursor: pointer;">
+                        <i class="fas fa-info-circle blue_" style="cursor: pointer;" (click)="showDetail('modal_tintas',4)">
                             <span class="notification" *ngIf="SecuenciaDeColores[4].tintas.length > 0">{{SecuenciaDeColores[4].tintas.length}}</span>
                         </i>
                     </div>
@@ -421,7 +421,7 @@
                     </div>
                     <div class="control" *ngIf="SecuenciaDeColores[5].tintas">
                         <label for="" class="label"> </label>
-                        <i class="fas fa-info-circle blue_" style="cursor: pointer;">
+                        <i class="fas fa-info-circle blue_" style="cursor: pointer;" (click)="showDetail('modal_tintas',5)">
                             <span class="notification" *ngIf="SecuenciaDeColores[5].tintas.length > 0">{{SecuenciaDeColores[5].tintas.length}}</span>
                         </i>
                     </div>
@@ -458,7 +458,7 @@
                     </div>
                     <div class="control" *ngIf="SecuenciaDeColores[6].tintas">
                         <label for="" class="label"> </label>
-                        <i class="fas fa-info-circle blue_" style="cursor: pointer;">
+                        <i class="fas fa-info-circle blue_" style="cursor: pointer;" (click)="showDetail('modal_tintas',6)">
                             <span class="notification" *ngIf="SecuenciaDeColores[6].tintas.length > 0">{{SecuenciaDeColores[6].tintas.length}}</span>
                         </i>
                     </div>
@@ -495,7 +495,7 @@
                     </div>
                     <div class="control" *ngIf="SecuenciaDeColores[7].tintas">
                         <label for="" class="label"> </label>
-                        <i class="fas fa-info-circle blue_" style="cursor: pointer;">
+                        <i class="fas fa-info-circle blue_" style="cursor: pointer;" (click)="showDetail('modal_tintas',7)">
                             <span class="notification" *ngIf="SecuenciaDeColores[7].tintas.length > 0">{{SecuenciaDeColores[7].tintas.length}}</span>
                         </i>
                     </div>
@@ -530,7 +530,7 @@
                             <span class="icon"><i class="fas fa-plus"></i></span>
                         </button>
                     </div>
-                    <div class="control" *ngIf="SecuenciaDeColores[8].tintas">
+                    <div class="control" *ngIf="SecuenciaDeColores[8].tintas" (click)="showDetail('modal_tintas',8)">
                         <label for="" class="label"> </label>
                         <i class="fas fa-info-circle blue_" style="cursor: pointer;">
                             <span class="notification" *ngIf="SecuenciaDeColores[8].tintas.length > 0">{{SecuenciaDeColores[8].tintas.length}}</span>
@@ -837,6 +837,32 @@
                 </div>
             </span>
             <span class="content" *ngIf="i === 7">
+                <div class="field is-grouped">
+                    <div class="control">
+                        <label for="" class="label">Otros procesos:</label>
+                        <div class="select">
+                            <select name="" id="" [(ngModel)]="otros_selectec">
+                                <ng-container *ngFor="let maquina of maquinas.maquinas">
+                                    <option value="{{maquina._id}}&{{maquina.nombre}}" *ngIf="Impresion_(maquina, 'Otro')">{{maquina.nombre}}</option>
+                                </ng-container>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control" *ngIf="otros_selectec">
+                        <label for="" class="label"> </label>
+                        <button class="button is-info" (click)="otros_()">
+                            <span class="icon"><i class="fas fa-plus-circle"></i></span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <label for="" class="label"> </label>
+                        <i class="fas fa-info-circle blue_" style="cursor: pointer;" (click)="showDetail('modal_pegadora')">
+                            <span class="notification" *ngIf="producto.post_impresion.otros.length > 0">{{producto.post_impresion.otros.length}}</span>
+                        </i>
+                    </div>
+                </div>
+            </span>
+            <span class="content" *ngIf="i === 8">
 
                 <span class="subtitles_">
                     Distribución del producto en caja <br>
@@ -947,11 +973,24 @@
                 </ng-container>
             </ng-container>
             <ng-container *ngIf="detalles.modal_tintas">
-                <div class="subtitles">Tipo de tinta</div>
+                <div class="subtitles">Tintas aprobadas en color: {{SecuenciaDeColores[index_tinta].color}}</div>
                 <hr>
-                <ng-container *ngFor="let sustrato of tinta_nombres;index as i">
-                    <i class="fas fa-circle red"></i> {{sustrato}} {{producto.materia_prima.tintas[i].cantidad}}kg <i class="fas fa-trash-alt red"></i> <br>
-                </ng-container>
+                <table class="table is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Tinta</th>
+                            <th>Cantidad</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let sustrato of SecuenciaDeColores[index_tinta].tintas;index as i">
+                            <td>{{sustrato.nombre}}</td>
+                            <td>{{sustrato.cantidad}}kg</td>
+                            <td><i class="fas fa-trash-alt red"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
             </ng-container>
             <ng-container *ngIf="detalles.modal_barniz">
                 <div class="subtitles">Tipo de barniz</div>

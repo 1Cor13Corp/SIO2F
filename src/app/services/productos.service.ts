@@ -20,6 +20,7 @@ export class ProductosService {
   
     this.socket.io.on('SERVER:producto', (data)=>{
       this.producto = data;
+      console.log(this.producto)
     })
 
     this.socket.io.on('SERVER:historial',(data)=>{

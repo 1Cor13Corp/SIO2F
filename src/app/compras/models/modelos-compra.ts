@@ -352,9 +352,9 @@ export class Producto_ {
         public identificacion: Identificacion,
         public dimensiones: Dimensiones,
         public materia_prima: { sustrato: string[]; tintas: Tinta_[]; barnices: Barniz_[] },
-        public pre_impresion: { diseno: string; montajes: string; nombre_montajes: string[]; tamano_sustrato: TamanoSustrato; plancha: Plancha },
-        public impresion: { impresoras: string[]; secuencia: string[][]; pinzas: string[][]; fuentes: string[] },
-        public post_impresion: { troqueladora: string[]; henidura: { alto: string; ancho: string }; guillotina: string[];pegadora:string[]; pegamento: Pegamento_[]; caja: { nombre: string; cabida: string[] }; distribucion: Distribucion }
+        public pre_impresion: { diseno: string; montajes: string; nombre_montajes: string[]; tamano_sustrato: TamanoSustrato; plancha: Plancha;pelicula: any },
+        public impresion: { impresoras: string[]; secuencia: string[][]; pinzas: string[][]; fuentes: string[]; },
+        public post_impresion: { otros: string[]; troqueladora: string[]; henidura: { alto: string; ancho: string }; guillotina: string[];pegadora:string[]; pegamento: Pegamento_[]; caja: { nombre: string; cabida: string[] }; distribucion: Distribucion }
     ) {}
 }
   

@@ -5,6 +5,7 @@ import { EmpleadosComponent } from './empleados.component';
 import { GestionComponent } from './gestion/gestion.component';
 import { DepartamentosComponent } from './departamentos/departamentos.component';
 import { TrabajadoresComponent } from './trabajadores/trabajadores.component';
+import { HorariosComponent } from './horarios/horarios.component';
 
 const routes: Routes =[
   {
@@ -22,6 +23,10 @@ const routes: Routes =[
       {
         path: 'empleados',
         component:TrabajadoresComponent
+      },
+      {
+        path:'horarios',
+        component:HorariosComponent
       }
     ]
 }]

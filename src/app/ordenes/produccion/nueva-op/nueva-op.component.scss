@@ -372,7 +372,8 @@ mwlResizable {
     margin-top: 6px; 
     height: 62px; 
     background-size: 200% auto;
-    background-image: linear-gradient(to right, transparent 50%, #900c3f 50%);
+    background-image: linear-gradient(to right, transparent 50%, #c70039 50%);
+    // background-image: linear-gradient(to right, transparent 50%, #900c3f 50%);
     transition: background-position 1s ;
     transition: color 1s ;
 
@@ -469,4 +470,15 @@ cursor:auto;
     padding:3px;
     border-radius: 5px;
 
+  }
+
+  .alerta::before {
+    content: "Faltan ";
+    color: red; /* Puedes cambiar el color si lo deseas */
+    font-family: 'Gilroy';
+  }
+  
+  .alerta {
+    color: red; /* Puedes cambiar el color si lo deseas */
+    font-family: 'Gilroy';
   }

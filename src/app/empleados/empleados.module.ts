@@ -18,6 +18,8 @@ import { NuevoTrabajadorComponent } from './trabajadores/nuevo-trabajador/nuevo-
 import { HttpClientModule } from '@angular/common/http';
 import { InformacionEmpleadoComponent } from './trabajadores/informacion-empleado/informacion-empleado.component';
 import { HistorialEmpleadoComponent } from './trabajadores/historial-empleado/historial-empleado.component';
+import { HorariosComponent } from './horarios/horarios.component';
+import { NuevoHorarioComponent } from './horarios/nuevo-horario/nuevo-horario.component';
 
 
 
@@ -36,7 +38,9 @@ import { HistorialEmpleadoComponent } from './trabajadores/historial-empleado/hi
     TrabajadoresComponent,
     NuevoTrabajadorComponent,
     InformacionEmpleadoComponent,
-    HistorialEmpleadoComponent
+    HistorialEmpleadoComponent,
+    HorariosComponent,
+    NuevoHorarioComponent
   ],
   imports: [
     CommonModule,

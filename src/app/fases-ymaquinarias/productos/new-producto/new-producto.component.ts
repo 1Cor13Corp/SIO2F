@@ -43,6 +43,9 @@ export class NewProductoComponent {
     ['magenta', 3],
     ['amarillo', 4]
   ]);
+
+
+  public otros_selectec = ''
   
   getNumeroPorSecuencia(secuencias: string[], secuencia: string): number {
     // Resetea el número incremental y mapa
@@ -144,6 +147,7 @@ export class NewProductoComponent {
     {title: 'Impresión', content: 'Contenido 1'},
     {title: 'Post-impresión', content: 'Contenido 1'},
     {title: 'Post-impresión', content: 'Contenido 1'},
+    {title: 'Post-impresión', content: 'Contenido 1'},
     // Agrega más tarjetas según sea necesario
   ];
   currentIndex = 0;
@@ -230,10 +234,13 @@ export class NewProductoComponent {
       })
   }  
 
-  showDetail(tipo){
+  public index_tinta;
+  showDetail(tipo, index?){
+    console.log('Mostrar Detalles')
     this.detalle = true;
     if(tipo in this.detalles){
       this.detalles[tipo] = true
+      this.index_tinta = index;
     }
   }
 
@@ -243,6 +250,7 @@ export class NewProductoComponent {
 
   guardar(){
     this.loading = true;
+    this.producto.pre_impresion.pelicula = this.SecuenciaDeColores;
     this.api.GuardarProducto(this.producto)
     setTimeout(() => {
       Swal.fire({
@@ -329,6 +337,7 @@ export class NewProductoComponent {
       this.producto.impresion.impresoras.push(splited[0]);
       this.impresoras_nombre.push(splited[1])
       if (this.producto.impresion.impresoras.length > 1) {
+        console.log(this.producto.impresion.secuencia[0])
         let colores__ = this.producto.impresion.secuencia[0].slice();
         this.producto.impresion.secuencia.push(colores__);
     }
@@ -365,6 +374,17 @@ export class NewProductoComponent {
     }
 
     this.pegadora_selected = ''
+  }
+
+  otros_nombre:any = [] 
+  otros_(){
+    let splited = this.otros_selectec.split('&')
+    if (!this.producto.post_impresion.otros.includes(splited[0])) {
+      this.producto.post_impresion.otros.push(splited[0]);
+      this.otros_nombre.push(splited[1])
+    }
+
+    this.otros_selectec = ''
   }
 
   Solucion_fuente(){
@@ -426,7 +446,8 @@ export class NewProductoComponent {
     if(isChecked){
       if(!this.SecuenciaDeColores[index]){
         this.SecuenciaDeColores[index] = {color:color}
-        console.log(this.SecuenciaDeColores)
+        this.producto.impresion.secuencia[0][index] = color
+        console.log( this.producto.impresion.secuencia)
       }
     }else{
       // Si el checkbox no está marcado, elimina el color
@@ -434,6 +455,8 @@ export class NewProductoComponent {
       console.log(index)
       if (index > -1) {
         this.SecuenciaDeColores.splice(index, 1); // Elimina el color del array
+        this.producto.impresion.secuencia.splice(index, 1); // Elimina el color del array
+        this.producto.impresion.secuencia[0].splice(index, 1);
         console.log(this.SecuenciaDeColores)
       }
     }
@@ -456,9 +479,11 @@ export class NewProductoComponent {
       if (this.SecuenciaDeColores[index]) {
         // Si ya existe un Pantone en esa posición, actualízalo
         this.SecuenciaDeColores[index].color = color;
+        this.producto.impresion.secuencia[0][index] = color
       } else {
         // Si no existe, añade uno nuevo
         this.SecuenciaDeColores[index] = { color: color };
+        this.producto.impresion.secuencia[0][index] = color
       }
     }else{
       this.SecuenciaDeColores[index] = undefined
@@ -554,7 +579,14 @@ export class NewProductoComponent {
   }
 
   Impresion_(maquina, fase_) {
-    let incluye = maquina.fases.some(fase => fase.nombre === fase_);
+    let incluye
+    if(fase_ === 'Otro'){
+      incluye = maquina.fases.some(fase => fase.nombre != 'Impresión' && fase.nombre != 'Impresion 2 pase' && fase.nombre != 'Barnizar'
+        && fase.nombre != 'Troquelado' && fase.nombre != 'Cortado' && fase.nombre != 'Pegado' 
+      );
+    }else{
+      incluye = maquina.fases.some(fase => fase.nombre === fase_);
+    }
     return incluye;
   }
 

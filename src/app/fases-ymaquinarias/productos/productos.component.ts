@@ -140,7 +140,8 @@ export class ProductosComponent implements OnInit{
         tipo:'',
         marca:'',
         tiempo_exposicion:''
-      }
+      },
+      pelicula:[]
     },
     impresion:{
       impresoras:[],
@@ -149,6 +150,7 @@ export class ProductosComponent implements OnInit{
       fuentes:[]
     },
     post_impresion:{
+      otros:[],
       troqueladora:[],
       henidura:{alto:'', ancho:''},
       guillotina:[],
@@ -336,7 +338,8 @@ export class ProductosComponent implements OnInit{
           tipo:'',
           marca:'',
           tiempo_exposicion:''
-        }
+        },
+        pelicula:[]
       },
       impresion:{
         impresoras:[],
@@ -345,6 +348,7 @@ export class ProductosComponent implements OnInit{
         fuentes:[]
       },
       post_impresion:{
+        otros:[],
         troqueladora:[],
         henidura:{alto:'', ancho:''},
         guillotina:[],
@@ -495,36 +499,36 @@ console.log(formulas___);
       let peliculas:any = []
       let peliculasB:any = []
 
-for (let i = 0; i < producto.materia_prima.tintas.length; i++) {
-    let color = producto.materia_prima.tintas[i].tinta.color;
+// for (let i = 0; i < producto.materia_prima.tintas.length; i++) {
+//     let color = producto.materia_prima.tintas[i].tinta.color;
     
-    switch (color) {
-        case 'A':
-            color = 'Amarillo';
-            break;
-        case 'C':
-            color = 'Cyan';
-            break;
-        case 'M':
-            color = 'Magenta';
-            break;
-        case 'K':
-            color = 'Negro';
-            break;
-        default:
-            color = producto.materia_prima.tintas[i].tinta.codigo;
-    }
+//     switch (color) {
+//         case 'A':
+//             color = 'Amarillo';
+//             break;
+//         case 'C':
+//             color = 'Cyan';
+//             break;
+//         case 'M':
+//             color = 'Magenta';
+//             break;
+//         case 'K':
+//             color = 'Negro';
+//             break;
+//         default:
+//             color = producto.materia_prima.tintas[i].tinta.codigo;
+//     }
 
-    let existe = colores.findIndex(x => x.color === color);
+//     let existe = colores.findIndex(x => x.color === color);
     
-    if (existe === -1) {
-        colores.push({ color, tintas: [{tinta:producto.materia_prima.tintas[i].tinta, cantidad:producto.materia_prima.tintas[i].cantidad}] });
-    } else {
-        colores[existe].tintas.push({tinta:producto.materia_prima.tintas[i].tinta, cantidad:producto.materia_prima.tintas[i].cantidad});
-    }
+//     if (existe === -1) {
+//         colores.push({ color, tintas: [{tinta:producto.materia_prima.tintas[i].tinta, cantidad:producto.materia_prima.tintas[i].cantidad}] });
+//     } else {
+//         colores[existe].tintas.push({tinta:producto.materia_prima.tintas[i].tinta, cantidad:producto.materia_prima.tintas[i].cantidad});
+//     }
     
-    console.log(colores);
-}
+//     console.log(colores);
+// }
 
 const colorNumero = {
   'Negro': 1,
@@ -718,7 +722,6 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
         new Table([
           [
             new Cell(new Txt('2.3 Diseño del producto').end).fillColor('#dedede').bold().border([false]).end,
-  
           ],
           [
             new Cell(await new Img(`http://192.168.0.22/api/imagen/producto/${producto.dimensiones.diseno}`).width(400).margin([0, 15]).build()).alignment('center').border([false]).pageBreak('after').end,
@@ -813,32 +816,32 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
 
       for(let i=0;i<producto.materia_prima.sustrato.length;i++){
 
-        pdf.add(
-          new Table([
-            [
-              new Cell(new Txt(producto.materia_prima.sustrato[i].fabricante.alias).end).bold().border([false]).alignment('center').end,
-              new Cell(new Txt(producto.materia_prima.sustrato[i].origen).end).fontSize(8).bold().border([false]).alignment('center').end,
-              new Cell(
-                new Table([
-                  [
-                    new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.calibre.pt.min).end).border([false]).alignment('center').end,
-                    new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.calibre.pt.nom).end).border([false]).alignment('center').end,
-                    new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.calibre.pt.max).end).border([false]).alignment('center').end
-                  ]
-                ]).widths(['33.3%','33.3%','33.3%']).end
-                ).bold().border([false]).end,
-              new Cell(
-                new Table([
-                  [
-                    new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.gramaje.min).end).border([false]).alignment('center').end,
-                    new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.gramaje.nom).end).border([false]).alignment('center').end,
-                    new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.gramaje.max).end).border([false]).alignment('center').end
-                  ]
-                ]).widths(['33.3%','33.3%','33.3%']).end
-              ).bold().border([false]).end,
-            ]
-          ]).widths(['20%','19%','30%','30%']).margin([5,0,0,0]).end
-        )
+       pdf.add(
+         new Table([
+           [
+             new Cell(new Txt(producto.materia_prima.sustrato[i].fabricante.alias).end).bold().border([false]).alignment('center').end,
+             new Cell(new Txt(producto.materia_prima.sustrato[i].origen).end).fontSize(8).bold().border([false]).alignment('center').end,
+             new Cell(
+               new Table([
+                 [
+                   new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.calibre.pt.min).end).border([false]).alignment('center').end,
+                   new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.calibre.pt.nom).end).border([false]).alignment('center').end,
+                   new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.calibre.pt.max).end).border([false]).alignment('center').end
+                 ]
+               ]).widths(['33.3%','33.3%','33.3%']).end
+               ).bold().border([false]).end,
+             new Cell(
+               new Table([
+                 [
+                   new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.gramaje.min).end).border([false]).alignment('center').end,
+                   new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.gramaje.nom).end).border([false]).alignment('center').end,
+                   new Cell(new Txt(producto.materia_prima.sustrato[i].especificacion.gramaje.max).end).border([false]).alignment('center').end
+                 ]
+               ]).widths(['33.3%','33.3%','33.3%']).end
+             ).bold().border([false]).end,
+           ]
+         ]).widths(['20%','19%','30%','30%']).margin([5,0,0,0]).end
+       )
 
       }
 
@@ -892,13 +895,13 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
 
       pdf.add('\n')
 
+      for(let i=0;i<producto.pre_impresion.pelicula.length;i++){
 
-      for(let i=0;i<colores.length;i++){
-        if(colores[i].color != 'Amarillo' && colores[i].color != 'Cyan' && colores[i].color != 'Magenta' && colores[i].color != 'Negro'){
+        if(producto.pre_impresion.pelicula[i].color != 'Amarillo' && producto.pre_impresion.pelicula[i].color != 'Cyan' && producto.pre_impresion.pelicula[i].color != 'Magenta' && producto.pre_impresion.pelicula[i].color != 'Negro'){
           pdf.add(
             new Table([
               [
-                new Cell(new Txt(colores[i].color).end).decoration('underline').decorationStyle('dotted').linkToPage(9).bold().fillColor('#c9c9c9').border([false]).end,
+                new Cell(new Txt(producto.pre_impresion.pelicula[i].color).end).decoration('underline').decorationStyle('dotted').linkToPage(9).bold().fillColor('#c9c9c9').border([false]).end,
               ]
             ]).widths(['100%']).end
           )
@@ -906,37 +909,39 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
           pdf.add(
             new Table([
               [
-                new Cell(new Txt(colores[i].color).end).bold().fillColor('#c9c9c9').border([false]).end,
+                new Cell(new Txt(producto.pre_impresion.pelicula[i].color).end).bold().fillColor('#c9c9c9').border([false]).end,
               ]
             ]).widths(['100%']).end
           )
         }
-      for(let n=0;n<colores[i].tintas.length;n++){
-        if(n === 0){
+        for(let n=0;n<producto.pre_impresion.pelicula[i].tintas.length;n++){
+          if(n === 0){
+            pdf.add(
+              new Table([
+                [
+                  new Cell(new Txt('Nombre').end).bold().fillColor('#f1f1f1').border([false]).end,
+                  new Cell(new Txt('Serie').end).bold().fillColor('#f1f1f1').border([false]).end,
+                  new Cell(new Txt('Marca').end).bold().fillColor('#f1f1f1').border([false]).end,
+                  new Cell(new Txt('Consumo (kg)').end).bold().fillColor('#f1f1f1').border([false]).end
+                ],
+              ]).widths(['25%','25%','25%','25%']).end
+            )
+          }
           pdf.add(
             new Table([
               [
-                new Cell(new Txt('Nombre').end).bold().fillColor('#f1f1f1').border([false]).end,
-                new Cell(new Txt('Serie').end).bold().fillColor('#f1f1f1').border([false]).end,
-                new Cell(new Txt('Marca').end).bold().fillColor('#f1f1f1').border([false]).end,
-                new Cell(new Txt('Consumo (kg)').end).bold().fillColor('#f1f1f1').border([false]).end
-              ],
+                new Cell(new Txt(producto.pre_impresion.pelicula[i].tintas[n].tinta.nombre).end).border([false]).end,
+                new Cell(new Txt(producto.pre_impresion.pelicula[i].tintas[n].tinta.serie).end).border([false]).end,
+                new Cell(new Txt(producto.pre_impresion.pelicula[i].tintas[n].tinta.fabricante.alias).end).border([false]).end,
+                new Cell(new Txt(producto.pre_impresion.pelicula[i].tintas[n].cantidad).end).border([false]).end,
+              ]
             ]).widths(['25%','25%','25%','25%']).end
           )
         }
-        pdf.add(
-          new Table([
-            [
-              new Cell(new Txt(colores[i].tintas[n].tinta.nombre).end).border([false]).end,
-              new Cell(new Txt(colores[i].tintas[n].tinta.serie).end).border([false]).end,
-              new Cell(new Txt(colores[i].tintas[n].tinta.fabricante.alias).end).border([false]).end,
-              new Cell(new Txt(colores[i].tintas[n].cantidad).end).border([false]).end,
-            ]
-          ]).widths(['25%','25%','25%','25%']).end
-        )
+      
       }
-    }
       // PAGINA 4 ******************************
+
       pdf.add(
         new Table([
           [
@@ -1055,7 +1060,7 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
                 ).end
               ).border([false]).end
             ],
-            
+         
             [
               new Cell(new Txt('4.5 Tamaño de sustrato a imprimir / Cantidad de ejemplares').end).fillColor('#dedede').bold().border([false,false,false,false]).end,
             ],
@@ -1137,7 +1142,6 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
                 ]).widths(['45%','25%','30%']).end
               ).border([false]).end
             ]
-  
           ]).widths(['100%']).end
         )
       }else{
@@ -1207,7 +1211,7 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
                 ).end
               ).border([false]).end
             ],
-            
+         
             [
               new Cell(new Txt('4.5 Tamaño de sustrato a imprimir / Cantidad de ejemplares').end).fillColor('#dedede').bold().border([false,false,false,false]).end,
             ],
@@ -1289,7 +1293,6 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
                 ]).widths(['45%','25%','30%']).end
               ).border([false]).end
             ]
-  
           ]).widths(['100%']).end
         )
       }
@@ -1322,8 +1325,7 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
           ],
         ]).widths(['25%','50%','25%']).pageBreak('before').end
       )
-
-      pdf.add(
+    pdf.add(
         new Table([
           [
             new Cell(new Txt(' ').end).border([false]).fontSize(1).end
@@ -1363,7 +1365,7 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
               new Columns(
                 [
                   new Ol(producto.impresion.secuencia[0]).end,
-                  new Ol(producto.impresion.secuencia[1]).end
+                  // new Ol(producto.impresion.secuencia[1]).end
                 ],
               ).end
             ).border([false]).end
@@ -1584,8 +1586,7 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
           [
             new Cell(await new Img(`http://192.168.0.22/api/imagen/producto/${producto.post_impresion.distribucion.paletizado}`).width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
           ]
-
-        ]).widths(['100%']).end
+      ]).widths(['100%']).end
       )
 
       // PAGINA 8 **************************************************************

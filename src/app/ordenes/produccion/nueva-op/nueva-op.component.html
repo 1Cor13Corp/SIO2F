@@ -47,7 +47,7 @@
                     <div class="control">
                         <label for="" class="label">Montaje:</label>
                         <div class="select">
-                            <select [(ngModel)]="OP.montaje">
+                            <select [(ngModel)]="OP.montaje" (change)="calcularHojas()">
                                 <option value="{{i}}" *ngFor="let montaje of [].constructor(ToNumber_(producto.pre_impresion.montajes));index as i">Montaje {{ ShowLetter(i) }}</option>
                             </select>
                         </div>
@@ -100,111 +100,76 @@
                         <tr>
                             <td>{{OP.hojas | number}}</td>
                             <td>{{almacenado | number}}</td>
-                            <td>{{almacenado - OP.hojas | number}}</td>
+                            <td [ngClass]="{'alerta':(almacenado - OP.hojas) < 0}">{{Absolute(almacenado - OP.hojas) | number}}</td>
                         </tr>
                     </tbody>
                 </table>
             </span>
             <span class="content" *ngIf="i === 2">
-                <!-- <div class="select">
-                    <select>
-                        <option value="" *ngFor="let tinta of producto.materia_prima.tintas;index as i"></option>
-                    </select>
-                </div> -->
-
-                <div class="field is-grouped" *ngIf="producto">
-                    <div class="control">
-                        <div class="select">
-                            <select [(ngModel)]="color_selected">
-                                <option value="{{i}}" *ngFor="let tinta of producto.materia_prima.tintas;index as i">{{tinta.tinta.nombre}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="control">
-                        <button class="button" style="background-color: transparent; border:none;color: #3e8ed0;" (click)="agregarColor()">
-                            <span class="icon"><i class="fas fa-plus"></i></span>
-                        </button>
-                    </div>
-                </div>
-                <hr>
-                <div>
-                    <table class="table is-fullwidth">
-                        <thead>
-                            <tr>
-                                <th>Tinta</th>
-                                <th>En almacen</th>
-                                <th>Necesario</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let tinta of tintas_added;index as i">
-                                <td><span class="tinta__" [ngStyle]="{'background-color': tinta.tinta.rgb, 'color': getTextColorFromHex(tinta.tinta.rgb)}">{{tinta.tinta.nombre}}</span></td>
-                                <td></td>
-                                <td>{{calcularTinta(tinta.cantidad)}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <hr>
-                <!-- <div class="field is-grouped">
-                    <div class="control" *ngFor="let tinta of Tintas;index as i">
-                        <div class="pantone-card" *ngIf="tinta[0] != 'P'">
-                            <label class="label pantone-title" *ngIf="tinta[0] === 'A'">Amarillo</label>
-                            <label class="label pantone-title" *ngIf="tinta[0] === 'M'">Magenta</label>
-                            <label class="label pantone-title" *ngIf="tinta[0] === 'C'">Cyan</label>
-                            <label class="label pantone-title" *ngIf="tinta[0] === 'K'">Negro</label>
-                            <span class="pantone-color" [ngStyle]="{'background-color': coloresHex[tinta[0]]}">
-                                <span class="pantone-necesario">{{calcularTinta(i) | number}}</span>
-                            </span>
-                            <span class="pantone-add">
-                                <i class="fa-solid fa-circle-plus green"></i>
-                            </span>
-                        </div>
-                        <ng-container *ngIf="tinta[0] === 'P'">
-                            <div class="pantone-card" *ngFor="let pantone of tinta[1]">
-                                <label class="label pantone-title">{{pantone.codigo}}</label>
-                                
-                                <span class="pantone-color" [ngStyle]="{'background-color': pantone.rgb}">
-                                    <span class="pantone-necesario">{{calcularTinta(i) | number}}</span>
-                                </span>
-                                <span class="pantone-add">
-                                    <i class="fa-solid fa-circle-plus green"></i>
-                                </span>
+                <table class="table is-fullwidth" *ngIf="producto">
+                    <ng-container *ngFor="let colores of producto.pre_impresion.pelicula; index as i">
+                        <tr>
+                          <th class="is-selected">{{colores.color}}</th>
+                        </tr>
+                        <td>
+                          <div class="field is-grouped">
+                            <div class="control">
+                              <div class="select">
+                                <select (change)="onTintaChange(colores.color, $event)">
+                                  <option value="#">Seleccionar Tinta</option>
+                                  <option 
+                                    *ngFor="let tinta of producto.pre_impresion.pelicula[i].tintas"
+                                    [value]="tinta.tinta._id"
+                                    [disabled]="isDisabled(tinta)">
+                                    {{tinta.tinta.nombre}} {{tinta.tinta.serie}} - Necesario: {{Necesario(tinta.cantidad) | number}}kg - En almacen: {{buscarEnAlmacenDirecto(tinta.tinta._id) | number}}kg
+                                  </option>
+                                </select>
+                              </div>
                             </div>
-                        </ng-container>
-                    </div>
-                    <div class="field">
-                        <div class="select">
-                            <select>
-                                <option value="">Tinta 1</option>
-                                <option value="">Tinta 2</option>
-                                <option value="">Tinta 3</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <hr> -->
+                            <div class="control" *ngIf="selectedTintas[colores.color] && !isDisabled({tinta: {tinta: {_id: selectedTintas[colores.color]}}})">
+                              <button class="button" style="background-color: transparent; border:none; color:#48c78e">
+                                <span class="icon"><i class="fas fa-check"></i></span>
+                              </button>
+                            </div>
+                          </div>
+                        </td>
+                      </ng-container>
+                      
+                </table>
+                <hr>
             </span>
             <span class="content" *ngIf="i === 3">
-                <div class="columns">
+                <div class="columns" *ngIf="producto">
                     <div class="column">
                         <span class="barniz">
                             <div class="field">
                                 <div class="control">
                                     <label for="" class="label">Barnices aprobados:</label>
                                     <div class="select">
-                                        <select>
-                                            <option value="">Barniz aprobado 1</option>
-                                            <option value="">Barniz aprobado 2</option>
-                                            <option value="">Barniz aprobado 3</option>
+                                        <select (change)="CalcularBarniz($event.target)">
+                                            <option value="#">Seleccione Barniz</option>
+                                            <option value="{{i}}" *ngFor="let barniz of producto.materia_prima.barnices;index as i">{{barniz.barniz.nombre}}</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <span class="informacion-barniz">
-                                7,8kg Necesarios <i class="fa-solid fa-check green"></i>
-                            </span>
                         </span>
+                        <table class="table is-full-width" *ngIf="barniz_selected">
+                            <thead>
+                                <tr>
+                                    <th>Necesario:</th>
+                                    <th>En almacen:</th>
+                                    <th>Restante:</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{Necesario(barniz_selected.cantidad) | number}}</td>
+                                    <td>{{buscarEnAlmacenDirecto(barniz_selected.barniz._id) | number}}</td>
+                                    <td [ngClass]="{'alerta':(buscarEnAlmacenDirecto(barniz_selected.barniz._id) - Necesario(barniz_selected.cantidad)) < 0}">{{Absolute(buscarEnAlmacenDirecto(barniz_selected.barniz._id) - Necesario(barniz_selected.cantidad)) | number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="column">
                         <span class="title titulo-absoluto">Pegamento</span>
@@ -212,28 +177,43 @@
                             <div class="control">
                                 <label for="" class="label">Pegamentos aprobados:</label>
                                 <div class="select">
-                                    <select>
-                                        <option value="">Pegamento aprobado 1</option>
-                                        <option value="">Pegamento aprobado 2</option>
-                                        <option value="">Pegamento aprobado 3</option>
-                                    </select>
+                                    <div class="select">
+                                        <select (change)="CalcularPega($event.target)">
+                                            <option value="#">Seleccione pega</option>
+                                            <option value="{{i}}" *ngFor="let pega of producto.post_impresion.pegamento;index as i">{{pega.pega.nombre}}</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <span class="informacion-barniz formulario-pegamento">
-                            7,8kg Necesarios <i class="fa-solid fa-check green"></i>
-                        </span>
+                        <br>
+                        <table class="table is-full-width" *ngIf="pega_selected">
+                            <thead>
+                                <tr>
+                                    <th>Necesario:</th>
+                                    <th>En almacen:</th>
+                                    <th>Restante:</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{Necesario(pega_selected.cantidad) | number}}</td>
+                                    <td>{{buscarEnAlmacenDirecto(pega_selected.pega._id) | number}}</td>
+                                    <td [ngClass]="{'alerta':(buscarEnAlmacenDirecto(pega_selected.pega._id) - Necesario(pega_selected.cantidad)) < 0}">{{Absolute(buscarEnAlmacenDirecto(pega_selected.pega._id) - Necesario(pega_selected.cantidad)) | number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </span>
             <span class="content" *ngIf="i === 4" style="color: black;">
-                <div class="columns">
+                <div class="columns" *ngIf="producto">
                     <div class="column">
                         <strong class="gilroy">Cajas corrugadas</strong>
-                        <input type="text" class="input" value="Caja Nº 9" disabled>
-                        550Und / Caja. <strong class="gilroy">Total:</strong> 19 caja(s) <br>
+                        <input type="text" class="input" value="{{producto.post_impresion.caja.nombre}}" disabled>
+                        {{producto.post_impresion.caja.cabida[0]}}Und / Caja. <strong class="gilroy">Total:</strong> {{calcularCajas(producto.post_impresion.caja.cabida[0]) | number}} caja(s) <br>
                         <strong class="gilroy">Cinta de embalaje:</strong> <br>
-                        328mts. <strong class="gilroy">Total:</strong> 4 rollos.
+                        {{CalcularMetros(producto.post_impresion.caja.nombre) * calcularCajas(producto.post_impresion.caja.cabida[0]) | number}} mts. <strong class="gilroy">Total:</strong> {{(CalcularMetros(producto.post_impresion.caja.nombre) * calcularCajas(producto.post_impresion.caja.cabida[0])) / 100}}  rollos.
                     </div>
                     <div class="column">
                         <strong class="gilroy">Pads</strong>
@@ -252,10 +232,10 @@
             </span>
             <span class="content" *ngIf="i === 5">
 
-            <div class="columns">
+            <div class="columns" *ngIf="producto">
                 <div class="column">
                 <span class="subtitles">Aprobadas</span> <br>
-                    <div class="idea titulo" *ngFor="let maquina of maquinas.maquinas;index as x">
+                    <div class="idea titulo" *ngFor="let maquina of producto.impresion.impresoras;index as x">
                         <div class="columns">
                             <div class="column is-4 maquina maquina-name" (click)="selectIdea(maquina)">
                                 {{ maquina.nombre }}
@@ -265,18 +245,46 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="idea" *ngFor="let maquina of maquinas.maquinas;index as x">
-                    <div class="columns">
-                        <div class="column is-2">
-                        <div class="titulo" >{{ maquina.nombre }}({{x}})</div>
-                        </div>
-                        <div class="column">
-                        <span class="opciones" *ngIf="selectedIdea === maquina">
-                            <div class="sub-titulo" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y)">{{ fase.nombre }} <i class="fa-solid fa-circle-plus blue_"></i></div>
-                        </span>
+                    <div class="idea titulo" *ngFor="let maquina of producto.post_impresion.troqueladora;index as x">
+                        <div class="columns">
+                            <div class="column is-4 maquina maquina-name" (click)="selectIdea(maquina)">
+                                {{ maquina.nombre }}
+                            </div>
+                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y)">
+                                {{ fase.nombre }}
+                            </div>
                         </div>
                     </div>
-                    </div> -->
+                    <div class="idea titulo" *ngFor="let maquina of producto.post_impresion.guillotina;index as x">
+                        <div class="columns">
+                            <div class="column is-4 maquina maquina-name" (click)="selectIdea(maquina)">
+                                {{ maquina.nombre }}
+                            </div>
+                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y)">
+                                {{ fase.nombre }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="idea titulo" *ngFor="let maquina of producto.post_impresion.pegadora;index as x">
+                        <div class="columns">
+                            <div class="column is-4 maquina maquina-name" (click)="selectIdea(maquina)">
+                                {{ maquina.nombre }}
+                            </div>
+                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y)">
+                                {{ fase.nombre }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="idea titulo" *ngFor="let maquina of producto.post_impresion.otros;index as x">
+                        <div class="columns">
+                            <div class="column is-4 maquina maquina-name" (click)="selectIdea(maquina)">
+                                {{ maquina.nombre }}
+                            </div>
+                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y)">
+                                {{ fase.nombre }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="column">
                     <span class="subtitles">A utilizar</span> <br>
@@ -287,78 +295,7 @@
 
                 </div>
             </div>
-  
-
                   <hr>
-
-                <!-- <div class="columns">
-                    <div class="column">
-                        <span class="subtitles">Maquinas</span>
-                        <div cdkDropList
-                         #maquinas_="cdkDropList" 
-                         [cdkDropListData]="maquinas.maquinas"
-                         [cdkDropListConnectedTo]="[needed]"
-                         (cdkDropListDropped)="onDrop($event)" class="maquinas">
-                            <div *ngFor="let maquina of maquinas.maquinas" cdkDrag class="item">{{ maquina.nombre }}</div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <span class="subtitles">Maquinas a utilizar:</span>
-                        <div cdkDropList 
-                        [cdkDropListConnectedTo]="[maquinas_]" 
-                        [cdkDropListData]="maquinasDestino"
-                        #needed = "cdkDropList" 
-                        (cdkDropListDropped)="onDrop($event)"
-                        class="maquinas-need">
-                          <div *ngFor="let maquina of maquinasDestino" cdkDrag class="item">{{ maquina.nombre }}</div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <span class="subtitles">Fases de la orden:</span>
-                        <ng-container *ngFor="let maquina of maquinasDestino; let i = index">
-                            <ng-container *ngFor="let fase of maquina.fases; let j = index">
-                                <span class="tag is-success" *ngIf="!fase.borrado">
-                                    {{ maquina.nombre }} - {{ fase.nombre }}
-                                    <button class="delete is-small" (click)="eliminarFase(i,j)"></button>
-                                </span>
-                                <span class="tag is-danger" *ngIf="fase.borrado">
-                                    {{ maquina.nombre }} - {{ fase.nombre }}
-                                    <button class="delete is-small" (click)="eliminarFase(i,j)"></button>
-                                </span>
-                                <br>
-                            </ng-container>
-                        </ng-container>
-                    </div>
-                </div>
-                <div>
-                    <label for="" class="label">Impresora 4 Colores:</label>
-                     <span class="timeline">
-                        <span class="process" [style.background-color]="getColor(0)">
-                            2024090 <br> 
-                        01/06/2024 - 06/06/2024
-                        </span>
-                        <span class="process" [style.background-color]="getColor(1)">
-                            2024092 <br> 
-                        06/06/2024 - 09/06/2024
-                        </span>
-                        <span class="process" [style.background-color]="getColor(2)">
-                            2024093 <br> 
-                        10/06/2024 - 12/06/2024
-                        </span>
-                    </span>
-                    <br>
-                    <label for="" class="label">Pegadora:</label>
-                    <span class="timeline">
-                        <span class="process" [style.background-color]="getColor(0)">
-                            2024090 <br> 
-                        01/06/2024 - 06/06/2024
-                        </span>
-                        <span class="process" [style.background-color]="getColor(1)">
-                            2024092 <br> 
-                        06/06/2024 - 09/06/2024
-                        </span>
-                    </span>
-                </div> -->
             </span>
             <span style="overflow-x: scroll; display: block;">
                 <span class="content" *ngIf="i === 6">
@@ -398,21 +335,23 @@
                                                     <label class="label"> </label>
                                                     <button class="button is-small" style="background-color: transparent;border: none;color: #48c78e;font-family: 'Gilroy'; margin-top: -35px;font-size: large;" (click)="ShowToolTip(x, i, n)">
                                                         <span class="icon">
-                                                            <i class="fa-solid fa-check"></i>
+                                                            <i class="fas fa-check"></i>
                                                         </span>
                                                     </button> <br>
                                                     <button class="button is-small" style="background-color: transparent;border: none;color: #3e8ed0;font-family: 'Gilroy'; margin-top: -30px;font-size: large;" (click)="returnData(x, i, n)">
                                                         <span class="icon">
-                                                            <i class="fa-solid fa-rotate-left"></i>
+                                                            <i class="fas fa-undo"></i>
                                                         </span>
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <span style="font-size: xx-small;margin-top:15px">
+                                        <span style="margin-top:-20px; cursor:pointer" (click)="ShowToolTip(x, i, n)">
+                                            <br>
                                             {{medidas[x].fases[i].inicio[n]}} - {{medidas[x].fases[i].fin[n]}}
+                                            <br>
                                         </span> <br>
-                                        <i class="fa-regular fa-clock time_clock" (click)="ShowToolTip(x, i, n)"></i>
+                                        <!-- <i class="fas fa-clock" ></i> -->
                                     </span>
                                 </div>
     

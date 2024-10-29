@@ -6,6 +6,8 @@ import { CdkDragDrop, CdkDragEnd, CdkDragMove, CdkDragStart, moveItemInArray, tr
 import { ResizeEvent } from 'angular-resizable-element';
 import * as moment from 'moment'
 import { AlmacenService } from 'src/app/services/almacen.service';
+import { MaterialesService } from 'src/app/services/materiales.service';
+import { HorariosService } from 'src/app/services/horarios.service';
 
 @Component({
   selector: 'app-nueva-op',
@@ -22,7 +24,9 @@ export class NuevaOPComponent implements OnInit{
               public clientes:ClientesService,
               public oc:OcompraService,
               public maquinas:MaquinasService,
-              public almacen:AlmacenService
+              public almacen:AlmacenService,
+              public materiales:MaterialesService,
+              public horarios:HorariosService
   ){
 
 
@@ -80,7 +84,7 @@ export class NuevaOPComponent implements OnInit{
     {title: 'Barniz', content: 'Contenido 1'},
     {title: 'Embalaje', content: 'Contenido 1'},
     {title: 'Maquinas', content: 'Contenido 1'},
-    {title: 'Fases', content: 'Contenido 1'},
+    {title: 'Planificación', content: 'Contenido 1'},
     {title: 'Adicional', content: 'Contenido 1'},
     // Agrega más tarjetas según sea necesario
   ];
@@ -133,8 +137,49 @@ agregarColor(){
   console.log(this.tintas_added)
 }
 
+selectedTintas: { [key: string]: boolean } = {};
+
+onTintaChange(tintaId: string, event: Event) {
+  const selected = (event.target as HTMLSelectElement).value !== '#';
+  this.selectedTintas[tintaId] = selected;
+}
+
+public barniz_selected;
+CalcularBarniz(e){
+  if(e.value != '#'){
+    this.barniz_selected = this.producto.materia_prima.barnices[e.value];
+    console.log(this.barniz_selected)
+  }
+}
+
+public pega_selected;
+CalcularPega(e){
+  if(e.value != '#'){
+    this.pega_selected = this.producto.post_impresion.pegamento[e.value];
+    console.log(this.pega_selected)
+  }
+}
+
+calcularCajas(cabida){
+  return Math.ceil(this.OP.cantidad / cabida)
+}
+
 BuscarEnAlmacen(e){
   this.almacenado = this.almacen.BuscarCantidadEnAlmacen(e.value)
+}
+
+buscarEnAlmacenDirecto(e){
+  return this.almacen.BuscarCantidadEnAlmacen(e)
+}
+
+isDisabled(tinta: any): boolean {
+  const necesario = this.Necesario(tinta.cantidad);
+  const enAlmacen = this.buscarEnAlmacenDirecto(tinta.tinta._id);
+  return necesario > enAlmacen;
+}
+
+Necesario(cantidad){
+  return (cantidad / 1000) * (this.OP.hojas + this.OP.demasia);
 }
 
 ToNumber_(number){
@@ -147,6 +192,10 @@ calcularHojas(){
   this.OP.hojas = Math.ceil(this.OP.cantidad / this.producto.pre_impresion.tamano_sustrato.montajes[this.OP.montaje].ejemplares)
   
 
+}
+
+Absolute(n){
+  return Math.abs(n)
 }
 
 calcularTinta(cantidad){
@@ -226,8 +275,10 @@ getColor(index: number): string {
     this.Ordenes = this.oc.buscarPorCliente(this.OP.cliente);
   }
 
+  public OC_SELECTED
   findProducts(){
     let orden = this.Ordenes.find((x:any)=> x._id === this.OP.oc)
+    this.OC_SELECTED = orden;
     this.productos = orden.pedido;
   }
 
@@ -317,6 +368,11 @@ crearLargos(maquinasDestino) {
     }
   }
 
+  CalcularMetros(nombre){
+    let cinta = this.materiales.buscarCajasYmetros(nombre).cinta;
+    return cinta
+  }
+
   mostrarProducto(e){
     this.producto = this.productos[e.value].producto
     
@@ -339,6 +395,9 @@ crearLargos(maquinasDestino) {
            this.Tintas = arregloCategorizado;
 
            console.log(this.Tintas)
+
+           this.OP.cantidad = this.OC_SELECTED.pedido[e.value].cantidad
+           this.calcularHojas();
 
   }
 

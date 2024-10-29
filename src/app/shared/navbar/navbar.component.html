@@ -71,10 +71,11 @@
             <ul class="menu-list">
                 <li>
                     <a (click)="showEmpresa()" [ngClass]="{'is-active':router.url == '/empresa'}">Empresa</a>
-                    <ul *ngIf="empresa || router.url == '/empresa/departamentos' || router.url == '/empresa/cargos' || router.url == '/empresa/empleados'">
+                    <ul *ngIf="empresa || router.url == '/empresa/departamentos' || router.url == '/empresa/cargos' || router.url == '/empresa/empleados' || router.url == '/empresa/horarios'">
                         <li> <a [ngClass]="{'is-active':router.url == '/empresa/departamentos'}" routerLink="/empresa/departamentos">Departamentos</a></li>
                         <li> <a [ngClass]="{'is-active':router.url == '/empresa/cargos'}" routerLink="/empresa/cargos">Cargos</a></li>
                         <li> <a [ngClass]="{'is-active':router.url == '/empresa/empleados'}" routerLink="/empresa/empleados">Empleados</a></li>
+                        <li> <a [ngClass]="{'is-active':router.url == '/empresa/horarios'}" routerLink="/empresa/horarios">Horarios</a></li>
                     </ul>
                 </li>
             </ul>
