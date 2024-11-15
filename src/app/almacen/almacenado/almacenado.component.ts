@@ -25,6 +25,7 @@ export class AlmacenadoComponent {
     }
 
     detallar = async(id:any)=>{
+      console.log(id)
       const sumByMaterialId:any = []
       this.Inventario = true;
       this.listado = this.api.BuscarPorGrupo(id);

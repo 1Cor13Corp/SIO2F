@@ -74,7 +74,7 @@
                                 <table class="table is-fullwidth is-striped">
                                     <tbody>
                                         <tr *ngFor="let material of formula.formula">
-                                            <td>{{material.material.nombre}}</td>
+                                            <td>{{material.material.nombre}} {{material.material.serie}} ({{material.material.fabricante.alias}})</td>
                                             <td>{{material.cantidad}}kg</td>
                                         </tr>
                                     </tbody>

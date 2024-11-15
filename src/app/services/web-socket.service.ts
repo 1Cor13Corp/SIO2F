@@ -10,7 +10,7 @@ import io from 'socket.io-client'
 
 export class WebSocketService {
 
-  io = io('http://192.168.0.22:80', {
+  io = io('https://192.168.0.22:443', {
     transports: ['websocket'],
     withCredentials: true,
     autoConnect: true

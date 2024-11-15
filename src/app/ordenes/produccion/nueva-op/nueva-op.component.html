@@ -1,12 +1,12 @@
-<div class="modal is-active">
+<div class="modal" [ngClass]="{'is-active':nueva}">
     <div class="modal-background"></div>
-    <div class="modal-content longer">
+    <div class="modal-content longer" *ngIf="nueva">
       <div class="card" *ngFor="let card of cards; let i = index" [style.display]="i === currentIndex ? 'block' : 'none'">
         <div class="modal-card-head">
             <p class="modal-card-title fuente">
                 Nueva Orden de producción
             </p>
-            <button class="delete red_cross" aria-label="close"></button>
+            <button class="delete red_cross" aria-label="close" (click)="onCloseModal.emit()"></button>
             <label for="" class="label">.</label>
         </div>
         <div class="card-content">
@@ -40,7 +40,7 @@
                     </div>
                     <div class="control">
                         <label class="label">Fecha Solicitada:</label>
-                        <input type="date" class="input">
+                        <input type="date" class="input" [(ngModel)]="OP.solicitud">
                     </div>
                 </div>
                 <div class="field is-grouped" *ngIf="producto">
@@ -53,9 +53,15 @@
                         </div>
                     </div>
                     <div class="control">
+                        <label for="" class="label">Ejemplares:</label>
+                        <input type="number" class="input" [(ngModel)]="OP.ejemplares" min="1" (input)="calcularHojas_()">
+                    </div>
+                    <div class="control">
                         <label class="label">Cantidad (Producto):</label>
                         <input type="number" class="input" [(ngModel)]="OP.cantidad" (change)="calcularHojas()">
                     </div>
+                </div>
+                <div class="field is-grouped">
                     <div class="control">
                         <label class="label">Hojas:</label>
                         <input type="number" class="input short" disabled [value]="OP.hojas + OP.demasia">
@@ -68,9 +74,6 @@
                         <label class="label">Demasia (%):</label>
                         <input type="number" class="input short" [value]="calcularDesmasia()" disabled>
                     </div>
-                </div>
-                <div class="field is-grouped">
-                    
                     <!-- <div class="control">
                         <label for="" class="label">.</label>
                         <input type="checkbox" name="" id=""> Estándar de colores
@@ -82,7 +85,7 @@
                     <div class="control" *ngIf="producto">
                         <label class="label">Sustrato:</label>
                         <div class="select">
-                            <select [(ngModel)]="OP.sustrato" (change)="BuscarEnAlmacen($event.target)">
+                            <select [(ngModel)]="OP.sustrato.sustrato" (change)="BuscarEnAlmacen($event.target)">
                                 <option value="{{sustrato._id}}" *ngFor="let sustrato of producto.materia_prima.sustrato">{{sustrato.nombre}} ({{sustrato.serie}}) {{sustrato.origen}} {{sustrato.gramaje}}g {{sustrato.calibre}}pt</option>
                             </select>
                         </div>
@@ -98,9 +101,9 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{OP.hojas | number}}</td>
+                            <td>{{(OP.hojas + OP.demasia)| number}}</td>
                             <td>{{almacenado | number}}</td>
-                            <td [ngClass]="{'alerta':(almacenado - OP.hojas) < 0}">{{Absolute(almacenado - OP.hojas) | number}}</td>
+                            <td [ngClass]="{'alerta':(almacenado - (OP.hojas + OP.demasia)) < 0}">{{Absolute(almacenado - (OP.hojas + OP.demasia)) | number}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -119,7 +122,7 @@
                                   <option value="#">Seleccionar Tinta</option>
                                   <option 
                                     *ngFor="let tinta of producto.pre_impresion.pelicula[i].tintas"
-                                    [value]="tinta.tinta._id"
+                                    value="{{i}}_{{tinta.tinta._id}}_{{tinta.cantidad}}"
                                     [disabled]="isDisabled(tinta)">
                                     {{tinta.tinta.nombre}} {{tinta.tinta.serie}} - Necesario: {{Necesario(tinta.cantidad) | number}}kg - En almacen: {{buscarEnAlmacenDirecto(tinta.tinta._id) | number}}kg
                                   </option>
@@ -240,7 +243,7 @@
                             <div class="column is-4 maquina maquina-name" (click)="selectIdea(maquina)">
                                 {{ maquina.nombre }}
                             </div>
-                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y)">
+                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y, maquina)">
                                 {{ fase.nombre }}
                             </div>
                         </div>
@@ -250,7 +253,7 @@
                             <div class="column is-4 maquina maquina-name" (click)="selectIdea(maquina)">
                                 {{ maquina.nombre }}
                             </div>
-                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y)">
+                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y, maquina)">
                                 {{ fase.nombre }}
                             </div>
                         </div>
@@ -260,7 +263,7 @@
                             <div class="column is-4 maquina maquina-name" (click)="selectIdea(maquina)">
                                 {{ maquina.nombre }}
                             </div>
-                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y)">
+                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y, maquina)">
                                 {{ fase.nombre }}
                             </div>
                         </div>
@@ -270,7 +273,7 @@
                             <div class="column is-4 maquina maquina-name" (click)="selectIdea(maquina)">
                                 {{ maquina.nombre }}
                             </div>
-                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y)">
+                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y, maquina)">
                                 {{ fase.nombre }}
                             </div>
                         </div>
@@ -280,7 +283,7 @@
                             <div class="column is-4 maquina maquina-name" (click)="selectIdea(maquina)">
                                 {{ maquina.nombre }}
                             </div>
-                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y)">
+                            <div class="column maquina fases-type" [ngClass]="{'no-hide':selectedIdea === maquina}" *ngFor="let fase of maquina.fases;index as y" (click)="DropMaquina(x,y, maquina)">
                                 {{ fase.nombre }}
                             </div>
                         </div>
@@ -290,7 +293,7 @@
                     <span class="subtitles">A utilizar</span> <br>
 
                     <div class="idea" *ngFor="let maquina of maquinasDestino;index as x">
-                        <div class="titulo_" ><span class="color-page" [style.background-color]="colores[x]"></span>{{maquina.fases[0].nombre}} ({{ maquina.nombre }})<span class="delete_icon" (click)="deleteFromUsar(x)"><i class="fa-solid fa-trash-can red"></i></span></div>
+                        <div class="titulo_" ><span class="color-page" [style.background-color]="colores[x]"></span>{{maquina.fases[0].nombre}} ({{ maquina.nombre }})<span class="delete_icon" (click)="deleteFromUsar(x)"><i class="fas fa-trash-alt red"></i></span></div>
                     </div>
 
                 </div>
@@ -301,7 +304,7 @@
                 <span class="content" *ngIf="i === 6">
                     <div class="calendar">
                         <div class="calendar-day day-info" style="min-width: 110px; max-width:110px;"></div>
-                        <div *ngFor="let day of generateDates(); let i = index" class="calendar-day day-info" [ngClass]="{'gray-tenue': i % 2 == 0}" style="min-width: 110px; max-width:110px;">
+                        <div *ngFor="let day of generateDates(); let i = index" class="calendar-day day-info" [ngClass]="{'gray-tenue': i % 2 == 0, 'no-laboral': formatearFecha_(generateDates()[i-1]) === 'No laboral'}" style="min-width: 110px; max-width:110px;">
                           {{ formatearFecha(generateDates()[i-1]) }}
                         </div>
                       </div>
@@ -325,15 +328,15 @@
                                             <div class="field is-grouped">
                                                 <div class="control">
                                                     <label for="" class="label">Inicio</label>
-                                                    <input type="time" class="input is-small" min="07:00:00" [(ngModel)]="medidas[x].fases[i].inicio[n]">
+                                                    <input type="time" class="input is-small" min="07:00:00" [value]="medidas[x].fases[i].inicio[n]" #inicio>
                                                 </div>
                                                 <div class="control">
                                                     <label for="" class="label">Fin</label>
-                                                    <input type="time" class="input is-small" min="07:00:00" [(ngModel)]="medidas[x].fases[i].fin[n]">
+                                                    <input type="time" class="input is-small" min="07:00:00" [value]="medidas[x].fases[i].fin[n]" #fin>
                                                 </div>
                                                 <div class="control">
                                                     <label class="label"> </label>
-                                                    <button class="button is-small" style="background-color: transparent;border: none;color: #48c78e;font-family: 'Gilroy'; margin-top: -35px;font-size: large;" (click)="ShowToolTip(x, i, n)">
+                                                    <button class="button is-small" style="background-color: transparent;border: none;color: #48c78e;font-family: 'Gilroy'; margin-top: -35px;font-size: large;" (click)="ShowToolTip(x, i, n, inicio.value, fin.value)">
                                                         <span class="icon">
                                                             <i class="fas fa-check"></i>
                                                         </span>
@@ -347,9 +350,13 @@
                                             </div>
                                         </div>
                                         <span style="margin-top:-20px; cursor:pointer" (click)="ShowToolTip(x, i, n)">
-                                            <br>
-                                            {{medidas[x].fases[i].inicio[n]}} - {{medidas[x].fases[i].fin[n]}}
-                                            <br>
+                                            
+                                            <span style="position: relative; top: 15px;" *ngIf="NoCaeFeriado(CalcularPosicion(x,i,n))">
+                                                {{medidas[x].fases[i].inicio[n]}} - {{medidas[x].fases[i].fin[n]}}
+                                            </span>
+                                            <span style="position: relative; top: 15px;" *ngIf="!NoCaeFeriado(CalcularPosicion(x,i,n))">
+                                                <i class="fas fa-ban"></i>
+                                            </span>
                                         </span> <br>
                                         <!-- <i class="fas fa-clock" ></i> -->
                                     </span>
@@ -365,7 +372,7 @@
                                 {{medidas[x].fases[i].fecha | date:'dd/MM/yyyy'}} - {{medidas[x].fases[i].final | date:'dd/MM/yyyy'}}
                             </span>
                             </div>
-                            <div *ngFor="let day of generateDates(); let i = index" class="calendar-day day-info" [ngClass]="{'gray-tenue': i % 2 == 0}" style="min-width: 110px; max-width:110px;max-height: 30px;min-height: 30px;">
+                            <div *ngFor="let day of generateDates(); let i = index" class="calendar-day day-info" [ngClass]="{'gray-tenue': i % 2 == 0, 'no-laboral':!NoCaeFeriado(i)}" style="min-width: 110px; max-width:110px;max-height: 30px;min-height: 30px;">
                                 
                             </div>
                         </div>
@@ -404,7 +411,7 @@
                     
                     <hr>
                     <button class="button is-success" (click)="GuardarTrabajo()">
-                        <span class="icon"><i class="fa-regular fa-floppy-disk"></i></span>
+                        <span class="icon"><i class="fas fa-save"></i></span>
                         <span>Guardar</span>
                     </button>
                 </span>

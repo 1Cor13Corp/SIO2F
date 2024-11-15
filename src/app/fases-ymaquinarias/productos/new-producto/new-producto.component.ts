@@ -186,7 +186,7 @@ export class NewProductoComponent {
   openImage(imageName,imageAlt){
     Swal.fire({
       showConfirmButton:false,
-      imageUrl: `http://192.168.0.22/api/imagen/producto/${imageName}`,
+      imageUrl: `https://192.168.0.22/api/imagen/producto/${imageName}`,
       imageAlt: imageAlt
     });
   }
@@ -826,7 +826,7 @@ export class NewProductoComponent {
   
           ],
           [
-            new Cell(await new Img('http://192.168.0.22/api/imagen/producto/PRODUCTO_2_4_2024_15_42_39_494.png').width(450).margin([0, 15]).build()).alignment('center').border([false]).pageBreak('after').end,
+            new Cell(await new Img('https://192.168.0.22/api/imagen/producto/PRODUCTO_2_4_2024_15_42_39_494.png').width(450).margin([0, 15]).build()).alignment('center').border([false]).pageBreak('after').end,
           ]
         ]).widths(['100%']).end
       )
@@ -1510,8 +1510,8 @@ export class NewProductoComponent {
             new Cell(
               new Columns(
                 [
-                  new Cell(await new Img('http://192.168.0.23:8080/api/imagen/aereo/62266c741c1b1805b8ad24a0-434.png').width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
-                  new Cell(await new Img('http://192.168.0.23:8080/api/imagen/distribucion/62266c741c1b1805b8ad24a0-478.png').width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
+                  new Cell(await new Img('https://192.168.0.23:8080/api/imagen/aereo/62266c741c1b1805b8ad24a0-434.png').width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
+                  new Cell(await new Img('https://192.168.0.23:8080/api/imagen/distribucion/62266c741c1b1805b8ad24a0-478.png').width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
                 ],
               ).end
             ).border([false]).end
@@ -1538,7 +1538,7 @@ export class NewProductoComponent {
             new Cell(new Txt('Peletizado aprobado').end).fillColor('#f1f1f1').bold().border([false,false,false,false]).end,
           ],
           [
-            new Cell(await new Img('http://192.168.0.23:8080/api/imagen/despacho/62266c741c1b1805b8ad24a0-959.png').width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
+            new Cell(await new Img('https://192.168.0.23:8080/api/imagen/despacho/62266c741c1b1805b8ad24a0-959.png').width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
           ]
 
         ]).widths(['100%']).end

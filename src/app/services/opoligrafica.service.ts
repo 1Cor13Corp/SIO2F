@@ -43,9 +43,6 @@ export class OpoligraficaService {
           }
         }
       });
-    
-      console.log(`Órdenes del mes actual: ${this.ordenesMesActual}`);
-      console.log(`Órdenes del año actual: ${this.ordenesAnoActual}`);
     });
 
     this.socket.io.on('SERVIDOR:enviaMensaje', (data) => {

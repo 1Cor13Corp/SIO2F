@@ -17,6 +17,7 @@ export class NuevoMaterialComponent implements OnInit{
   public selected_tinta:boolean = false;
   public selected_pantone:boolean = false;
   public selected_cajas:boolean = false;
+  public selected_envases:boolean = false;
 
   @Input() nuevo_material:any;
   @Input() cargando!:boolean;
@@ -35,6 +36,7 @@ export class NuevoMaterialComponent implements OnInit{
   public rgb:string = '';
   public modelo:string = '';
   public cinta:string = '';
+  public capacidad:string = '';
 
 
   constructor(public grupos:GruposService,
@@ -81,6 +83,12 @@ export class NuevoMaterialComponent implements OnInit{
       }else{
         this.selected_cajas = false;
       }
+      if(this.grupos.grupos[e.value].nombre === 'Envases'){
+        this.selected_envases = true;
+      }else{
+        this.selected_envases = false;
+      }
+
     }
 
     select_color(e:any){
@@ -123,6 +131,7 @@ export class NuevoMaterialComponent implements OnInit{
       this.modelo = '';
       this.rgb = '';
       this.cinta = '';
+      this.capacidad = ''
       this.onCloseModal_.emit();
     }
     
@@ -141,7 +150,8 @@ export class NuevoMaterialComponent implements OnInit{
         nombre:this.nombre,
         modelo:this.modelo,
         rgb:this.rgb,
-        cinta:this.cinta
+        cinta:this.cinta,
+        capacidad:this.capacidad
       }
 
       this.api.nuevoMaterial(data)

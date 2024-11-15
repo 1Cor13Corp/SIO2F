@@ -15,7 +15,7 @@ export class SubirArchivosService {
   ) {
     try{
       
-      const url = `http://192.168.0.22/api/upload/${tipo}/${id}`;
+      const url = `https://192.168.0.22/api/upload/${tipo}/${id}`;
       const formData = new FormData(); 
       formData.append('archivo', archivo);
 

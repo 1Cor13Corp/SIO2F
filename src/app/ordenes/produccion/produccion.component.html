@@ -1,4 +1,6 @@
-<app-nueva-op>
+<app-nueva-op
+[nueva]="nueva"
+(onCloseModal)="nueva = false">
 
 </app-nueva-op>
 <div class="container_ mt-5">
@@ -19,152 +21,261 @@
                 </div>
             </div>
             <br>
-            <div class="card">
+            <button class="button is-info" (click)="nueva = true">
+                <span class="icon"><i class="fas fa-plus-circle"></i></span>
+                <span>Orden</span>
+            </button>
+            <br><br>
+            <div class="columns">
+                <div class="column">
+                    <div class="card" style="height: 400px;overflow-y: scroll;">
+                        <div class="card-content">
+                            <span class="title">Órdenes activas</span>
+                            <table class="table is-fullwidth is-striped">
+                                <thead>
+                                    <tr>
+                                        <th>OP</th>
+                                        <th>Producto</th>
+                                        <th>Cliente</th>
+                                        <th>Solicitud</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let orden of api.orden">
+                                        <td style="font-family: 'Gilroy';">{{orden.numero_op}}</td>
+                                        <td>{{orden.producto[0].identificacion.producto}}</td>
+                                        <td>{{orden.cliente.nombre}}</td>
+                                        <td>{{orden.solicitud | date:'dd/MM/yyyy'}}</td>
+                                        <td>
+                                            <button class="button" style="border: none;background: transparent;">
+                                                <span class="icon">
+                                                    <i class="fas fa-info-circle blue_"></i>
+                                                </span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-4">
+                    <div class="card tags">
+                        <div class="card-content ty orange">
+                            <div class="columns">
+                                <div class="column is-2">
+                                    <span class="number_">
+                                        <h1>{{api.orden.length}}</h1>
+                                    </span>
+                                </div>
+                                <div class="column is-2">
+                                    <span class="fina">Órdenes</span> <br>
+                                </div>
+                                <div class="column">
+                                    <span class="Detalle">
+                                        Activas
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="position__">
+                            <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                            viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                              <defs>
+                                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                              </defs>
+                              <g class="moving-waves">
+                                <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.25)" />
+                                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.20)" />
+                                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0)" />
+                                <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.10)" />
+                                <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.05)" />
+                                <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0)" />
+                              </g>
+                            </svg>
+                          </div>
+                    </div>
+
+                    <div class="card mt-5 tags">
+                        <div class="card-content ty green__">
+                            <div class="columns">
+                                <div class="column is-2">
+                                    <span class="number_">
+                                        <h1>{{api.orden.length}}</h1>
+                                    </span>
+                                </div>
+                                <div class="column is-2">
+                                    <span class="fina">Órdenes</span> <br>
+                                    <span class="gruesa">Año</span>
+                                </div>
+                                <div class="column">
+                                    <span class="Detalle">
+                                        {{anoActual}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="position__">
+                            <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                            viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                              <defs>
+                                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                              </defs>
+                              <g class="moving-waves">
+                                  <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.20)" />
+                                <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.25)" />
+                                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0)" />
+                                <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.10)" />
+                                <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0)" />
+                                <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.05)" />
+                              </g>
+                            </svg>
+                          </div>
+                    </div>
+
+                    <div class="card mt-5 tags">
+                        <div class="card-content ty blue___">
+                            <div class="columns info_">
+                                <div class="column is-2">
+                                    <span class="number_">
+                                        <h1>0</h1>
+                                    </span>
+                                </div>
+                                <div class="column is-2">
+                                    <span class="fina">Ordenes</span> <br>
+                                    <!-- <span class="gruesa">Dia(s)</span> -->
+                                </div>
+                                <div class="column">
+                                    <span class="Detalle">
+                                        Cerradas
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="position_" style="margin-left: -30px;">
+                                <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                                  <defs>
+                                    <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                                  </defs>
+                                  <g class="moving-waves">
+                                    <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.25)" />
+                                    <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.20)" />
+                                    <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0)" />
+                                    <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.10)" />
+                                    <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.05)" />
+                                    <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0)" />
+                                  </g>
+                                </svg>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="card dark">
                 <div class="card-content">
-                    <span class="title">Producto</span>
-                    <hr>
                     <div class="field is-grouped">
                         <div class="control">
-                            <label class="label">Cliente:</label>
+                            <label for="" class="label">Buscar por:</label>
                             <div class="select">
-                                <select [(ngModel)]="OP.cliente" (change)="findOC()">
+                                <select [(ngModel)]='parametro_busqueda'>
+                                    <option value="">Selccione una opción</option>
+                                    <option value="op">OP</option>
+                                    <option value="oc">OC</option>
+                                    <option value="cliente">Cliente</option>
+                                    <option value="producto">Producto</option>
+                                    <option value="fecha">Fecha</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control" *ngIf="parametro_busqueda === 'op'">
+                            <label for="" class="label">Ingresa Nº OP:</label>
+                            <input type="text" class="input" (input)="filtrarResultados($event.target)">
+                        </div>
+                        <div class="control" *ngIf="parametro_busqueda === 'oc'">
+                            <label for="" class="label">Ingresa Nº OC:</label>
+                            <input type="text" class="input" (input)="filtrarResultadosOC($event.target)">
+                        </div>
+                        <div class="control" *ngIf="parametro_busqueda === 'cliente'">
+                            <label for="" class="label">Selecciona un cliente</label>
+                            <div class="select">
+                                <select (change)="filtrarResultadosCliente($event.target)">
+                                    <option value="#">Cliente</option>
                                     <option value="{{cliente._id}}" *ngFor="let cliente of clientes.clientes">{{cliente.nombre}}</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="control">
-                            <label class="label">OC:</label>
+                        <div class="control" *ngIf="parametro_busqueda === 'producto'">
+                            <label for="" class="label">Selecciona un cliente</label>
                             <div class="select">
-                                <select [(ngModel)]="OP.oc" (change)="findProducts()">
-                                    <option value="{{ordenes._id}}" *ngFor="let ordenes of Ordenes">{{ordenes.orden}}</option>
+                                <select (change)="BuscarProductos($event.target)">
+                                    <option value="#">Cliente</option>
+                                    <option value="{{cliente._id}}" *ngFor="let cliente of clientes.clientes">{{cliente.nombre}}</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="control">
-                            <label class="label">Producto:</label>
+                        <div class="control" *ngIf="parametro_busqueda === 'producto'">
+                            <label for="" class="label">Selecciona un producto</label>
                             <div class="select">
-                                <select>
-                                    <option value="" *ngFor="let producto of productos">E-{{producto.producto.identificacion.cliente.codigo}}-{{producto.producto.identificacion.codigo}}-{{producto.producto.identificacion.version}} {{producto.producto.identificacion.producto}} {{producto.solicitud | date:'dd/MM/yyyy'}}</option>
+                                <select (change)="filtrarResultadosProducto($event.target)">
+                                    <option value="#">Producto</option>
+                                    <option value="{{producto._id}}" *ngFor="let producto of productos_selected">{{producto.identificacion.producto}}</option>
                                 </select>
                             </div>
                         </div>
+                        <div class="control" *ngIf="parametro_busqueda === 'fecha'">
+                            <label for="" class="label">Desde:</label>
+                            <input type="date" class="input" [(ngModel)]="desde">
+                          </div>
+                          <div class="control" *ngIf="parametro_busqueda === 'fecha'">
+                            <label for="" class="label">Hasta:</label>
+                            <input type="date" class="input" [(ngModel)]="hasta">
+                          </div>
+                          <div class="control" *ngIf="parametro_busqueda === 'fecha'">
+                            <label for="" class="label"> </label>
+                            <button class="button is-success" (click)="BuscarPorFecha()">
+                              <span class="icon"><i class="fas fa-search"></i></span>
+                              <span>Buscar</span>
+                            </button>
+                          </div>
                     </div>
                 </div>
             </div>
             <br>
             <div class="card">
                 <div class="card-content">
-                    <span class="title">Maquinas</span>
+                    <span class="title">Resultados:</span>
                     <hr>
-                    <span class="subtitles">Cantidades</span> <br>
-                    <div class="field is-grouped">
-                        <div class="control">
-                            <label class="label">Cantidad:</label>
-                            <input type="number" class="input">
-                        </div>
-                        <div class="control">
-                            <label class="label">Demasia (Und):</label>
-                            <input type="number" class="input">
-                        </div>
-                        <div class="control">
-                            <label class="label">Fecha Solicitada:</label>
-                            <input type="date" class="input">
-                        </div>
-                        <div class="control">
-                            <label for="" class="label">Montaje:</label>
-                            <div class="select">
-                                <select>
-                                    <option value="">Montaje A</option>
-                                    <option value="">Montaje B</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="control">
-                            <label for="" class="label">.</label>
-                            <input type="checkbox" name="" id=""> Estándar de colores
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="columns">
-                        <div class="column is-3">
-                            <span class="subtitles">Maquinas</span>
-                            <div cdkDropList
-                             #maquinas_="cdkDropList" 
-                             cdkDropListLockAxis='x'
-                             [cdkDropListData]="maquinas.maquinas"
-                             [cdkDropListConnectedTo]="[needed]"
-                             (cdkDropListDropped)="onDrop($event)" class="maquinas">
-                                <div *ngFor="let maquina of maquinas.maquinas" cdkDrag class="item">{{ maquina.nombre }}</div>
-                            </div>
-                        </div>
-                        <div class="column is-3">
-                            <span class="subtitles">Maquinas a utilizar:</span>
-                            <div cdkDropList 
-                            [cdkDropListConnectedTo]="[maquinas_]" 
-                            [cdkDropListData]="maquinasDestino"
-                            #needed = "cdkDropList" 
-                            (cdkDropListDropped)="onDrop($event)"
-                            class="maquinas-need">
-                              <div *ngFor="let maquina of maquinasDestino" cdkDrag class="item">{{ maquina.nombre }}</div>
-                            </div>
-                        </div>
-                        <div class="column is-3">
-                            <span class="subtitles">Fases de la orden:</span>
-                            <ng-container *ngFor="let maquina of maquinasDestino; let i = index">
-                                <ng-container *ngFor="let fase of maquina.fases; let j = index">
-                                    <span class="tag is-success" *ngIf="!fase.borrado">
-                                        {{ maquina.nombre }} - {{ fase.nombre }}
-                                        <button class="delete is-small" (click)="eliminarFase(i,j)"></button>
-                                    </span>
-                                    <span class="tag is-danger" *ngIf="fase.borrado">
-                                        {{ maquina.nombre }} - {{ fase.nombre }}
-                                        <button class="delete is-small" (click)="eliminarFase(i,j)"></button>
-                                    </span>
-                                    <br>
-                                </ng-container>
-                            </ng-container>
-                        </div>
-                    </div>
+                    <table class="table is-fullwidth is-striped">
+                        <thead>
+                            <tr>
+                                <th>OC</th>
+                                <th>OP</th>
+                                <th>Producto</th>
+                                <th>Cliente</th>
+                                <th>Fecha Emisión</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let resultado of resultados">
+                                <td>{{resultado.oc.orden}}</td>
+                                <td>{{resultado.numero_op}}</td>
+                                <td>{{resultado.producto[0].identificacion.producto}}</td>
+                                <td>{{resultado.cliente.nombre}}</td>
+                                <td>{{resultado.createdAt | date: 'dd/MM/yyyy'}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <br>
-            <div class="card">
-                <div class="card-content">
-                    <span class="title">Tiempos</span>
-                    <hr>
-                    <ng-container *ngFor="let maquina of maquinasDestino;index as x">
-                        <ng-container *ngFor="let fase of maquina.fases;index as y">
-                            <ng-container *ngIf="!fase.borrado">
-                                <span class="subtitles">{{fase.nombre}}</span>
-                                <div class="field is-grouped">
-                                    <div class="control">
-                                        <label class="label">Inicio:</label>
-                                        <input type="datetime-local" name="" id="" class="input" >
-                                    </div>
-                                    <div class="control">
-                                        <label class="label">Final:</label>
-                                        <input type="datetime-local" name="" id="" class="input">
-                                    </div>
-                                </div>
-                                <br>
-                            </ng-container>
-                        </ng-container>
-                    </ng-container>
-                    <hr>
-                    <div class="timeline">
-                        <ng-container *ngFor="let maquina of maquinasDestino;index as x">
-                            <ng-container *ngFor="let fase of maquina.fases; index as y">
-                                <ng-container *ngIf="!fase.borrado">
-                                    <div class="process" [style.background-color]="getColor(y)">
-                                        <div class="hours">3 horas</div> <!-- Agregar esta línea -->
-                                        {{fase.nombre}}
-                                    </div>
-                                </ng-container>
-                            </ng-container>
-                        </ng-container>
-                    </div>
-                </div>
-            </div>
+
+
+
         </div>
     </div>
 </div>

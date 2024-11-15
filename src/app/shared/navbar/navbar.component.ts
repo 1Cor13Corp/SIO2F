@@ -1,6 +1,9 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
+import { NotificacionesService } from 'src/app/services/notificaciones.service';
+import { OproduccionService } from 'src/app/services/oproduccion.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,7 +13,10 @@ import { LoginService } from 'src/app/services/login.service';
 export class NavbarComponent implements OnInit {
 
   constructor(public router:Router,
-              public Login:LoginService
+              public Login:LoginService,
+              public notificacion:NotificacionesService,
+              public ordenes:OproduccionService,
+              public titleService:Title
   ) {
     this.usuario = Login.usuario;
     console.log(this.usuario)
@@ -25,14 +31,28 @@ export class NavbarComponent implements OnInit {
   public produccion = false;
   public usuario:any;
   public pass = false;
+  public asignacion:boolean = false;
 
   ngOnInit(): void {
+    this.notificacion.subscribeToPushNotifications();
   }
 
   Menu:boolean = false;
   Solicitud_Material:boolean = false;
 
   isMenuVisible = false;
+
+
+
+  showAsignaciones(){
+    let n = this.ordenes.orden.filter(orden => orden.status === 'Por asignar').length;
+    if(n > 0){
+      this.titleService.setTitle(`(${n}) - SIO | Sistema Integral de Operación`)
+    }else{
+      this.titleService.setTitle(`SIO | Sistema Integral de Operación`)
+    }
+    return n
+  }
   
   showPopUp(){
     this.isMenuVisible = true;
@@ -125,6 +145,13 @@ export class NavbarComponent implements OnInit {
   cerrar(){
     console.log('close')
     this.pass = false;
+  }
+
+  abrirAsignacion(){
+    let n = this.ordenes.orden.filter(orden => orden.status === 'Por asignar').length;
+    if(n>0){
+      this.asignacion = true;
+    }
   }
 
 }

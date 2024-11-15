@@ -100,7 +100,7 @@ export class InformacionEmpleadoComponent {
             new Cell(new Txt(informacion.datos_personales.apellidos).end).end,
             new Cell(new Txt('Nombres').bold().end).fillColor('#dbdbdb').colSpan(2).end,
             new Cell(new Txt(informacion.datos_personales.nombres).end).end,
-            new Cell(await new Img(`http://192.168.0.22/api/imagen/empleado/${informacion.datos_personales.foto}`).fit([163,200]).build()).colSpan(2).rowSpan(10).end,
+            new Cell(await new Img(`https://192.168.0.22/api/imagen/empleado/${informacion.datos_personales.foto}`).fit([163,200]).build()).colSpan(2).rowSpan(10).end,
             new Cell(new Txt('').bold().end).fillColor('#dbdbdb').end,
           ]
           ,

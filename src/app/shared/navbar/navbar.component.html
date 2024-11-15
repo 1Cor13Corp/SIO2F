@@ -8,6 +8,12 @@
 (OnCloseModal)="cerrar()">
 </app-cambio-contrasena>
 
+<app-asignacion
+[asignacion]="asignacion"
+(onCloseModal)="asignacion = false">
+
+</app-asignacion>
+
 <div class="menu__ animate__animated animate__fadeInLeft" id='menu'>
     <img src="../../../assets/LOGO-SIO.png" width="100" height="20" id="logo_menu">
     <hr>
@@ -82,7 +88,12 @@
             <ul class="menu-list">
                 <li>
                         <a (click)="Solicitud_Material = true">Solicitud</a>
-                        <a>Asignación (n)</a>
+                        <a class="asignacion-container" (click)="abrirAsignacion()">
+                            Asignación ({{ showAsignaciones() }})
+                            <ng-container *ngIf="showAsignaciones() > 0">
+                              <div class="blinking-light"></div>
+                            </ng-container>
+                          </a>
                 </li>
             </ul>
     </aside>

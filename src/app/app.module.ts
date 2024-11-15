@@ -23,9 +23,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { DashboardModule } from './Dashboard/dashboard.module';
 
 
-import { LOCALE_ID } from '@angular/core';
+import { LOCALE_ID, isDevMode } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 registerLocaleData(localeEs);
 
@@ -48,7 +49,13 @@ registerLocaleData(localeEs);
     OrdenesModule,
     LoginModule,
     DashboardModule,
-    HttpClientModule
+    HttpClientModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: true,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es-ES' }],
   bootstrap: [AppComponent]

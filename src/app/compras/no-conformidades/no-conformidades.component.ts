@@ -31,7 +31,7 @@ export class NoConformidadesComponent {
 
 
   verPlan(plan){
-    const url = `http://192.168.0.22/api/imagen/plan/${plan}`;
+    const url = `https://192.168.0.22/api/imagen/plan/${plan}`;
     
     // Create an anchor element
     const link = document.createElement('a');

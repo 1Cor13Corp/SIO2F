@@ -14,14 +14,14 @@
                 </select>
             </div>
             <br> <br>
-            <div class="subtitles" *ngIf="preparacion">Para preparación de (n)kg.</div>
+            <div class="subtitles" *ngIf="preparacion">Para preparación de 1kg.</div>
             <br>
             <div class="field is-grouped" *ngIf="preparacion">
                 <div class="control">
                     <label for="" class="label">Material</label>
                     <div class="select">
                         <select name="" id="" [(ngModel)]="material">
-                            <option value="{{tinta._id}}*{{tinta.nombre}}*{{tinta.fabricante.alias}}" *ngFor="let tinta of tintas.filtrarGrupos('654525e819e55313308bd49b')">{{tinta.nombre}}</option>
+                            <option value="{{tinta._id}}*{{tinta.nombre}}*{{tinta.fabricante.alias}}" *ngFor="let tinta of tintas.filtrarGrupos('66bf583c605b8ca0df5680d3')">{{tinta.nombre}} {{tinta.serie}} ({{tinta.fabricante.alias}})</option>
                         </select>
                     </div>
                 </div>

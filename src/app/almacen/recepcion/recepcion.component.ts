@@ -104,9 +104,10 @@ buscarUltimoReclamoPorRecepcion(recepcion, i){
 EnviarAlmacen = async(index: number, i: number) =>{
   const materiales = this.api.recepciones[index].materiales[i];
   await materiales.forEach((material:any) => {
-    material.material = material.material._id; // Asigna el ID del material
+    material.material = material.material; // Asigna el ID del material
     material.recepcion = this.api.recepciones[index]._id; // Asigna el ID de la recepción
   });
+  console.log(materiales)
   this.almacen.GuardarAlmacen(materiales); // Guarda los materiales en el almacén
 }
 

@@ -33,7 +33,7 @@ export class LoginService {
   }
 
   Login(data, recuerdame){
-    const url = `http://192.168.0.22/api/login`
+    const url = `https://192.168.0.22/api/login`
     if(recuerdame){
       localStorage.setItem('SESSION_EMAIL', data.Correo);
     }
@@ -41,7 +41,7 @@ export class LoginService {
   }
 
   validarToken(): Observable<boolean> {
-    return this.http.get(`http://192.168.0.22/api/renew`, {
+    return this.http.get(`https://192.168.0.22/api/renew`, {
       headers: this.headers
     }).pipe(
       tap((resp: any) => {
@@ -73,22 +73,22 @@ export class LoginService {
   }
 
   registrar(data){
-    const url = `http://192.168.0.22/api/usuario`
+    const url = `https://192.168.0.22/api/usuario`
     return this.http.post(url,data)
   }
 
   buscarUsuario(){
-    const url = `http://192.168.0.22/api/usuario`
+    const url = `https://192.168.0.22/api/usuario`
     return this.http.get(url)
   }
 
   editarUsuario(data){
-    const url = `http://192.168.0.22/api/usuario`
+    const url = `https://192.168.0.22/api/usuario`
     return this.http.put(url, data)
   }
 
   eliminarUsuario(id){
-    const url = `http://192.168.0.22/api/usuario/${id}`
+    const url = `https://192.168.0.22/api/usuario/${id}`
     return this.http.delete(url)
   }
 

@@ -416,7 +416,7 @@ export class AnalisisTintaComponent{
             new Cell(new Txt('').bold().end).end,
             new Cell(new Txt('').bold().end).end,
             new Cell(new Txt('').bold().end).end,
-            new Cell(await new Img(`http://192.168.0.22/api/imagen/analisis/${analisis.img}`).width(150).margin([8, 0]).build()).rowSpan(34).border([false, false]).fontSize(8).end,
+            new Cell(await new Img(`https://192.168.0.22/api/imagen/analisis/${analisis.img}`).width(150).margin([8, 0]).build()).rowSpan(34).border([false, false]).fontSize(8).end,
           ],
           [
             new Cell(new Txt('Transparencia / Opacidad').alignment('center').bold().end).fontSize(8).fillColor('#dedede').colSpan(5).end,

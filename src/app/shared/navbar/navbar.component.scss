@@ -153,3 +153,29 @@
     border-top: 10px solid #fff; /* Cambia el color y el tamaño según tus necesidades */
 }
   
+
+.asignacion-container {
+    display: flex;
+    align-items: center; /* Centra el texto y el círculo verticalmente */
+    gap: 5px; /* Espacio entre el texto y el círculo */
+    text-decoration: none; /* Opcional: quita el subrayado si es un enlace */
+  }
+  
+  .blinking-light {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+    animation: blink 0.5s infinite alternate;
+  }
+
+  /* Animación de parpadeo */
+  @keyframes blink {
+    0% {
+      opacity: 1; /* Estado visible */
+    }
+    100% {
+      opacity: 0.2; /* Estado más tenue */
+    }
+  }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { MaquinasService } from 'src/app/services/maquinas.service';
 import { OcompraService } from 'src/app/services/ocompra.service';
@@ -8,6 +8,8 @@ import * as moment from 'moment'
 import { AlmacenService } from 'src/app/services/almacen.service';
 import { MaterialesService } from 'src/app/services/materiales.service';
 import { HorariosService } from 'src/app/services/horarios.service';
+import Swal from 'sweetalert2';
+import { OproduccionService } from 'src/app/services/oproduccion.service';
 
 @Component({
   selector: 'app-nueva-op',
@@ -26,27 +28,51 @@ export class NuevaOPComponent implements OnInit{
               public maquinas:MaquinasService,
               public almacen:AlmacenService,
               public materiales:MaterialesService,
-              public horarios:HorariosService
+              public horarios:HorariosService,
+              public api:OproduccionService
   ){
 
 
   }
 
+
+  @Input() nueva:any;
+  @Output() onCloseModal = new EventEmitter();
+
   public almacenado = 0;
   public producto:any;
-  public OP ={
+  public OP:any ={
     cliente: '',
     oc:'',
+    solicitud:'',
+    montaje:'',
+    ejemplares:0,
+    cantidad:0,
+    demasia:0,
+    sustrato:{
+      sustrato:'',
+      cantidad:0
+    },
+    tinta:[{
+      tinta:'',
+      cantidad:0
+    }],
+    barniz:{
+      barniz:'',
+      cantidad:0
+    },
+    pega:{
+      pega:'',
+      cantidad:0
+    },
+
+
     producto:{
       materia_prima:{
         sustrato:[]
       }
     },
-    cantidad:0,
-    demasia:0,
-    montaje:'',
     hojas:0,
-    sustrato:''
 
   }
 
@@ -123,6 +149,8 @@ public dragDisabled = false
 public width_tal = 110;
 public position = 0;
 
+public feriados:number[] = []
+
 selectedIdea: any;
 
 test1 = '2024-06-11'
@@ -139,16 +167,39 @@ agregarColor(){
 
 selectedTintas: { [key: string]: boolean } = {};
 
-onTintaChange(tintaId: string, event: Event) {
+onTintaChange(tintaId: string, event: any) {
   const selected = (event.target as HTMLSelectElement).value !== '#';
   this.selectedTintas[tintaId] = selected;
+
+  let value = event.target.value
+
+  let n = value.split('_')
+
+  if(!this.OP.tinta[n[0]]){
+
+    this.OP.tinta[n[0]] = {
+      tinta:'',
+      cantidad:0
+    }
+
+  }
+
+  this.OP.tinta[n[0]].tinta = n[1];
+  this.OP.tinta[n[0]].cantidad = Number(this.Necesario(n[2]).toFixed(2))
+
+  console.log(this.OP)
+
 }
 
 public barniz_selected;
 CalcularBarniz(e){
   if(e.value != '#'){
     this.barniz_selected = this.producto.materia_prima.barnices[e.value];
-    console.log(this.barniz_selected)
+
+    this.OP.barniz.barniz = this.barniz_selected.barniz._id;
+    this.OP.barniz.cantidad = Number(this.Necesario(this.barniz_selected.cantidad).toFixed(2))
+  
+    console.log(this.OP)
   }
 }
 
@@ -156,7 +207,11 @@ public pega_selected;
 CalcularPega(e){
   if(e.value != '#'){
     this.pega_selected = this.producto.post_impresion.pegamento[e.value];
-    console.log(this.pega_selected)
+    
+    this.OP.pega.pega = this.pega_selected.pega._id;
+    this.OP.pega.cantidad = Number(this.Necesario(this.pega_selected.cantidad).toFixed(2))
+  
+    console.log(this.OP)
   }
 }
 
@@ -166,6 +221,9 @@ calcularCajas(cabida){
 
 BuscarEnAlmacen(e){
   this.almacenado = this.almacen.BuscarCantidadEnAlmacen(e.value)
+
+  this.OP.sustrato.cantidad = this.OP.hojas + this.OP.demasia
+  console.log(this.OP)
 }
 
 buscarEnAlmacenDirecto(e){
@@ -189,9 +247,14 @@ ToNumber_(number){
 calcularHojas(){
   console.log(this.producto,' - ', this.OP.cantidad)
   console.log(this.producto.pre_impresion.tamano_sustrato.montajes[this.OP.montaje].ejemplares)
-  this.OP.hojas = Math.ceil(this.OP.cantidad / this.producto.pre_impresion.tamano_sustrato.montajes[this.OP.montaje].ejemplares)
+  this.OP.ejemplares = this.producto.pre_impresion.tamano_sustrato.montajes[this.OP.montaje].ejemplares
+  this.OP.hojas = Math.ceil(this.OP.cantidad / this.OP.ejemplares)
   
 
+}
+
+calcularHojas_(){
+  this.OP.hojas = Math.ceil(this.OP.cantidad / this.OP.ejemplares)
 }
 
 Absolute(n){
@@ -249,10 +312,140 @@ getTextColorFromHex(hex: string): string {
     this.mostrarTooltip = !this.mostrarTooltip;
   }
 
-  ShowToolTip(maquina, fase, date){
+  ShowToolTip(maquina, fase, date, inicio?, fin?){
     if(!this.medidas[maquina].fases[fase].date[date]){
       this.medidas[maquina].fases[fase].date[date] = true;
     }else{
+
+      let old_inicio = moment(this.medidas[maquina].fases[fase].inicio[date], 'hh:mm')
+      let old_fin = moment(this.medidas[maquina].fases[fase].fin[date], 'hh:mm')
+
+      let inicio_ = moment(inicio, 'hh:mm')
+      let fin_ = moment(fin, 'hh:mm')
+
+      // Calculamos la duración en horas para ambos intervalos
+      const duracion_old = moment.duration(old_fin.diff(old_inicio)).asHours();
+      const duracion_nueva = moment.duration(fin_.diff(inicio_)).asHours();
+
+      // Determinamos el cambio de horas
+      const diferencia = duracion_nueva - duracion_old;
+
+      if (diferencia > 0) {
+
+        Swal.fire({
+          icon:'question',
+          title: `Se agregaron ${diferencia} horas al horario.`,
+          text:'¿Quieres descontarlas al final del proceso?',
+          confirmButtonText: "Descontar",
+          showDenyButton: true,
+          showCancelButton: false,
+          denyButtonText:'No descontar',
+          confirmButtonColor:'#48c78e'
+        }).then((result)=>{
+            if(result.isConfirmed){
+
+              console.log(this.medidas[maquina].fases[fase].width);
+              console.log(parseInt(this.medidas[maquina].fases[fase].width) / 110);
+
+              let largo = parseInt(this.medidas[maquina].fases[fase].width) / 110;
+
+              const finActual = moment(this.medidas[maquina].fases[fase].fin[largo-1], 'HH:mm');
+              const inicioActual = moment(this.medidas[maquina].fases[fase].inicio[largo-1], 'HH:mm');
+
+              // Calcula la diferencia entre fin[largo-1] e inicio[largo-1] en horas
+              const diferenciaMaxima = finActual.diff(inicioActual, 'hours');
+
+              console.log(diferenciaMaxima)
+
+              if (diferencia >= diferenciaMaxima) {
+                // Si la diferencia excede el tiempo entre fin[largo-1] e inicio[largo-1]
+                
+                // Descontamos solo el tiempo necesario para igualar a inicio[largo-1]
+                let newWidth = parseInt(this.medidas[maquina].fases[fase].width) - 110;
+                this.medidas[maquina].fases[fase].width = `${newWidth}px`;
+              
+                // Calcula el tiempo restante y descuéntalo de fin[largo-2]
+                const tiempoRestante = diferencia - diferenciaMaxima;
+
+                if(largo-2 != date){
+                  this.medidas[maquina].fases[fase].fin[largo-2] = moment(this.medidas[maquina].fases[fase].fin[largo-2], 'HH:mm')
+                    .subtract(tiempoRestante, 'hours')
+                    .format('HH:mm');
+                }
+              } else {
+                // Si la diferencia no excede el tiempo entre fin[largo-1] e inicio[largo-1], resta directamente
+                this.medidas[maquina].fases[fase].fin[largo-1] = moment(this.medidas[maquina].fases[fase].fin[largo-1], 'HH:mm')
+                                                                  .subtract(diferencia, 'hours')
+                                                                  .format('HH:mm')
+              }
+            }
+        })
+        console.log(`Se agregaron ${diferencia} horas al horario.`);
+    } else if (diferencia < 0) {
+
+      Swal.fire({
+        icon:'question',
+        title: `Se quitaron ${Math.abs(diferencia)} horas del horario.`,
+        text:'¿Quieres agregarlos al proximo dia laboral?',
+        confirmButtonText: "Agregar",
+        showDenyButton: true,
+        showCancelButton: false,
+        denyButtonText:'No agregar',
+        confirmButtonColor:'#48c78e'
+      }).then((result)=>{
+        if(result.isConfirmed){
+
+              console.log(this.medidas[maquina].fases[fase].width);
+              console.log(parseInt(this.medidas[maquina].fases[fase].width) / 110);
+              let horarioDefault = this.horarios.horarios.find(x => x.default == true)
+
+
+              let largo = parseInt(this.medidas[maquina].fases[fase].width) / 110;
+
+              const finActual = moment(this.medidas[maquina].fases[fase].fin[largo-1], 'HH:mm');
+              const inicioActual = moment(horarioDefault.a, 'HH:mm');
+
+              // Calcula la diferencia entre fin[largo-1] e inicio[largo-1] en horas
+              const diferenciaMaxima = inicioActual.diff(finActual, 'hours');
+
+              console.log(Math.abs(diferencia),'<>',diferenciaMaxima)
+
+              if (Math.abs(diferencia) >= diferenciaMaxima) {
+                // Si la diferencia excede el tiempo entre fin[largo-1] e inicio[largo-1]
+                
+                // Descontamos solo el tiempo necesario para igualar a inicio[largo-1]
+                this.medidas[maquina].fases[fase].fin[largo -1] = horarioDefault.a
+                let newWidth = parseInt(this.medidas[maquina].fases[fase].width) + 110;
+                this.medidas[maquina].fases[fase].width = `${newWidth}px`;
+              
+                // Calcula el tiempo restante y descuéntalo de fin[largo-2]
+                const tiempoRestante = Math.abs(diferencia) - diferenciaMaxima;
+
+                  this.medidas[maquina].fases[fase].inicio[largo] = moment(horarioDefault.de, 'HH:mm').format('HH:mm')
+                  this.medidas[maquina].fases[fase].fin[largo] = moment(this.medidas[maquina].fases[fase].inicio[largo], 'HH:mm')
+                                                                  .add(tiempoRestante, 'hours')
+                                                                  .format('HH:mm');
+              } else {
+                // Si la diferencia no excede el tiempo entre fin[largo-1] e inicio[largo-1], resta directamente
+                this.medidas[maquina].fases[fase].fin[largo-1] = moment(this.medidas[maquina].fases[fase].fin[largo-1], 'HH:mm')
+                                                                  .add(Math.abs(diferencia), 'hours')
+                                                                  .format('HH:mm')
+              }
+
+
+          // if(!this.NoCaeFeriado(this.CalcularPosicion(maquina,fase,date+1))){
+          //   let fin =  moment((this.medidas[maquina].fases[fase].fin[date+2]), 'HH:mm')
+          //   this.medidas[maquina].fases[fase].fin[date+2] = fin.add(Math.abs(diferencia), 'hours').format('HH:mm')
+          // }else{
+          //   this.medidas[maquina].fases[fase].fin[date+1] = moment(this.medidas[maquina].fases[fase].fin[date+1]).subtract(diferencia, 'hours').format('HH:mm')
+          // }
+        }
+      })
+        console.log(`Se quitaron ${Math.abs(diferencia)} horas del horario.`);
+    }
+
+      this.medidas[maquina].fases[fase].inicio[date] = inicio
+      this.medidas[maquina].fases[fase].fin[date] = fin
       this.medidas[maquina].fases[fase].date[date] = false;
     }
   }
@@ -305,10 +498,36 @@ crearLargos(maquinasDestino) {
     const result = this.medidas || [];
 
     let hoy = moment().format('yyyy-MM-DD');
+
+    let horarioDefault = this.horarios.horarios.find(x => x.default == true)
+
+    const inicioHorario = moment(horarioDefault.de, "HH:mm");
+    const finHorario = moment(horarioDefault.a, "HH:mm");
+    let horas_trabajo = finHorario.diff(inicioHorario, 'hours');
+    horas_trabajo = horas_trabajo - 1;
+
     
     maquinasDestino.forEach(maquina => {
         let maquinaObj = result.find(m => m.maquina === maquina);
+
+        const produccion_diaria = maquina.trabajo * horas_trabajo;
+        let diasNecesarios = Math.ceil((this.OP.hojas + this.OP.demasia) / produccion_diaria);
         
+        let horas_necesarias = (this.OP.hojas + this.OP.demasia) / maquina.trabajo;
+        
+        const horas_restantes = horas_necesarias % horas_trabajo;
+
+        console.log(horas_restantes)
+
+        for(let i=0;i<diasNecesarios;i++){
+
+          if(this.formatearFecha_(moment().add(i, 'days').format('yyyy-MM-DD')) === 'No laboral'){
+            diasNecesarios++
+          }
+
+        }
+        
+        let largo = 110*diasNecesarios
         if (!maquinaObj) {
             maquinaObj = {
                 maquina: maquina,
@@ -319,13 +538,41 @@ crearLargos(maquinasDestino) {
         
         maquina.fases.forEach(() => {
             let faseArray = { 
-                width: '110px',
+                width: `${largo}px`,
                 fecha: hoy,
                 final: hoy,
-                inicio:[],
-                fin:[],
+                inicio:[horarioDefault.de],
+                fin:[horarioDefault.a],
                 date: [false]
             };
+
+            faseArray.final = moment(faseArray.fecha).add(diasNecesarios -1, 'days').format('yyyy-MM-DD');
+
+            for (let i = diasNecesarios - 1; i >= 0; i--) { 
+
+              if(i === diasNecesarios - 1){
+
+                if (!faseArray.inicio[i]) { 
+                  faseArray.inicio[i] = horarioDefault.de; 
+                } 
+
+                if (!faseArray.fin[i]) { 
+
+                  const horaInicial = moment(horarioDefault.de, "HH:mm");
+
+                  faseArray.fin[i] = horaInicial.add(horas_restantes, 'hours').format('HH:mm'); 
+                }
+
+              }else{
+                if (!faseArray.inicio[i]) { 
+                  faseArray.inicio[i] = horarioDefault.de; 
+                } 
+                
+                if (!faseArray.fin[i]) { 
+                  faseArray.fin[i] = horarioDefault.a; 
+                }
+              }
+            }
             
             if (!maquinaObj.fases.some(fase => fase.width)) {
                 maquinaObj.fases.push(faseArray);
@@ -334,7 +581,6 @@ crearLargos(maquinasDestino) {
     });
     
     this.medidas = result;
-    console.log(this.medidas);
 }
 
 
@@ -375,6 +621,7 @@ crearLargos(maquinasDestino) {
 
   mostrarProducto(e){
     this.producto = this.productos[e.value].producto
+    this.OP.producto = this.producto
     
       const TintasPorColor = {};
       // Recorremos el arreglo original
@@ -415,6 +662,8 @@ crearLargos(maquinasDestino) {
   async onResizeEnd(event: ResizeEvent, maquina: number, fase: number): Promise<void> {
     this.dragDisabled = true;
     
+    let horarioDefault = this.horarios.horarios.find(x => x.default == true)
+
     if (event.rectangle.width) {
         let newWidth = Math.round(event.rectangle.width / 110) * 110;
         
@@ -434,6 +683,16 @@ crearLargos(maquinasDestino) {
         // Calculate this.test2 based on newWidth
         let daysToAdd = Math.floor(newWidth / 110); // Calculate number of days to add based on newWidth
         this.medidas[maquina].fases[fase].final = moment(this.medidas[maquina].fases[fase].fecha).add(daysToAdd -1, 'days').format('yyyy-MM-DD'); // Add days to test1 and assign to test2
+        
+        for (let i = daysToAdd - 1; i >= 0; i--) { 
+          if (!this.medidas[maquina].fases[fase].inicio[i]) { 
+            this.medidas[maquina].fases[fase].inicio[i] = horarioDefault.de; 
+          } 
+          
+          if (!this.medidas[maquina].fases[fase].fin[i]) { 
+            this.medidas[maquina].fases[fase].fin[i] = horarioDefault.a; 
+          }
+        }
       }
 
     
@@ -457,6 +716,8 @@ crearLargos(maquinasDestino) {
       this.medidas[maquina].fases[fase].width = `${this.width_tal}px`
     }
 
+    console.log(this.position)
+
     // Calculate this.test2 based on newWidth
     let daysToAdd = Math.floor(this.position / 110); // Calculate number of days to add based on newWidth
     this.medidas[maquina].fases[fase].fecha = moment(hoy).add(daysToAdd, 'days').format('YYYY-MM-DD'); // Add days to test1 and assign to test1
@@ -468,13 +729,46 @@ crearLargos(maquinasDestino) {
     event.source.setFreeDragPosition({ x: newPositionX, y: currentYPosition });
 }
 
+CalcularPosicion(x,i,n){
+  let hoy = moment().format('yyyy-MM-DD');
+  let fin = moment(this.medidas[x].fases[i].fecha)
+
+  // console.log(hoy,'-',fin)
+
+  return fin.diff(hoy, 'days') + n
+}
+
 onDragStarted(event: CdkDragStart){
   this.dragDisabled = false
 }
 
 formatearFecha(fecha){
   moment.locale('es');
-  return moment(fecha).format('dddd D/M');
+  let Calendario = this.horarios.calendario.find(x => x.year === Number(moment(fecha).format('yyyy')))
+  let feriado = Calendario.dias.find(x => x.month === (Number(moment(fecha).format('M')) - 1) && x.day === Number(moment(fecha).format('D')))
+
+  if(feriado){
+    return moment(fecha).format('dddd D/M')
+  }else{
+    return moment(fecha).format('dddd D/M');
+  }
+}
+
+formatearFecha_(fecha){
+  moment.locale('es');
+  let Calendario = this.horarios.calendario.find(x => x.year === Number(moment(fecha).format('yyyy')))
+  let feriado = Calendario.dias.find(x => x.month === (Number(moment(fecha).format('M')) - 1) && x.day === Number(moment(fecha).format('D')))
+
+  if(feriado){
+    let hoy = moment().format('yyyy-MM-DD');
+    let fin = moment(fecha)
+
+    this.feriados.push(fin.diff(hoy, 'days'))
+
+    return `No laboral`
+  }else{
+    return moment(fecha).format('dddd D/M');
+  }
 }
 
 selectIdea(idea): void {
@@ -485,12 +779,20 @@ selectIdea(idea): void {
   }
 }
 
-DropMaquina(maquina, fase: number) {
-  const maquinaToAdd = { ...this.maquinas.maquinas[maquina] }; // Clonar la máquina para evitar modificar la original
-  maquinaToAdd.fases = [maquinaToAdd.fases[fase]]; // Crear un nuevo array con solo la fase específica
-  this.maquinasDestino.push(maquinaToAdd); // Agregar la máquina modificada a maquinasDestino
-  this.crearLargos(this.maquinasDestino)
+DropMaquina(maquina, fase: number, maquina_?) {
+  // Clonar profundamente el objeto que se pasa
+  let maquinaToAdd = JSON.parse(JSON.stringify(maquina_));
+  
+  // Crear un nuevo array con solo la fase específica
+  maquinaToAdd.fases = [maquinaToAdd.fases[fase]];
+  
+  // Agregar la máquina modificada a maquinasDestino
+  this.maquinasDestino.push(maquinaToAdd);
+  
+  // Llamar a la función para crear largos
+  this.crearLargos(this.maquinasDestino);
 }
+
 
 deleteFromUsar(i){
   this.maquinasDestino.splice(i,1)
@@ -530,12 +832,62 @@ generateDates(): string[] {
 }
 
 GuardarTrabajo(){
-  console.log(this.medidas)
+  this.OP.fases = [];
+  this.OP.fases = this.medidas
+  console.log(this.OP)
+  this.api.guardarOrdenProduccion(this.OP)
+  this.OP = {
+    cliente: '',
+    oc:'',
+    solicitud:'',
+    montaje:'',
+    ejemplares:0,
+    cantidad:0,
+    demasia:0,
+    sustrato:{
+      sustrato:'',
+      cantidad:0
+    },
+    tinta:[{
+      tinta:'',
+      cantidad:0
+    }],
+    barniz:{
+      barniz:'',
+      cantidad:0
+    },
+    pega:{
+      pega:'',
+      cantidad:0
+    },
+
+
+    producto:{
+      materia_prima:{
+        sustrato:[]
+      }
+    },
+    hojas:0,
+
+  }
+
+  this.onCloseModal.emit();
 }
 
 returnData(x,y,z){
   this.medidas[x].fases[y].inicio[z] = ''
   this.medidas[x].fases[y].fin[z] = ''
+}
+
+
+NoCaeFeriado(n) {
+  let Feriado = this.feriados.find(dia => dia === n);
+  // console.log(Feriado);
+  if (!Feriado && Feriado !== 0) { // para manejar el caso cuando Feriado es 0
+    return true;
+  } else {
+    return false;
+  }
 }
 
 }

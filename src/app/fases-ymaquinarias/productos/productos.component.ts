@@ -724,7 +724,7 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
             new Cell(new Txt('2.3 Diseño del producto').end).fillColor('#dedede').bold().border([false]).end,
           ],
           [
-            new Cell(await new Img(`http://192.168.0.22/api/imagen/producto/${producto.dimensiones.diseno}`).width(400).margin([0, 15]).build()).alignment('center').border([false]).pageBreak('after').end,
+            new Cell(await new Img(`https://192.168.0.22/api/imagen/producto/${producto.dimensiones.diseno}`).width(400).margin([0, 15]).build()).alignment('center').border([false]).pageBreak('after').end,
           ]
         ]).widths(['100%']).end
       )
@@ -1556,8 +1556,8 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
             new Cell(
               new Columns(
                 [
-                  new Cell(await new Img(`http://192.168.0.22/api/imagen/producto/${producto.post_impresion.distribucion.aerea}`).width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
-                  new Cell(await new Img(`http://192.168.0.22/api/imagen/producto/${producto.post_impresion.distribucion.v3d}`).width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
+                  new Cell(await new Img(`https://192.168.0.22/api/imagen/producto/${producto.post_impresion.distribucion.aerea}`).width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
+                  new Cell(await new Img(`https://192.168.0.22/api/imagen/producto/${producto.post_impresion.distribucion.v3d}`).width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
                 ],
               ).end
             ).border([false]).end
@@ -1584,7 +1584,7 @@ const ultimaPropiedad = propiedadesUltimaEspecificacion[propiedadesUltimaEspecif
             new Cell(new Txt('Peletizado aprobado').end).fillColor('#f1f1f1').bold().border([false,false,false,false]).end,
           ],
           [
-            new Cell(await new Img(`http://192.168.0.22/api/imagen/producto/${producto.post_impresion.distribucion.paletizado}`).width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
+            new Cell(await new Img(`https://192.168.0.22/api/imagen/producto/${producto.post_impresion.distribucion.paletizado}`).width(250).margin([0, 15]).build()).alignment('center').border([false]).end,
           ]
       ]).widths(['100%']).end
       )
