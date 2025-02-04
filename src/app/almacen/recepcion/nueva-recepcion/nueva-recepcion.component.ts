@@ -12,7 +12,7 @@ import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-nueva-recepcion',
-  templateUrl: './nueva-recepcion.component.html',
+  standalone: false,templateUrl: './nueva-recepcion.component.html',
   styleUrls: ['./nueva-recepcion.component.scss']
 })
 export class NuevaRecepcionComponent {

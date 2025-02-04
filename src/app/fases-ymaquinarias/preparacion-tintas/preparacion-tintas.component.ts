@@ -4,7 +4,7 @@ import { MaterialesService } from 'src/app/services/materiales.service';
 
 @Component({
   selector: 'app-preparacion-tintas',
-  templateUrl: './preparacion-tintas.component.html',
+  standalone: false,templateUrl: './preparacion-tintas.component.html',
   styleUrls: ['./preparacion-tintas.component.scss']
 })
 export class PreparacionTintasComponent {
@@ -22,7 +22,6 @@ export class PreparacionTintasComponent {
   public id:any = ''
 
   MostrarInfo(pantone, name ){
-    console.log('Estallido social')
     this._seBusco = false
     this.name = name
     this.formulas_ = pantone

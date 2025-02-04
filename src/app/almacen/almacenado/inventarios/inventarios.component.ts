@@ -1,11 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AlmacenService } from 'src/app/services/almacen.service';
 
 @Component({
   selector: 'app-inventarios',
-  templateUrl: './inventarios.component.html',
+  standalone: false,templateUrl: './inventarios.component.html',
   styleUrls: ['./inventarios.component.scss']
 })
 export class InventariosComponent {
+
+  constructor(private almacen:AlmacenService){
+
+  }
+
   @Input() Inventario:any;
   @Input() agrupadoMateriales!: Array<{
     nombre: string;
@@ -31,6 +37,10 @@ export class InventariosComponent {
   public clicked: any = [];
   public clicked_: any = [];
   public clicked__: any = [];
+
+  public registro_:boolean = false;
+
+  public registro:any = []
 
   showInfo(i) {
     if (!this.clicked[i]) {
@@ -65,5 +75,13 @@ export class InventariosComponent {
 
   cerrar(){
     this.onCloseModal.emit();
+  }
+
+
+  buscarRegistro(material){
+      this.registro = this.almacen.Registro.filter(x => x.material.nombre === material.nombre)
+      console.log(this.registro)
+      this.Inventario = false;
+      this.registro_ = true;
   }
 }

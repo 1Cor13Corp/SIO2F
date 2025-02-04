@@ -3,7 +3,7 @@ import { FasesService } from 'src/app/services/fases.service';
 
 @Component({
   selector: 'app-nueva-fase',
-  templateUrl: './nueva-fase.component.html',
+  standalone: false,templateUrl: './nueva-fase.component.html',
   styleUrls: ['./nueva-fase.component.scss']
 })
 export class NuevaFaseComponent {

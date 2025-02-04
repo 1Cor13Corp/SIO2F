@@ -6,7 +6,7 @@ import { ProveedoresService } from 'src/app/services/proveedores.service';
 
 @Component({
   selector: 'app-fabricantes',
-  templateUrl: './fabricantes.component.html',
+  standalone: false,templateUrl: './fabricantes.component.html',
   styleUrls: ['./fabricantes.component.scss']
 })
 export class FabricantesComponent {

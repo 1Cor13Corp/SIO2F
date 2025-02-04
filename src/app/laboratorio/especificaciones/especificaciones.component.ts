@@ -4,7 +4,7 @@ import { MaterialesService } from 'src/app/services/materiales.service';
 
 @Component({
   selector: 'app-especificaciones',
-  templateUrl: './especificaciones.component.html',
+  standalone: false,templateUrl: './especificaciones.component.html',
   styleUrls: ['./especificaciones.component.scss']
 })
 export class EspecificacionesComponent implements OnInit {

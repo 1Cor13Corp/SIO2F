@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sub-areas',
-  templateUrl: './sub-areas.component.html',
+  standalone: false,templateUrl: './sub-areas.component.html',
   styleUrls: ['./sub-areas.component.scss']
 })
 export class SubAreasComponent {

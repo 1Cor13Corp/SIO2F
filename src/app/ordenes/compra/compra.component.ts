@@ -3,7 +3,7 @@ import { OcompraService } from 'src/app/services/ocompra.service';
 
 @Component({
   selector: 'app-compra',
-  templateUrl: './compra.component.html',
+  standalone: false,templateUrl: './compra.component.html',
   styleUrls: ['./compra.component.scss']
 })
 export class CompraComponent {

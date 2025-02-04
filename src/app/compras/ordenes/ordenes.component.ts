@@ -8,7 +8,7 @@ import { OpoligraficaService } from 'src/app/services/opoligrafica.service';
 
 @Component({
   selector: 'app-ordenes',
-  templateUrl: './ordenes.component.html',
+  standalone: false,templateUrl: './ordenes.component.html',
   styleUrls: ['./ordenes.component.scss'],
   providers: [DecimalPipe]
 })

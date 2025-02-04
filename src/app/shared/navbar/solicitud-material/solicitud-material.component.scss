@@ -1,22 +1,28 @@
 .primera{
-    background: rgb(0,56,255);
-    background: linear-gradient(90deg, rgba(0,56,255,1) 0%, #75b4ff 100%);
-    color: white;
-    width: 100%;
-    cursor: pointer;
-  }
+  background: rgb(33, 33, 100);
+  background: linear-gradient(0deg, rgba(33, 33, 100, 1) 0%, rgba(77, 77, 155, 1) 100%);
   
+  
+  color: white;
+  width: 100%;
+  cursor: pointer;
+}
+
   .segunda{
-    background: rgb(8,172,38);
-      background: linear-gradient(90deg, rgba(8,172,38,1) 15%, rgba(44,255,82,1) 100%);
+    background: rgb(87, 87, 255);
+    background: linear-gradient(0deg, rgba(87, 87, 255, 1) 0%, rgba(137, 137, 255, 1) 100%);
+    
+
   color:white;
   width: 100%;
   cursor: pointer;
   }
   
   .tercera{
-    background: rgb(245,152,28);
-  background: linear-gradient(90deg, rgba(245,152,28,1) 25%, rgba(255,184,88,1) 100%);
+    background: rgb(0, 191, 255);
+    background: linear-gradient(0deg, rgba(0, 191, 255, 1) 0%, rgba(102, 224, 255, 1) 100%);
+
+
   color: white;
   width: 100%;
   cursor: pointer;
@@ -52,20 +58,26 @@ font-size: 80px;
 text-align: center;
   }
   .orden{
-    background: rgb(0,56,255);
-    background: radial-gradient(circle, rgba(117,180,255,1) 0%, rgba(0,56,255,1) 100%);
+    background: rgb(33, 33, 100);
+    background: linear-gradient(0deg, rgba(33, 33, 100, 1) 0%, rgba(77, 77, 155, 1) 100%);
+    
   }
+  
   .otros{
-    background: rgb(8,172,38);
-    background: radial-gradient(circle, rgba(44,255,82,1) 0%, rgba(8,172,38,1) 100%);
+    background: rgb(87, 87, 255);
+  background: linear-gradient(0deg, rgba(87, 87, 255, 1) 0%, rgba(137, 137, 255, 1) 100%);
   }
   .tintas {
-    background: rgb(128, 0, 32); /* Vinotinto */
-    background: radial-gradient(circle, rgba(179, 51, 102, 1) 0%, rgba(128, 0, 32, 1) 100%); /* Gradiente vinotinto */
-}
+    background: rgb(0, 191, 255);
+    background: linear-gradient(0deg, rgba(0, 191, 255, 1) 0%, rgba(102, 224, 255, 1) 100%);
+    
+    
+  }
   .repuestos{
-    background: rgb(245,152,28);
-background: radial-gradient(circle, rgba(255,184,88,1) 0%, rgba(245,152,28,1) 100%);
+    background: rgb(173, 216, 230);
+  background: linear-gradient(0deg, rgba(173, 216, 230, 1) 0%, rgba(205, 236, 255, 1) 100%);
+
+
   }
 
   .menu_circle {
@@ -216,4 +228,74 @@ strong{
 
 .modal .modal-card strong{
     color: white;
+}
+
+
+
+
+
+.dividido {
+  position: relative;
+  width: 130px;
+  height: 55px;
+  overflow: hidden; /* Oculta los bordes de los hijos si exceden */
+  cursor: pointer;
+  margin: 2px;
+  background: rgb(8,172,38);
+  background: radial-gradient(circle, rgba(44,255,82,1) 0%, rgba(8,172,38,1) 100%);
+  margin-top: -5px;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 14px 3px rgba(122,122,122,1);
+-moz-box-shadow: 0px 0px 14px 3px rgba(122,122,122,1);
+box-shadow: 0px 0px 14px 3px rgba(122,122,122,1);
+}
+
+.cheked{
+  background: rgb(8,172,38);
+  background: radial-gradient(circle, rgba(44,255,82,1) 0%, rgba(8,172,38,1) 100%);
+}
+
+.dividido i{
+  font-size: 20px;
+}
+
+.dividido_ {
+  position: relative;
+  width: 130px;
+  height: 55px;
+  overflow: hidden; /* Oculta los bordes de los hijos si exceden */
+  cursor: pointer;
+  margin: 2px;
+  background: rgb(245,152,28);
+  background: radial-gradient(circle, rgba(255,184,88,1) 0%, rgba(245,152,28,1) 100%);
+  margin-top: 13px;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 14px 3px rgba(122,122,122,1);
+-moz-box-shadow: 0px 0px 14px 3px rgba(122,122,122,1);
+box-shadow: 0px 0px 14px 3px rgba(122,122,122,1);
+}
+
+.dividido_ i{
+  font-size: 20px;
+}
+
+
+.custom-card {
+  background-color: #c7f7d8;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+}
+
+.custom-card:hover {
+  transform: scale(1.05);
+}
+
+.message {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  background-color: #c7f7d8;
 }

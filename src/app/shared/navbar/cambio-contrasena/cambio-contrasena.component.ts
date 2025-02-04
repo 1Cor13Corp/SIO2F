@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cambio-contrasena',
-  templateUrl: './cambio-contrasena.component.html',
+  standalone: false,templateUrl: './cambio-contrasena.component.html',
   styleUrls: ['./cambio-contrasena.component.scss']
 })
 export class CambioContrasenaComponent implements OnInit{

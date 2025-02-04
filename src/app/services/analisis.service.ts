@@ -379,6 +379,15 @@ this.calcularAnualYMensual()
     this.socket.io.emit('CLIENTE:AnalisisTinta', Data)
   }
 
+  EnviarAnalisisPreparacion(data, recepcion, index){
+    const Data = {
+      data,
+      recepcion,
+      index
+    }
+    this.socket.io.emit('CLIENTE:AnalisisPreparacion', Data)
+  }
+
   EnviarAnalisisSustrato(data, recepcion, index){
     const Data = {
       data,

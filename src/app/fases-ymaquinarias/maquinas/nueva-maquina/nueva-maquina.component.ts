@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nueva-maquina',
-  templateUrl: './nueva-maquina.component.html',
+  standalone: false,templateUrl: './nueva-maquina.component.html',
   styleUrls: ['./nueva-maquina.component.scss']
 })
 export class NuevaMaquinaComponent {

@@ -6,7 +6,7 @@ import { MaterialesService } from 'src/app/services/materiales.service';
 
 @Component({
   selector: 'app-nuevo-material',
-  templateUrl: './nuevo-material.component.html',
+  standalone: false,templateUrl: './nuevo-material.component.html',
   styleUrls: ['./nuevo-material.component.scss']
 })
 export class NuevoMaterialComponent implements OnInit{

@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-listado',
-  templateUrl: './listado.component.html',
+  standalone: false,templateUrl: './listado.component.html',
   styleUrls: ['./listado.component.scss']
 })
 export class ListadoComponent {

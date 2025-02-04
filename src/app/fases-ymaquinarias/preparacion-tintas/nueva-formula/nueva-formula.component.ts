@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nueva-formula',
-  templateUrl: './nueva-formula.component.html',
+  standalone: false,templateUrl: './nueva-formula.component.html',
   styleUrls: ['./nueva-formula.component.scss']
 })
 export class NuevaFormulaComponent implements OnInit{

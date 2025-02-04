@@ -3,7 +3,7 @@ import { MaterialesService } from 'src/app/services/materiales.service';
 
 @Component({
   selector: 'app-inventario',
-  templateUrl: './inventario.component.html',
+  standalone: false,templateUrl: './inventario.component.html',
   styleUrls: ['./inventario.component.scss']
 })
 export class InventarioComponent {

@@ -14,6 +14,12 @@
 
 </app-asignacion>
 
+<app-etiquetas
+[Etiquetas]="Etiquetas"
+(onCloseModal)="Etiquetas = false">
+
+</app-etiquetas>
+
 <div class="menu__ animate__animated animate__fadeInLeft" id='menu'>
     <img src="../../../assets/LOGO-SIO.png" width="100" height="20" id="logo_menu">
     <hr>
@@ -32,9 +38,8 @@
             <ul class="menu-list">
                 <li>
                     <a (click)="showVentas()" [ngClass]="{'is-active':router.url == '/ventas'}">Ventas</a>
-                    <ul *ngIf="ventas || router.url == '/ventas/compra' || router.url == '/ventas/produccion' || router.url == '/ventas/clientes'">
+                    <ul *ngIf="ventas || router.url == '/ventas/compra' || router.url == '/ventas/clientes'">
                         <li><a [ngClass]="{'is-active':router.url == '/ventas/compra'}" routerLink="/ventas/compra">Órdenes de compra</a></li>
-                        <li><a [ngClass]="{'is-active':router.url == '/ventas/produccion'}" routerLink="/ventas/produccion">Órdenes de producción</a></li>
                         <li><a [ngClass]="{'is-active':router.url == '/ventas/clientes'}" routerLink="/ventas/clientes">Clientes</a></li>
                     </ul>
                 </li>
@@ -65,7 +70,8 @@
             <ul class="menu-list">
                 <li>
                     <a (click)="showProduccion()" [ngClass]="{'is-active':router.url == '/maquinas'}">Producción</a>
-                    <ul *ngIf="produccion || router.url == '/maquinas/fases' || router.url == '/maquinas/maquinas' || router.url == '/maquinas/productos' || router.url == '/maquinas/categoria' || router.url == '/maquinas/tintas'">
+                    <ul *ngIf="produccion || router.url == '/maquinas/fases' || router.url == '/ventas/produccion' || router.url == '/maquinas/maquinas' || router.url == '/maquinas/productos' || router.url == '/maquinas/categoria' || router.url == '/maquinas/tintas'">
+                        <li><a [ngClass]="{'is-active':router.url == '/ventas/produccion'}" routerLink="/ventas/produccion">Órdenes</a></li>
                         <li> <a [ngClass]="{'is-active':router.url == '/maquinas/fases'}" routerLink="/maquinas/fases">Fases</a></li>
                         <li> <a [ngClass]="{'is-active':router.url == '/maquinas/maquinas'}" routerLink="/maquinas/maquinas">Máquinas</a></li>
                         <li> <a [ngClass]="{'is-active':router.url == '/maquinas/categoria'}" routerLink="/maquinas/categoria">Categoría</a></li>
@@ -85,18 +91,35 @@
                     </ul>
                 </li>
             </ul>
-            <ul class="menu-list">
-                <li>
-                        <a (click)="Solicitud_Material = true">Solicitud</a>
-                        <a class="asignacion-container" (click)="abrirAsignacion()">
-                            Asignación ({{ showAsignaciones() }})
-                            <ng-container *ngIf="showAsignaciones() > 0">
-                              <div class="blinking-light"></div>
-                            </ng-container>
-                          </a>
-                </li>
-            </ul>
     </aside>
+    <span class="iconos">
+        <div class="columns">
+            <div class="column">
+                <button class="button" style="background-color: transparent;border: none;color: #9fadbc;" (click)="Solicitud_Material = true">
+                    <span class="icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="column">
+                <button class="button" style="background-color: transparent;border: none;color: #9fadbc;" (click)="abrirAsignacion()">
+                    <span class="icon">
+                        <i class="fas fa-paper-plane"></i>
+                        <span class="notification-count" style="position: absolute; top: -5px; right: -5px; background-color: red; color: white; border-radius: 50%; padding: 3px 6px; font-size: 8px; font-weight: bold;">
+                            {{ showAsignaciones() }}
+                        </span>
+                    </span>
+                </button>
+            </div>
+            <div class="column">
+                <button class="button" style="background-color: transparent;border: none;color: #9fadbc;" (click)="Etiquetas = true">
+                    <span class="icon">
+                        <i class="fas fa-tags"></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </span>
     <span class="popup_menu" *ngIf="isMenuVisible">
         <a href="#" (click)="cerrarSesion()">Cerrar Sesión</a><br>
         <a (click)="cambiarContrasena()">Cambiar Contraseña</a>

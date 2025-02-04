@@ -6,7 +6,7 @@ import { ProveedoresService } from 'src/app/services/proveedores.service';
 
 @Component({
   selector: 'app-nuevo-fabricante',
-  templateUrl: './nuevo-fabricante.component.html',
+  standalone: false,templateUrl: './nuevo-fabricante.component.html',
   styleUrls: ['./nuevo-fabricante.component.scss']
 })
 export class NuevoFabricanteComponent implements OnInit{

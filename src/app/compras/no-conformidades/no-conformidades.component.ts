@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-no-conformidades',
-  templateUrl: './no-conformidades.component.html',
+  standalone: false,templateUrl: './no-conformidades.component.html',
   styleUrls: ['./no-conformidades.component.scss']
 })
 export class NoConformidadesComponent {

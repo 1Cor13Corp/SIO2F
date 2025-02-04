@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-fases',
-  templateUrl: './fases.component.html',
+  standalone: false,templateUrl: './fases.component.html',
   styleUrls: ['./fases.component.scss']
 })
 export class FasesComponent {

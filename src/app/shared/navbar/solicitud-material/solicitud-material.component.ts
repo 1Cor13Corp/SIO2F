@@ -1,11 +1,16 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { SolicitudesService } from 'src/app/services/solicitudes.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-solicitud-material',
-  templateUrl: './solicitud-material.component.html',
+  standalone: false,templateUrl: './solicitud-material.component.html',
   styleUrls: ['./solicitud-material.component.scss']
 })
 export class SolicitudMaterialComponent implements OnInit{
+
+
+  constructor(public solicitudes:SolicitudesService){}
 
 
   ngOnInit(): void {
@@ -125,6 +130,68 @@ inputValue: string = '0,00';
     this.inputValue = newValue;
   }
 
+
+  NoHayPorAceptar(): boolean { 
+    return !this.solicitudes.solicitudes.some(s => s.status === 'Por Aceptar');
+}
+
+  aceptarSolicitud(id){
+    Swal.fire({
+      title: "¿Aprobar solicitud?",
+      text:'Por favor verifica, cantidades, motivo y todo lo relacionado a esta solicitud',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Aprobar",
+      denyButtonText: `Cancelar`,
+      confirmButtonColor:'#48c78e',
+      denyButtonColor:'#f14668'
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.solicitudes.AprobarSolicitud(id)
+        setTimeout(() => {
+          Swal.fire({
+            title:this.solicitudes.mensaje.mensaje,
+            icon:this.solicitudes.mensaje.icon,
+            toast:true,
+            position:'top-end',
+            timer:5000,
+            timerProgressBar:true,
+            showConfirmButton:false
+          });
+        }, 500);
+      }
+    });
+  }
+
+
+  cacelarSlicitud(id){
+    Swal.fire({
+      title: "¿Cancelar esta solicitud?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Cancelar",
+      denyButtonText: `No cancelar`,
+      confirmButtonColor:'#f14668',
+      denyButtonColor:'#48c78e'
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.solicitudes.CancelarSolicitud(id)
+        setTimeout(() => {
+          Swal.fire({
+            title:this.solicitudes.mensaje.mensaje,
+            icon:this.solicitudes.mensaje.icon,
+            toast:true,
+            position:'top-end',
+            timer:5000,
+            timerProgressBar:true,
+            showConfirmButton:false
+          });
+        }, 500);
+      }
+    });
+  }
 
 
 

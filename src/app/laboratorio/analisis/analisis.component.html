@@ -4,6 +4,7 @@
 [Recepcion]="Recepcion_selected"
 [Index]="index_material"
 [Analisis]="Analisis"
+[Preparacion]="Preparacion"
 (onCloseModal)="Cerrar()"
 (onCloseSencillo)="Tinta = false">
 </app-analisis-tinta>
@@ -115,6 +116,19 @@
                                                         </td>
                                                     </tr>
                                                 </ng-container>
+                                            </ng-container>
+                                        </ng-container>
+                                        <ng-container *ngIf="PreparacionesTinta().length > 0">
+                                            <ng-container *ngFor="let preparacion of PreparacionesTinta();index as i">
+                                                <tr>
+                                                    <td>Tinta preparada</td>
+                                                    <td></td>
+                                                    <td>{{preparacion.material.nombre}}</td>
+                                                    <td>{{preparacion.cantidad | number:'1.0-2'}} Kg.</td>
+                                                    <td>
+                                                        <span class="icon blue_"><i class="fas fa-vial" (click)="AnalizarPreparacion(preparacion)"></i></span>
+                                                    </td>
+                                                </tr>
                                             </ng-container>
                                         </ng-container>
                                     </tbody>
@@ -344,14 +358,14 @@
                         Estadísticas
                     </span>
                     <div class="columns">
-                        <div class="column">
+                        <!-- <div class="column">
                             <div class="chart-container">
                                 <canvas  id="Sustrato_chart" width="50" height="50">{{ sustrato_char }}</canvas>
                             </div>
                             <div class="carga" *ngIf="!sustrato_char">
                                 <div class="spinner left"></div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="column">
                             <span class="subtitles">
                                 Detalles

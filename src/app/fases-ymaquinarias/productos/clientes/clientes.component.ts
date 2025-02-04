@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-clientes',
-  templateUrl: './clientes.component.html',
+  standalone: false,templateUrl: './clientes.component.html',
   styleUrls: ['./clientes.component.scss']
 })
 export class ClientesComponent {

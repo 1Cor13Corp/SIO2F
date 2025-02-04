@@ -1,21 +1,24 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AlmacenService } from 'src/app/services/almacen.service';
 import { OproduccionService } from 'src/app/services/oproduccion.service';
+import { SolicitudesService } from 'src/app/services/solicitudes.service';
 
 @Component({
   selector: 'app-asignacion',
-  templateUrl: './asignacion.component.html',
+  standalone: false,templateUrl: './asignacion.component.html',
   styleUrls: ['./asignacion.component.scss']
 })
 export class AsignacionComponent {
 
   constructor(public orden:OproduccionService,
-              public almacen:AlmacenService
+              public almacen:AlmacenService,
+              public solicitudes:SolicitudesService
   ){
 
   }
 
   public control:boolean[] = [];
+  public control_:boolean[] = [];
   public listado:boolean = false;
   public almacenado = [];
   public indice = 0;
@@ -26,6 +29,8 @@ export class AsignacionComponent {
   public lotes:any = []
   public cantidades:any = []
   public sumatoria:any = 0
+
+  public descuentos:any = []
 
   @Input() asignacion!:boolean;
   @Output() onCloseModal = new EventEmitter();
@@ -73,6 +78,17 @@ export class AsignacionComponent {
 
   largo(n){
     return this.orden.OrdenesPorAsignar()[n].tinta.length + 3
+  }
+
+  _largo(n){
+    return this.solicitudes.solicitudes[n].materiales.length
+  }
+
+
+  RealizarDescuento(orden){
+    this.almacen.AsignacionDeMaterial(this.descuentos);
+    this.orden.EditarOrden(orden)
+    this.asignacion = false;
   }
 
 

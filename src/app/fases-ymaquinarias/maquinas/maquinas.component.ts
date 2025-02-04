@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-maquinas',
-  templateUrl: './maquinas.component.html',
+  standalone: false,templateUrl: './maquinas.component.html',
   styleUrls: ['./maquinas.component.scss']
 })
 export class MaquinasComponent {

@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nueva-conformidad',
-  templateUrl: './nueva-conformidad.component.html',
+  standalone: false,templateUrl: './nueva-conformidad.component.html',
   styleUrls: ['./nueva-conformidad.component.scss']
 })
 export class NuevaConformidadComponent {

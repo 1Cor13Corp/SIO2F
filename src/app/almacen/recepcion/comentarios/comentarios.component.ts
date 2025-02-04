@@ -4,7 +4,7 @@ import { RecepcionService } from 'src/app/services/recepcion.service';
 
 @Component({
   selector: 'app-comentarios',
-  templateUrl: './comentarios.component.html',
+  standalone: false,templateUrl: './comentarios.component.html',
   styleUrls: ['./comentarios.component.scss']
 })
 export class ComentariosComponent {

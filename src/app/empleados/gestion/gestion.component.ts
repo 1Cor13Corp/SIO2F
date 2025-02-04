@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestion',
-  templateUrl: './gestion.component.html',
+  standalone: false,templateUrl: './gestion.component.html',
   styleUrls: ['./gestion.component.scss']
 })
 export class GestionComponent {

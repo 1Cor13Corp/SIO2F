@@ -8,6 +8,7 @@ import { Mensaje } from '../compras/models/modelos-compra';
 export class OproduccionService {
 
   public orden!:any
+  public gestiones!:any;
   public mensaje!:Mensaje
 
   constructor(public socket:WebSocketService) { 
@@ -28,6 +29,12 @@ export class OproduccionService {
       this.mensaje = data
     });
 
+    this.socket.io.emit('Cliente:Gestiones');
+    
+    this.socket.io.on('SERVER:Gestiones', (data)=>{
+      this.gestiones = data
+    })
+
   }
 
   guardarOrdenProduccion(data){
@@ -40,5 +47,17 @@ export class OproduccionService {
     )
   }
 
+  EditarOrden(data){
+    this.socket.io.emit('CLIENTE:ActualizarOrdenProduccion', data)
+  }
+
+
+  NuevaGestion(data){
+    this.socket.io.emit('CLIENTE:NuevaGestion', data)
+  }
+
+  GestionesDeFase(orden:any, fase:any){
+    return this.gestiones.filter(g => g.orden._id === orden._id && g.fase === fase)
+  }
 
 }

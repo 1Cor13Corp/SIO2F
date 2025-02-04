@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nuevo-grupo',
-  templateUrl: './nuevo-grupo.component.html',
+  standalone: false,templateUrl: './nuevo-grupo.component.html',
   styleUrls: ['./nuevo-grupo.component.scss']
 })
 export class NuevoGrupoComponent implements OnInit{

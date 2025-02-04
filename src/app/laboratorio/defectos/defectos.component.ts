@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-defectos',
-  templateUrl: './defectos.component.html',
+  standalone: false,templateUrl: './defectos.component.html',
   styleUrls: ['./defectos.component.scss']
 })
 export class DefectosComponent {

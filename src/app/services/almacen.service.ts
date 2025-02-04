@@ -7,6 +7,7 @@ import { WebSocketService } from './web-socket.service';
 export class AlmacenService {
 
   Almacen:any;
+  Registro:any;
   constructor(private socket:WebSocketService) {
     this.BuscarAlmacen();
    }
@@ -17,7 +18,12 @@ export class AlmacenService {
       this.Almacen = Almacen;
     })
 
+    this.socket.io.emit('CLIENTE:BuscarLogs')
     this.socket.io.emit('CLIENTE:BuscarAlmacen');
+
+    this.socket.io.on('SERVER:registros', async (registro)=>{
+      this.Registro = registro
+    })
   }
 
   GuardarAlmacen(data:any){
@@ -63,7 +69,6 @@ export class AlmacenService {
         capacidadesMap.set(capacidad, 1);
       }
     });
-  
     // Convertir el mapa a un array para facilitar el uso
     const capacidades = Array.from(capacidadesMap.entries()).map(([capacidad, cantidad]) => ({
       capacidad,
@@ -72,5 +77,8 @@ export class AlmacenService {
     return capacidades; // Devuelve un array con objetos de capacidad y cantidad
   }
 
-
+  AsignacionDeMaterial(data){
+    console.log(data)
+    this.socket.io.emit('CLIENTE:Asignacion', data)
+  }
 }

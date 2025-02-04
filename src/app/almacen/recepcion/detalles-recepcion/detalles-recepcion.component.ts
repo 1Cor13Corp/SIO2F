@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-detalles-recepcion',
-  templateUrl: './detalles-recepcion.component.html',
+  standalone: false,templateUrl: './detalles-recepcion.component.html',
   styleUrls: ['./detalles-recepcion.component.scss']
 })
 export class DetallesRecepcionComponent {

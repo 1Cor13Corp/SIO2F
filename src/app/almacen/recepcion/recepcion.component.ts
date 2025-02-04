@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import Swall from 'sweetalert2'
 @Component({
   selector: 'app-recepcion',
-  templateUrl: './recepcion.component.html',
+  standalone: false,templateUrl: './recepcion.component.html',
   styleUrls: ['./recepcion.component.scss']
 })
 export class RecepcionComponent {

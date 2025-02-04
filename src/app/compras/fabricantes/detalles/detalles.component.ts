@@ -3,7 +3,7 @@ import { Fabricante, Fabricante_populated } from '../../models/modelos-compra';
 
 @Component({
   selector: 'app-detalles',
-  templateUrl: './detalles.component.html',
+  standalone: false,templateUrl: './detalles.component.html',
   styleUrls: ['./detalles.component.scss']
 })
 export class DetallesComponent {

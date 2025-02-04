@@ -3,7 +3,7 @@ import { CategoriasService } from 'src/app/services/categorias.service';
 
 @Component({
   selector: 'app-nueva-categoria',
-  templateUrl: './nueva-categoria.component.html',
+  standalone: false,templateUrl: './nueva-categoria.component.html',
   styleUrls: ['./nueva-categoria.component.scss']
 })
 export class NuevaCategoriaComponent {

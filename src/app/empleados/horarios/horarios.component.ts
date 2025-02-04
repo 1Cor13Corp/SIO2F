@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-horarios',
-  templateUrl: './horarios.component.html',
+  standalone: false,templateUrl: './horarios.component.html',
   styleUrls: ['./horarios.component.scss']
 })
 export class HorariosComponent  {

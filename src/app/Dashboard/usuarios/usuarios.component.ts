@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-usuarios',
-  templateUrl: './usuarios.component.html',
+  standalone: false,templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.scss']
 })
 export class UsuariosComponent implements OnInit{

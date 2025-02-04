@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-trabajadores',
-  templateUrl: './trabajadores.component.html',
+  standalone: false,templateUrl: './trabajadores.component.html',
   styleUrls: ['./trabajadores.component.scss']
 })
 export class TrabajadoresComponent implements OnInit{

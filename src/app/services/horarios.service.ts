@@ -27,11 +27,13 @@ export class HorariosService {
 
 
     this.socket.io.on('SERVER:Horarios', (data) =>{
-      this.horarios = data
+      this.horarios = data;
+      console.log(this.horarios)
     })
 
     this.socket.io.on('SERVIDOR:EmitirCalendarios', (data) => {
       this.calendario = data;
+      console.log(this.calendario)
     })
   }
 

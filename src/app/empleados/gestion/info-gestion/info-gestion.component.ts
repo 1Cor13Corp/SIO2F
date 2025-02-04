@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-info-gestion',
-  templateUrl: './info-gestion.component.html',
+  standalone: false,templateUrl: './info-gestion.component.html',
   styleUrls: ['./info-gestion.component.scss']
 })
 export class InfoGestionComponent {

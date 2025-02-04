@@ -876,8 +876,14 @@
                     </div>
                 </div>
                 <div class="columns">
-                    <div class="column">
+                    <div class="column" *ngIf="!Preparacion">
                         <button class="button is-success" (click)="guardar()">
+                            <span class="icon"><i class="fas fa-save"></i></span>
+                            <span>Guardar</span>
+                        </button>
+                    </div>
+                    <div class="column" *ngIf="Preparacion">
+                        <button class="button is-success" (click)="guardarPreparacion()">
                             <span class="icon"><i class="fas fa-save"></i></span>
                             <span>Guardar</span>
                         </button>
@@ -892,13 +898,17 @@
                                 <td>
                                     <div class="select">
                                         <select name="" id="" [(ngModel)]="Analisis.resultado.resultado">
+                                            <option value="LIBERADO" *ngIf="Preparacion">LIBERADO</option>
                                             <option value="APROBADO">APROBADO</option>
                                             <option value="RECHAZADO">RECHAZADO</option>
                                         </select>
                                     </div>
                                 </td>
                                 <td>
-                                    <button class="button is-success" (click)="AnalisisCompletado()" *ngIf="Analisis.resultado.resultado">
+                                    <button class="button is-success" (click)="AnalisisCompletado(Preparacion)" *ngIf="Analisis.resultado.resultado && !Preparacion">
+                                        <span>Descargar</span>
+                                    </button>
+                                    <button class="button is-success" (click)="AnalisisPreparacion()" *ngIf="Analisis.resultado.resultado && Preparacion">
                                         <span>Descargar</span>
                                     </button>
                                 </td>

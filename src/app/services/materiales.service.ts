@@ -78,6 +78,31 @@ buscarCajasYmetros(nombre) {
   return caja;
 }
 
+  /**
+ * Busca elementos según la capacidad especificada.
+ * 
+ * @param {number} capacidad - La capacidad que se utilizará para filtrar los elementos.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * const resultado = BuscarPorCapacidad(10);
+ * console.log(resultado);
+ * 
+ * @returns {Array|Object} - Devuelve el envase que tenga la misma capacidad que le pasas como parametro
+ */
+  BuscarPorCapacidad(capacidad: number) {
+
+    // Filtrar los envases en el almacén
+    const envases = this.materiales.filter(x => x.grupo.nombre === 'Envases');
+
+    console.log(envases)
+
+    return envases.find((x) => x.capacidad == capacidad)
+  
+    
+  
+  }
+
 
 
 

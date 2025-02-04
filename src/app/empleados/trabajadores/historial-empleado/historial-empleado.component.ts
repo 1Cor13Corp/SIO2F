@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-historial-empleado',
-  templateUrl: './historial-empleado.component.html',
+  standalone: false,templateUrl: './historial-empleado.component.html',
   styleUrls: ['./historial-empleado.component.scss']
 })
 export class HistorialEmpleadoComponent {

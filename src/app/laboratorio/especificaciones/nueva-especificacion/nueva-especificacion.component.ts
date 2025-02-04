@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nueva-especificacion',
-  templateUrl: './nueva-especificacion.component.html',
+  standalone: false,templateUrl: './nueva-especificacion.component.html',
   styleUrls: ['./nueva-especificacion.component.scss']
 })
 export class NuevaEspecificacionComponent {

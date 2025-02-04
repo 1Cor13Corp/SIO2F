@@ -46,7 +46,7 @@
                           class="checkbox"
                           [checked]="cantidades[i] > 0"
                           [disabled]="isDisabled(i)"
-                          (click)="addLote(i, material.neto, $event.target, material.material.grupo.parcial)"
+                          (click)="addLote(i, material.neto, $event.target, material.material.grupo.parcial, material._id, (material.neto - (cantidades[i] || 0)), material.material._id)"
                         />
                       </td>
                       <td style="text-align: center;">{{ material.lote }}</td>

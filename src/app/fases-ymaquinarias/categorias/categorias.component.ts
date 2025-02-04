@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-categorias',
-  templateUrl: './categorias.component.html',
+  standalone: false,templateUrl: './categorias.component.html',
   styleUrls: ['./categorias.component.scss']
 })
 export class CategoriasComponent {

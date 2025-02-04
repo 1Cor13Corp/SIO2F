@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nuevo-proveedor',
-  templateUrl: './nuevo-proveedor.component.html',
+  standalone: false,templateUrl: './nuevo-proveedor.component.html',
   styleUrls: ['./nuevo-proveedor.component.scss']
 })
 export class NuevoProveedorComponent implements OnInit{

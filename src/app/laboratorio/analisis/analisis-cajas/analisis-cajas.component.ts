@@ -9,7 +9,7 @@ import { RecepcionService } from 'src/app/services/recepcion.service';
 
 @Component({
   selector: 'app-analisis-cajas',
-  templateUrl: './analisis-cajas.component.html',
+  standalone: false,templateUrl: './analisis-cajas.component.html',
   styleUrls: ['./analisis-cajas.component.scss']
 })
 export class AnalisisCajasComponent {

@@ -4,7 +4,7 @@ import { GruposService } from 'src/app/services/grupos.service';
 
 @Component({
   selector: 'app-almacenado',
-  templateUrl: './almacenado.component.html',
+  standalone: false,templateUrl: './almacenado.component.html',
   styleUrls: ['./almacenado.component.scss']
 })
 export class AlmacenadoComponent {

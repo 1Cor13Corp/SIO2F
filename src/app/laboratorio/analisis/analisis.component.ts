@@ -6,10 +6,11 @@ import { MaterialesService } from 'src/app/services/materiales.service';
 import { RecepcionService } from 'src/app/services/recepcion.service';
 import Swal from 'sweetalert2';
 import Chart from 'chart.js/auto';
+import { SolicitudesService } from 'src/app/services/solicitudes.service';
 
 @Component({
   selector: 'app-analisis',
-  templateUrl: './analisis.component.html',
+  standalone: false,templateUrl: './analisis.component.html',
   styleUrls: ['./analisis.component.scss']
 })
 export class AnalisisComponent {
@@ -450,16 +451,17 @@ export class AnalisisComponent {
   constructor(public recepciones:RecepcionService,
               public analisis:AnalisisService,
               public grupos:GruposService,
-              public materiales:MaterialesService){
+              public materiales:MaterialesService,
+              public solicitudes:SolicitudesService){
 
-                console.log(this.recepciones)
                 const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
                 const fechaActual = new Date();
                 this.mesActual = meses[fechaActual.getMonth()];
                 this.yearActual = new Date().getFullYear();
-                setTimeout(() => {
-                  this.SustratoChar()
-                }, 5000);
+  }
+
+  PreparacionesTinta(){
+    return this.solicitudes.solicitudes.filter(s => s.tag === 'Preparacion' && (s.status === 'Por Asignar' || s.status === 'Por Etiquetar'))
   }
 
   CalcularPeso(materiales){
@@ -474,37 +476,37 @@ export class AnalisisComponent {
     this.Analizar(e[0],e[1],e[2],e[3])
   }
 
-  SustratoChar(){
-    if(this.sustrato_char){
-      this.sustrato_char.destroy();
-    }
-    this.sustrato_char = new Chart("Sustrato_chart",{
-      type:'bar',
-      data:{
-        labels:['Sustrato','Tinta','Cajas','Pads','Otros'],
-        datasets: [{
-          label: 'Aprobados',
-          data: [this.analisis.SustratoAprobado,this.analisis.TintasAprobadas,this.analisis.CajasAceptadas,this.analisis.PadsAprobados,this.analisis.OtrosAprobados],
-          backgroundColor: ['rgba(72, 199, 142, 0.5)',],
-          borderColor: ['rgb(72, 199, 142)',],
-          borderWidth:2,
-          borderSkipped: false,
-          borderRadius:10
-          // hoverOffset: 4
-        },
-        {
-          label: 'Rechazados',
-          data: [this.analisis.SustratoRechazado,this.analisis.TintasRechazadas,this.analisis.CajasRechazadas,this.analisis.PadsRechazados,this.analisis.OtrosRechazados],
-          backgroundColor: ['rgba(255, 99, 132, 0.5)',],
-          borderColor: ['rgb(255, 99, 132)',],
-          borderWidth:2,
-          borderSkipped: false,
-          borderRadius:10
-          // hoverOffset: 4
-        }],
-      }
-    })
-  }
+  // SustratoChar(){
+  //   if(this.sustrato_char){
+  //     this.sustrato_char.destroy();
+  //   }
+  //   this.sustrato_char = new Chart("Sustrato_chart",{
+  //     type:'bar',
+  //     data:{
+  //       labels:['Sustrato','Tinta','Cajas','Pads','Otros'],
+  //       datasets: [{
+  //         label: 'Aprobados',
+  //         data: [this.analisis.SustratoAprobado,this.analisis.TintasAprobadas,this.analisis.CajasAceptadas,this.analisis.PadsAprobados,this.analisis.OtrosAprobados],
+  //         backgroundColor: ['rgba(72, 199, 142, 0.5)',],
+  //         borderColor: ['rgb(72, 199, 142)',],
+  //         borderWidth:2,
+  //         borderSkipped: false,
+  //         borderRadius:10
+  //         // hoverOffset: 4
+  //       },
+  //       {
+  //         label: 'Rechazados',
+  //         data: [this.analisis.SustratoRechazado,this.analisis.TintasRechazadas,this.analisis.CajasRechazadas,this.analisis.PadsRechazados,this.analisis.OtrosRechazados],
+  //         backgroundColor: ['rgba(255, 99, 132, 0.5)',],
+  //         borderColor: ['rgb(255, 99, 132)',],
+  //         borderWidth:2,
+  //         borderSkipped: false,
+  //         borderRadius:10
+  //         // hoverOffset: 4
+  //       }],
+  //     }
+  //   })
+  // }
 
 // setInterval(changeText, 5000); // Cambia el texto cada 5 segundos
 
@@ -565,6 +567,20 @@ export class AnalisisComponent {
     }
   }
 
+
+
+
+  public Preparacion = false;
+  AnalizarPreparacion(preparacion){
+    this.Tinta = true;
+    this.Recepcion_selected = preparacion;
+    this.Preparacion = true;
+    // this.Material_selected = material;
+    // this.index_material = index_material;
+    if(this.analisis.buscarAnalisisPorID(preparacion.analisis)){
+      this.Analisis = this.analisis.buscarAnalisisPorID(preparacion.analisis)
+    }
+  }
 
 
   Analizar(recepcion:any, material:any, index_recepcion:number, index_material:number){
@@ -640,7 +656,7 @@ export class AnalisisComponent {
     this.pads = false;
     this.otro = false;
     setTimeout(() => {
-      this.SustratoChar();
+      // this.SustratoChar();
       Swal.fire({
         title: this.analisis.mensaje.mensaje,
         icon: this.analisis.mensaje.icon,
@@ -655,9 +671,9 @@ export class AnalisisComponent {
 
   Cerrar(){
     this.Tinta = false;
-    this.SustratoChar()
+    // this.SustratoChar()
     setTimeout(() => {
-      this.SustratoChar();
+      // this.SustratoChar();
       Swal.fire({
         title: this.analisis.mensaje.mensaje,
         icon: this.analisis.mensaje.icon,
@@ -738,4 +754,7 @@ export class AnalisisComponent {
     this.Busqueda = true;
     console.log(this.Materiales)
   }
+
+
+
 }

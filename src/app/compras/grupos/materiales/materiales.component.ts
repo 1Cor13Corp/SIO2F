@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-materiales',
-  templateUrl: './materiales.component.html',
+  standalone: false,templateUrl: './materiales.component.html',
   styleUrls: ['./materiales.component.scss']
 })
 export class MaterialesComponent {

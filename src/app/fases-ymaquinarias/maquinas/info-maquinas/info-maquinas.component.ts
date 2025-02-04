@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-info-maquinas',
-  templateUrl: './info-maquinas.component.html',
+  standalone: false,templateUrl: './info-maquinas.component.html',
   styleUrls: ['./info-maquinas.component.scss']
 })
 export class InfoMaquinasComponent {

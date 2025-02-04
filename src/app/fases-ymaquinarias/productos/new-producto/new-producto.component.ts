@@ -15,7 +15,7 @@ import { ProductosService } from 'src/app/services/productos.service';
 
 @Component({
   selector: 'app-new-producto',
-  templateUrl: './new-producto.component.html',
+  standalone: false,templateUrl: './new-producto.component.html',
   styleUrls: ['./new-producto.component.scss']
 })
 export class NewProductoComponent {

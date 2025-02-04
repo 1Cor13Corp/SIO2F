@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nuevo-cargo',
-  templateUrl: './nuevo-cargo.component.html',
+  standalone: false,templateUrl: './nuevo-cargo.component.html',
   styleUrls: ['./nuevo-cargo.component.scss']
 })
 export class NuevoCargoComponent {

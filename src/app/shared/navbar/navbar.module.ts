@@ -8,6 +8,7 @@ import { CambioContrasenaComponent } from './cambio-contrasena/cambio-contrasena
 import { AsignacionComponent } from './asignacion/asignacion.component';
 import { ControlComponent } from './asignacion/control/control.component';
 import { ColorMixComponent } from './solicitud-material/color-mix/color-mix.component';
+import { EtiquetasComponent } from './etiquetas/etiquetas.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { ColorMixComponent } from './solicitud-material/color-mix/color-mix.comp
     CambioContrasenaComponent,
     AsignacionComponent,
     ControlComponent,
-    ColorMixComponent
+    ColorMixComponent,
+    EtiquetasComponent
   ],
   imports: [
     CommonModule,

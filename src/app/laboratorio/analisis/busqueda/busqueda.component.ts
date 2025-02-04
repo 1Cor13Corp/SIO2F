@@ -3,7 +3,7 @@ import { AnalisisService } from 'src/app/services/analisis.service';
 
 @Component({
   selector: 'app-busqueda',
-  templateUrl: './busqueda.component.html',
+  standalone: false,templateUrl: './busqueda.component.html',
   styleUrls: ['./busqueda.component.scss']
 })
 export class BusquedaComponent {

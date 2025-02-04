@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-condicion',
-  templateUrl: './condicion.component.html',
+  standalone: false,templateUrl: './condicion.component.html',
   styleUrls: ['./condicion.component.scss']
 })
 export class CondicionComponent {

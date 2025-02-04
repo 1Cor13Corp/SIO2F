@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nuevo-departamento',
-  templateUrl: './nuevo-departamento.component.html',
+  standalone: false,templateUrl: './nuevo-departamento.component.html',
   styleUrls: ['./nuevo-departamento.component.scss']
 })
 export class NuevoDepartamentoComponent {

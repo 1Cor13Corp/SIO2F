@@ -7,7 +7,7 @@ import { MaquinasService } from 'src/app/services/maquinas.service';
 
 @Component({
   selector: 'app-cambios',
-  templateUrl: './cambios.component.html',
+  standalone: false,templateUrl: './cambios.component.html',
   styleUrls: ['./cambios.component.scss']
 })
 export class CambiosComponent {

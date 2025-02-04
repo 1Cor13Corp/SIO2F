@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-proveedores',
-  templateUrl: './proveedores.component.html',
+  standalone: false,templateUrl: './proveedores.component.html',
   styleUrls: ['./proveedores.component.scss']
 })
 export class ProveedoresComponent{

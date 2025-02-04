@@ -25,7 +25,7 @@
                     </div>
                     <div class="column_">
                         <div class="circle tintas" (click)="seccion(3)">
-                            <i class="fab fa-mix"></i>
+                            <i class="fas fa-swatchbook"></i>
                             <p>Preparación de tintas</p>
                         </div>
                     </div>
@@ -33,6 +33,16 @@
                         <div class="circle repuestos" (click)="seccion(2)">
                             <i class="fas fa-wrench"></i>
                             <p>Repuestos</p>
+                        </div>
+                    </div>
+                    <div class="column_">
+                        <div class="circle dividido" (click)="seccion(4)">
+                            <i class="fas fa-check smaller"></i>
+                            <p>Pendientes</p>
+                        </div>
+                        <div class="circle dividido_">
+                            <i class="fas fa-history smaller"></i>
+                            <p>Historial</p>
                         </div>
                     </div>
                 </div>
@@ -339,6 +349,58 @@
                         (onCloseModal)="home()">
 
                         </app-color-mix>
+                    </div>
+
+                    <div *ngIf="secciones[4]">
+                        <div class="card mt-5 title_ cheked">
+                            <!-- <span class="red-bar"></span> -->
+                            <div class="card-content">
+                              <h1 class="title blancas">
+                               Solicitudes pendientes
+                              </h1>
+                              <div class="iconos">
+                                <i class="fas fa-check"></i>
+                              </div>
+                            </div>
+                        </div>
+                        <br>
+                        <span class="link more" (click)="home()">
+                            <i class="fas fa-home"></i> Inicio
+                        </span>
+                        <br> <br>
+                        <div class="custom-card" *ngIf="NoHayPorAceptar()">
+                            <p class="message">No hay solicitudes pendientes</p>
+                        </div>
+                        <ng-container *ngFor="let solicitudes_ of solicitudes.solicitudes; index as index" >
+                            <ng-container *ngIf="solicitudes_.status == 'Por Aceptar'">
+                                <div class="card">
+                                    <div class="card-container" style="padding: 5px;">
+                                        <div class="subtitles">{{solicitudes_.motivo}}</div>
+                                        <table class="table is-fullwidth">
+                                            <thead>
+                                                <tr>
+                                                    <th>Material</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let materiales of solicitudes_.materiales">
+                                                    <td>{{materiales.material.nombre}}</td>
+                                                    <td>{{materiales.cantidad}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <button class="button is-success" style="margin: 5px;" (click)="aceptarSolicitud(solicitudes_._id)">
+                                            <span class="icon"><i class="fas fa-check"></i></span>
+                                        </button>
+                                        <button class="button is-danger" style="margin: 5px;" (click)="cacelarSlicitud(solicitudes_._id)">
+                                            <span class="icon"><i class="fas fa-ban"></i></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <hr>
+                            </ng-container>
+                        </ng-container>
                     </div>
                 </div>
             </div>

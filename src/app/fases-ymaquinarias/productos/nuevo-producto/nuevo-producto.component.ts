@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nuevo-producto',
-  templateUrl: './nuevo-producto.component.html',
+  standalone: false,templateUrl: './nuevo-producto.component.html',
   styleUrls: ['./nuevo-producto.component.scss']
 })
 export class NuevoProductoComponent implements OnInit{

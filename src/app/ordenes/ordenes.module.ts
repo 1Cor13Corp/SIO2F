@@ -12,6 +12,7 @@ import { NuevaOPComponent } from './produccion/nueva-op/nueva-op.component';
 import { ResizableModule } from 'angular-resizable-element';
 import { ClientesComponent } from './clientes/clientes.component';
 import { NewClienteComponent } from './clientes/new-cliente/new-cliente.component';
+import { NuevaGestionComponent } from './nueva-gestion/nueva-gestion.component';
 
 
 
@@ -22,7 +23,8 @@ import { NewClienteComponent } from './clientes/new-cliente/new-cliente.componen
     ProduccionComponent,
     NuevaOPComponent,
     ClientesComponent,
-    NewClienteComponent
+    NewClienteComponent,
+    NuevaGestionComponent
   ],
   imports: [
     CommonModule,

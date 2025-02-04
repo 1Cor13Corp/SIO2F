@@ -8,6 +8,7 @@
 [lotes]="lotes"
 [cantidades]="cantidades"
 [sumatoria]="sumatoria"
+[descuentos]="descuentos"
 (onCloseModal)="cerrarSubModal()">
 </app-control>
 
@@ -146,7 +147,7 @@
                         </table>
                         <br>
                         <ng-container *ngIf="_asignacion[i]">
-                            <button class="button is-success" *ngIf="_asignacion[i].length === largo(i)">
+                            <button class="button is-success" *ngIf="_asignacion[i].length === largo(i)" (click)="RealizarDescuento(orden)">
                                 <span class="icon"><i class="fas fa-tasks"></i></span>
                                 <span>Asignar</span>
                             </button>
@@ -154,6 +155,70 @@
                     </div>
                 </div>
                 <br>
+            </ng-container>
+            <ng-container *ngFor="let solicitudes of solicitudes.solicitudes; index as i">
+                <ng-container *ngIf="solicitudes.status === 'Por Asignar'">
+                    <div class="card">
+                        <header class="card-header dark">
+                          <p class="card-header-title"><b style="font-family: 'Gilroy';">Motivo: </b> {{solicitudes.motivo}}</p>
+                          <button class="card-header-icon" style="background-color: transparent;" aria-label="more options">
+                            <span class="icon" (click)="control_[i] = true" *ngIf="!control_[i]">
+                              <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                            <span class="icon" (click)="control_[i] = false" *ngIf="control_[i]">
+                                <i class="fas fa-angle-up" aria-hidden="true"></i>
+                              </span>
+                          </button>
+                        </header>
+                        <div class="card-content info" [ngClass]="{'Showed':control_[i]}">
+                            <table class="table is-fullwidth is-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 70%;">Material</th>
+                                        <th>Cantidad</th>
+                                        <th style="align-items: center; text-align: center;">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let materiales of solicitudes.materiales;index as n">
+                                            <td>
+                                                <div class="columns">
+                                                    <div class="column is-1">
+                                                        <ng-container *ngIf="_asignacion[i]">
+                                                            <button class="button" style="color: #48c78e;background-color: transparent;border: none;" *ngIf="_asignacion[i][n]">
+                                                                <span class="icon">
+                                                                    <i class="fas fa-check"></i>
+                                                                </span>
+                                                            </button>
+                                                        </ng-container> 
+                                                    </div>
+                                                    <div class="column">
+                                                        {{materiales.material.nombre}}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{materiales.cantidad |number }} und</td>
+                                            <td style="text-align: center; align-items: center;">
+                                                <button class="button" 
+                                                (click)="Asignar(i, materiales.material._id, materiales.cantidad, n)"
+                                                style="border: none;background-color: transparent;color: hsl(207, 61%, 53%);">
+                                                    <span class="icon"><i class="fas fa-plus-circle"></i></span>
+                                                </button>
+                                            </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br>
+                            <ng-container *ngIf="_asignacion[i]">
+                                <button class="button is-success" *ngIf="_asignacion[i].length === _largo(i)">
+                                    <span class="icon"><i class="fas fa-tasks"></i></span>
+                                    <span>Asignar</span>
+                                </button>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <br>
+                </ng-container>
             </ng-container>
 
         </div>

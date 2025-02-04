@@ -13,6 +13,7 @@ import { OproduccionService } from 'src/app/services/oproduccion.service';
 
 @Component({
   selector: 'app-nueva-op',
+  standalone: false,
   templateUrl: './nueva-op.component.html',
   styleUrls: ['./nueva-op.component.scss']
 })
@@ -831,11 +832,18 @@ generateDates(): string[] {
   return dates;
 }
 
-GuardarTrabajo(){
-  this.OP.fases = [];
-  this.OP.fases = this.medidas
+GuardarTrabajo = async ()=>{
   console.log(this.OP)
-  this.api.guardarOrdenProduccion(this.OP)
+  this.OP.fases = [];
+  this.OP.fases = this.medidas;
+
+  for(let i=0;i<this.OP.fases.length;i++){
+    if(!this.OP.fases[i].nombre){
+      this.OP.fases[i].nombre = this.OP.fases[i].maquina.fases[0].nombre
+    }
+  }
+
+  await this.api.guardarOrdenProduccion(this.OP)
   this.OP = {
     cliente: '',
     oc:'',

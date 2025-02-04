@@ -1,0 +1,64 @@
+.paletas_container {
+    display: flex;
+    gap: 5px;
+}
+
+.paletas_container .palets {
+    display: flex;
+    /* Change from block to flex */
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    background-color: rgb(72, 127, 237);
+    color: white;
+    text-align: center;
+    font-family: 'Gilroy';
+    border-radius: 5px;
+}
+
+
+.paletas_container .palets:hover {
+    background-color: rgb(215, 215, 215);
+    cursor: pointer;
+}
+
+.paletas_diseno {
+    padding: 10px;
+    background-color: rgb(234, 234, 234);
+    border-radius: 5px;
+    min-height: 100px;
+}
+
+.paletas_container .yellow {
+    background-color: yellow;
+    color: black;
+}
+
+// .paletas_container .selected {
+//     -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+//     -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+//     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+// }
+
+.burbuja {
+    display: block;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: white;
+}
+
+.triangle {
+    display: block;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 30px solid white;
+}
+
+.Nonselected {
+    visibility: hidden;
+}
+
+.selected {
+    visibility: visible;
+}

@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-grupos',
-  templateUrl: './grupos.component.html',
+  standalone: false,templateUrl: './grupos.component.html',
   styleUrls: ['./grupos.component.scss']
 })
 export class GruposComponent implements OnInit {

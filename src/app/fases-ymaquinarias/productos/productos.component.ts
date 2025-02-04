@@ -13,7 +13,7 @@ import { FormulasService } from 'src/app/services/formulas.service';
 
 @Component({
   selector: 'app-productos',
-  templateUrl: './productos.component.html',
+  standalone: false,templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.scss']
 })
 export class ProductosComponent implements OnInit{

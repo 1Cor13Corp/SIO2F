@@ -10,7 +10,7 @@ import { RecepcionService } from 'src/app/services/recepcion.service';
 
 @Component({
   selector: 'app-analisis-sustrato',
-  templateUrl: './analisis-sustrato.component.html',
+  standalone: false,templateUrl: './analisis-sustrato.component.html',
   styleUrls: ['./analisis-sustrato.component.scss']
 })
 export class AnalisisSustratoComponent {

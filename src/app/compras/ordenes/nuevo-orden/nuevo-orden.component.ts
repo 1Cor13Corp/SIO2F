@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nuevo-orden',
-  templateUrl: './nuevo-orden.component.html',
+  standalone: false,templateUrl: './nuevo-orden.component.html',
   styleUrls: ['./nuevo-orden.component.scss']
 })
 export class NuevoOrdenComponent {
