@@ -9,6 +9,8 @@ import { AsignacionComponent } from './asignacion/asignacion.component';
 import { ControlComponent } from './asignacion/control/control.component';
 import { ColorMixComponent } from './solicitud-material/color-mix/color-mix.component';
 import { EtiquetasComponent } from './etiquetas/etiquetas.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { ConfDevolucionesComponent } from './conf-devoluciones/conf-devoluciones.component';
 
 
 @NgModule({
@@ -19,7 +21,9 @@ import { EtiquetasComponent } from './etiquetas/etiquetas.component';
     AsignacionComponent,
     ControlComponent,
     ColorMixComponent,
-    EtiquetasComponent
+    EtiquetasComponent,
+    NotificationsComponent,
+    ConfDevolucionesComponent
   ],
   imports: [
     CommonModule,

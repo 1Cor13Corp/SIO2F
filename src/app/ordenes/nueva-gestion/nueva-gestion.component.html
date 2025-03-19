@@ -62,6 +62,8 @@
                 </div>
             </div>
             <hr>
+            <span class="title" style="font-size: medium;">Cantidad producida</span>
+            <span class="subtitle"></span>
             <div class="field is-grouped">
                 <div class="control">
                     <label for="" class="label">Unidad:</label>
@@ -97,8 +99,8 @@
                     </div>
                 </div>
                 <div class="burbuja">
-                    <button class="button is-small is-info" *ngIf="p_selected" (click)="addNew()">
-                        <span class="icon"><i class="fas fa-plus"></i></span>
+                    <button class="button is-info" style="color:rgb(72, 127, 237); background-color:transparent; border: none;" *ngIf="p_selected" (click)="addNew()">
+                        <span ><i class="fas fa-plus-circle"></i></span>
                     </button> 
                     <button class="button is-small is-success" *ngIf="FindDefecto(p_selected).amarillo === true">
                         <span class="icon"><i class="fas fa-edit"></i></span>
@@ -109,10 +111,55 @@
                     </ul>
                 </div>
             </div>
-
             <hr>
+            <span class="title" style="font-size: medium;">Equipo de trabajo</span> <br> <br>
+            <div class="field">
+                <div class="control">
+                    <label for="" class="label">Buscar empleado</label>
+                    <input type="text" class="input" [(ngModel)]="searchText" placeholder="Buscar empleado">
+                </div>
+            </div>
+            <span class="empleados" *ngFor="let trabajador of filteredEmployees()">
+                <div class="columns">
+                    <div class="column is-2">
+                        <figure class="image is-75x75 profile_pic">
+                            <img class="is-rounded" width="30px"  src="https://192.168.0.22/api/imagen/empleado/{{trabajador.datos_personales.foto}}"/>
+                        </figure>
+                    </div>
+                    <div class="column is-4">
+                        <br>
+                        {{trabajador.datos_personales.nombres}}
+                        {{trabajador.datos_personales.apellidos}} <br>
+                        {{trabajador.contratacion.cargo.nombre}}
+                    </div>
+                    <div class="column">
+                        <br>
+                        <button class="button" style="background-color: transparent; border: none; color: rgb(72, 127, 237);" (click)="agregarEmpleado(trabajador.datos_personales.nombres, trabajador.datos_personales.apellidos)">
+                            <span class="icon">
+                                <i class="fas fa-plus-circle"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </span>
+            <hr>
+            <table class="table is-fullwidth is-striped">
+                <thead>
+                    <tr>
+                        <th>Empleado</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let empleado of data.team;index as i">
+                        <td>{{empleado}}</td>
+                        <td><i class="fas fa-trash-alt" style="cursor: pointer; color: rgb(255, 162, 162);" (click)="data.team.splice(i,1)"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
             <button class="button is-success" (click)="GuardarData()">
-                <span class="ico"></span>
+                <span class="icon"></span>
                 <span>Guardar</span>
             </button>
         </div>

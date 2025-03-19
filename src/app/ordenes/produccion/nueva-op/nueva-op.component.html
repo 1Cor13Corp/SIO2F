@@ -415,6 +415,44 @@
                         <span>Guardar</span>
                     </button>
                 </span>
+                <span class="content" *ngIf="i === 7">
+                    <b>Cantidad a  despachar:</b> {{OP.cantidad | number: '2.0-00'}}
+                    <form [formGroup]="despachoForm">
+                        <div formArrayName="despachos">
+                          <div *ngFor="let despacho of despachos.controls; let idx = index" [formGroupName]="idx">
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <label class="label">Lugar:</label>
+                                    <input type="text" class="input" formControlName="lugar" />
+                                </div>
+                                <div class="control">
+                                    <label class="label">Fecha:</label>
+                                    <input type="date" class="input" formControlName="fecha" />
+                                </div>
+                                <div class="control">
+                                    <label class="label">Cantidad:</label>
+                                    <input type="number" class="input" formControlName="cantidad" (input)="validarCantidad()" />
+                                </div>
+                                <div class="control">
+                                    <label for="" class="label">.</label>
+                                    <button type="button" class="button is-danger" (click)="eliminarDespacho(idx)" *ngIf="despachos.length > 1">
+                                      Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                            <br>
+                          </div>
+                        </div>
+                      
+                        <button type="button" class="button is-success" (click)="agregarDespacho()" [disabled]="despachos.length >= 3">
+                          Agregar despacho
+                        </button>
+                      
+                        <div *ngIf="error" style="color: red">
+                          {{ error }}
+                        </div>
+                      </form>
+                </span>
             </span>
         </div>
       </div>

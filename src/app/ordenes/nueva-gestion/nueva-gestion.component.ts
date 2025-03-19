@@ -3,6 +3,7 @@ import { multiply } from 'lodash';
 import { DefectosService } from 'src/app/services/defectos.service';
 import { LoginService } from 'src/app/services/login.service';
 import { OproduccionService } from 'src/app/services/oproduccion.service';
+import { TrabajadoresService } from 'src/app/services/trabajadores.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -21,6 +22,7 @@ export class NuevaGestionComponent {
   public api = inject(OproduccionService)
   public login = inject(LoginService)
   public defectos = inject(DefectosService)
+  public trabajadores = inject(TrabajadoresService)
 
   public tipo = '';
   public hojas:boolean = true
@@ -30,7 +32,7 @@ export class NuevaGestionComponent {
   p_yellow = 3
   p_selected
 
-  public data = {
+  public data:any = {
     orden:'',
     fase:0,
     usuario:'',
@@ -40,13 +42,14 @@ export class NuevaGestionComponent {
     hojas:0,
     productos:0,
     paletas:0,
-    team:'',
+    team:[],
     defectos:[{paleta:0,defectos:[]}],
     observaciones:''
   }
 
   public add_defecto:boolean = false;
   public defectos_:any = []
+  public searchText = ''
 
   defectos_agregados:any = []
 
@@ -102,6 +105,7 @@ export class NuevaGestionComponent {
     this.data.fase = this.fase;
     this.data.usuario = `${this.login.usuario.Nombre} ${this.login.usuario.Apellido}`;
     this.api.NuevaGestion(this.data)
+    this.orden
     this.data = {
       orden:'',
       fase:0,
@@ -112,7 +116,7 @@ export class NuevaGestionComponent {
       hojas:0,
       productos:0,
       paletas:0,
-      team:'',
+      team:[],
       defectos:[{paleta:0,defectos:[]}],
       observaciones:''
     }
@@ -147,6 +151,30 @@ export class NuevaGestionComponent {
     }else{
       this.productos = false;
       this.hojas = true;
+    }
+  }
+
+  filteredEmployees() {
+    if (!this.searchText) {
+      return [];
+    }
+    
+    return this.trabajadores.trabajador.filter(trabajador => {
+      const nombreCompleto = `${trabajador.datos_personales.nombres} ${trabajador.datos_personales.apellidos}`;
+      const searchMatch = trabajador.datos_personales.nombres.toLowerCase().includes(this.searchText.toLowerCase()) ||
+                          trabajador.datos_personales.apellidos.toLowerCase().includes(this.searchText.toLowerCase()) ||
+                          trabajador.contratacion.cargo.nombre.toLowerCase().includes(this.searchText.toLowerCase());
+  
+      const nombreEnTeam = this.data.team.find((empleado: string) => empleado === nombreCompleto);
+  
+      return searchMatch && !nombreEnTeam;
+    });
+  }
+
+  agregarEmpleado(nombre: any, apellido: any) {
+    let existe = this.data.team.find((empleado: string) => empleado === `${nombre} ${apellido}`);
+    if (!existe) {
+      this.data.team.push(`${nombre} ${apellido}`);
     }
   }
 

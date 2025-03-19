@@ -77,8 +77,7 @@ export class AlmacenService {
     return capacidades; // Devuelve un array con objetos de capacidad y cantidad
   }
 
-  AsignacionDeMaterial(data){
-    console.log(data)
-    this.socket.io.emit('CLIENTE:Asignacion', data)
+  AsignacionDeMaterial(data, asignacion){
+    this.socket.io.emit('CLIENTE:Asignacion', data, asignacion)
   }
 }

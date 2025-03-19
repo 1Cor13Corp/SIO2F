@@ -86,7 +86,21 @@ export class AsignacionComponent {
 
 
   RealizarDescuento(orden){
-    this.almacen.AsignacionDeMaterial(this.descuentos);
+    console.log(orden)
+    console.log(this.descuentos)
+    let asignacion:any = {
+      op:orden._id,
+      material:[],
+    }
+
+    for(let i=0;i<this.descuentos.length;i++){
+      asignacion.material.push({
+        material:this.descuentos[i].producto,
+        cantidad:this.descuentos[i].salida
+      })
+    }
+
+    this.almacen.AsignacionDeMaterial(this.descuentos, asignacion);
     this.orden.EditarOrden(orden)
     this.asignacion = false;
   }

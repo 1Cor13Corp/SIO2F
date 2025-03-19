@@ -10,6 +10,7 @@ import { MaterialesService } from 'src/app/services/materiales.service';
 import { HorariosService } from 'src/app/services/horarios.service';
 import Swal from 'sweetalert2';
 import { OproduccionService } from 'src/app/services/oproduccion.service';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-nueva-op',
@@ -23,6 +24,9 @@ export class NuevaOPComponent implements OnInit{
     this.currentDate = moment().format('YYYY-MM-DD');
   }
 
+  despachoForm: FormGroup;
+  error: string = '';
+
   constructor(
               public clientes:ClientesService,
               public oc:OcompraService,
@@ -30,10 +34,45 @@ export class NuevaOPComponent implements OnInit{
               public almacen:AlmacenService,
               public materiales:MaterialesService,
               public horarios:HorariosService,
-              public api:OproduccionService
+              public api:OproduccionService,
+              private fb:FormBuilder
   ){
+    this.despachoForm = this.fb.group({
+      despachos: this.fb.array([this.crearDespacho()])
+    });
 
+  }
 
+  get despachos() {
+    return this.despachoForm.get('despachos') as FormArray;
+  }
+
+  crearDespacho(): FormGroup {
+    return this.fb.group({
+      lugar: ['', Validators.required],
+      fecha: ['', Validators.required],
+      cantidad: [0, [Validators.required, Validators.min(1)]]
+    });
+  }
+
+  agregarDespacho() {
+    if (this.despachos.length < 3) {
+      this.despachos.push(this.crearDespacho());
+    }
+  }
+
+  eliminarDespacho(index: number) {
+    this.despachos.removeAt(index);
+    this.validarCantidad();
+  }
+
+  validarCantidad() {
+    const totalDespachado = this.despachos.value.reduce((sum, d) => sum + d.cantidad, 0);
+    if (totalDespachado > this.OP.cantidad) {
+      this.error = `La cantidad total no puede exceder ${this.OP.cantidad}`;
+    } else {
+      this.error = '';
+    }
   }
 
 

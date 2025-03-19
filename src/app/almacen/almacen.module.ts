@@ -41,6 +41,7 @@ import { NoConformeComponent } from './recepcion/no-conforme/no-conforme.compone
     RouterModule,
     FormsModule,
     ReactiveFormsModule
-  ]
+  ],
+  exports:[ComentariosComponent]
 })
 export class AlmacenModule { }

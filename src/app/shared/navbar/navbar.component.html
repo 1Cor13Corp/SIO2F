@@ -20,6 +20,12 @@
 
 </app-etiquetas>
 
+<app-notifications
+[visible]="panel"
+(onCloseModal)="panel = false"
+>
+</app-notifications>
+
 <div class="menu__ animate__animated animate__fadeInLeft" id='menu'>
     <img src="../../../assets/LOGO-SIO.png" width="100" height="20" id="logo_menu">
     <hr>
@@ -93,32 +99,53 @@
             </ul>
     </aside>
     <span class="iconos">
-        <div class="columns">
-            <div class="column">
-                <button class="button" style="background-color: transparent;border: none;color: #9fadbc;" (click)="Solicitud_Material = true">
-                    <span class="icon">
-                        <i class="fas fa-shopping-cart"></i>
+        <button class="button" style="background-color: transparent;border: none;color: #9fadbc;" (click)="panel = !panel">
+            <span class="icon">
+                <i class="fas fa-bell"></i>
+                <ng-container *ngIf="notification.notificaciones.length > 0">
+                    <span class="notification-count" style="position: absolute; top: -5px; right: -5px; background-color: red; color: white; border-radius: 50%; padding: 3px 6px; font-size: 8px; font-weight: bold;">
+                        {{notification.notificaciones.length}}
                     </span>
-                </button>
+                </ng-container>
+            </span>
+        </button>
+        <button class="button" style="background-color: transparent;border: none;color: #9fadbc;" (click)="notification.nuevaNotificacion()">
+            <span class="icon">
+                <i class="fas fa-undo-alt"></i>
+            </span>
+        </button>
+        <button class="button" style="background-color: transparent;border: none;color: #9fadbc;" (click)="Solicitud_Material = true">
+            <span class="icon">
+                <i class="fas fa-shopping-cart"></i>
+            </span>
+        </button>
+        <button class="button" style="background-color: transparent;border: none;color: #9fadbc;" (click)="abrirAsignacion()">
+            <span class="icon">
+                <i class="fas fa-paper-plane"></i>
+                <ng-container *ngIf="showAsignaciones() > 0">
+                    <span class="notification-count" style="position: absolute; top: -5px; right: -5px; background-color: red; color: white; border-radius: 50%; padding: 3px 6px; font-size: 8px; font-weight: bold;">
+                        {{ showAsignaciones()}}
+                    </span>
+                </ng-container>
+            </span>
+        </button>
+        <button class="button" style="background-color: transparent;border: none;color: #9fadbc;" (click)="Etiquetas = true">
+            <span class="icon">
+                <i class="fas fa-tags"></i>
+            </span>
+        </button>
+        <!-- <div class="columns">
+            <div class="column">
             </div>
             <div class="column">
-                <button class="button" style="background-color: transparent;border: none;color: #9fadbc;" (click)="abrirAsignacion()">
-                    <span class="icon">
-                        <i class="fas fa-paper-plane"></i>
-                        <span class="notification-count" style="position: absolute; top: -5px; right: -5px; background-color: red; color: white; border-radius: 50%; padding: 3px 6px; font-size: 8px; font-weight: bold;">
-                            {{ showAsignaciones() }}
-                        </span>
-                    </span>
-                </button>
             </div>
             <div class="column">
-                <button class="button" style="background-color: transparent;border: none;color: #9fadbc;" (click)="Etiquetas = true">
-                    <span class="icon">
-                        <i class="fas fa-tags"></i>
-                    </span>
-                </button>
             </div>
-        </div>
+            <div class="column">
+            </div>
+            <div class="column">
+            </div>
+        </div> -->
     </span>
     <span class="popup_menu" *ngIf="isMenuVisible">
         <a href="#" (click)="cerrarSesion()">Cerrar Sesión</a><br>

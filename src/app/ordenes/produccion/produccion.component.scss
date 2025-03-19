@@ -211,13 +211,13 @@ width: 100%;
 
 
   .progress-container {
-    width: 400px;
-    height: 40px;
+    width: 380px;
+    height: 30px;
     background-color: #e0e0e0;
     border-radius: 25px;
     position: relative;
     overflow: hidden;
-    margin-top:-10px;
+    margin-top:-15px;
 }
 
 .progress-bar {
@@ -234,7 +234,7 @@ width: 100%;
     width: 100%;
     text-align: center;
     position: absolute;
-    top: -5px;
+    top: -10px;
     left: 0;
     height: 100%;
     line-height: 50px;
@@ -279,6 +279,16 @@ width: 100%;
   justify-content: center;
   font-size: 12px; /* Font size of the number inside the card */
   font-weight: bold;
+}
+
+.team-list{
+  position: absolute;
+  z-index: 1000;
+  display: block;
+  -webkit-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.75);
+box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.75);
+border-radius: 5px;
 }
 
 .palette-list{
@@ -334,3 +344,8 @@ border-radius: 5px;
 //   font-size: 18px;
 //   font-weight: bold;
 // }
+
+.empleados{
+  display: flex;
+  gap: 10px;
+}

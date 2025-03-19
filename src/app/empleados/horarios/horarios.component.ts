@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HorariosService } from 'src/app/services/horarios.service';
+import { OproduccionService } from 'src/app/services/oproduccion.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -9,7 +10,9 @@ import Swal from 'sweetalert2';
 })
 export class HorariosComponent  {
 
-  constructor(public api:HorariosService){
+  constructor(public api:HorariosService, 
+              public order:OproduccionService
+  ){
   
   }
 
@@ -217,6 +220,60 @@ saveNonWorkingDay(month: number, day: number, motivo: string) {
 
   // Emitimos el evento al servidor para guardar el día no laboral
   this.api.guardarCalendario(nonWorkingDay);
+
+  let color = 0;
+let date = new Date(`${this.currentYear}-${month + 1}-${day}`);
+let first = -1;
+
+// Iteramos por cada orden
+for (let orden of this.order.orden) {
+  color++; // Contamos las órdenes
+  
+  // Iteramos por cada fase de la orden
+  for (let i = 0; i < orden.fases.length; i++) {
+    let fase = orden.fases[i];
+    let inicio = new Date(fase.fases[0].fecha);
+    let final = new Date(fase.fases[0].final);
+
+    
+    // Verificamos si la fecha está dentro del rango de la fase
+    if (date >= inicio && date <= final) {
+      // Si es la primera vez que encontramos una fase con el rango, ajustamos la fecha
+      if (first === -1) {
+        first = i; // Guardamos el índice de la primera fase encontrada
+        // Si la fecha es igual o antes que la fecha de inicio, se ajusta la fecha de inicio
+        console.log(orden.fases[i].fases[0].fecha)
+        console.log(orden.fases[i].fases[0].final)
+        if (date <= inicio) {
+          // Asegúrate de no modificar la fecha original de 'inicio'
+          const nuevaFechaInicio = new Date(inicio);
+          nuevaFechaInicio.setDate(nuevaFechaInicio.getDate() + 1);
+          orden.fases[i].fases[0].fecha = nuevaFechaInicio;
+        } else {
+          // Asegúrate de no modificar la fecha original de 'final'
+          const nuevaFechaFinal = new Date(final);
+          nuevaFechaFinal.setDate(nuevaFechaFinal.getDate() + 1);
+          orden.fases[i].fases[0].final = nuevaFechaFinal;
+          alert(nuevaFechaFinal)
+        }
+
+        console.log(orden.fases[i].fases[0].fecha)
+        console.log(orden.fases[i].fases[0].final)
+      } else {
+        // Si ya encontramos una fase en el rango, continuamos con las fases siguientes
+        if (i > first) {
+          // Ajustamos las fechas de las fases siguientes
+          orden.fases[i].fases[0].fecha = new Date(orden.fases[i].fases[0].fecha.setDate(orden.fases[i].fases[0].fecha.getDate() + 1));
+          orden.fases[i].fases[0].final = new Date(orden.fases[i].fases[0].final.setDate(orden.fases[i].fases[0].final.getDate() + 1));
+        }
+      }
+    }
+  }
+  
+  // Llamamos al método EditarOrden para actualizar la orden en la base de datos
+  console.log(orden)
+  this.order.EditarOrden_(orden);
+}
 
   // Alerta de éxito
   Swal.fire({

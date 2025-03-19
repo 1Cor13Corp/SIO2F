@@ -3,8 +3,10 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
 import { NotificacionesService } from 'src/app/services/notificaciones.service';
+import { NotificationsService } from 'src/app/services/notifications.service';
 import { OproduccionService } from 'src/app/services/oproduccion.service';
 import { SolicitudesService } from 'src/app/services/solicitudes.service';
+import { WebSocketService } from 'src/app/services/web-socket.service';
 
 @Component({
   selector: 'app-navbar',
@@ -19,7 +21,9 @@ export class NavbarComponent implements OnInit {
               public notificacion:NotificacionesService,
               public ordenes:OproduccionService,
               public titleService:Title,
-              public solicitudes:SolicitudesService
+              public solicitudes:SolicitudesService,
+              public socket:WebSocketService,
+              public notification:NotificationsService
   ) {
     this.usuario = Login.usuario;
     console.log(this.usuario)
@@ -36,26 +40,35 @@ export class NavbarComponent implements OnInit {
   public pass = false;
   public asignacion:boolean = false;
   public Etiquetas:boolean = false;
+  public notificaciones:any = []
+  public confirmacion:boolean = false;
+  public devolucion = ''
 
-  ngOnInit(): void {
-    this.notificacion.subscribeToPushNotifications();
+
+
+  ngOnInit() {
+      this.notificacion.subscribeToPushNotifications();
   }
+  
 
   Menu:boolean = false;
   Solicitud_Material:boolean = false;
 
   isMenuVisible = false;
 
-
+  panel = false
 
   showAsignaciones(){
-    let n = this.ordenes.orden.filter(orden => orden.status === 'Por asignar').length + this.solicitudes.solicitudes.filter(solicitud => solicitud.status === 'Por Asignar').length;
-    if(n > 0){
-      this.titleService.setTitle(`(${n}) - SIO | Sistema Integral de Operación`)
-    }else{
-      this.titleService.setTitle(`SIO | Sistema Integral de Operación`)
+    
+    if(this.ordenes.orden){
+      let n = this.ordenes.orden.filter(orden => orden.status === 'Por asignar').length + this.solicitudes.solicitudes.filter(solicitud => solicitud.status === 'Por Asignar').length;
+      if(n > 0){
+        this.titleService.setTitle(`(${n}) - SIO | Sistema Integral de Operación`)
+      }else{
+        this.titleService.setTitle(`SIO | Sistema Integral de Operación`)
+      }
+      return n
     }
-    return n
   }
   
   showPopUp(){

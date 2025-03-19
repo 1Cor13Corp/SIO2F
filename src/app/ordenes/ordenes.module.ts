@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { OrdenesRoutingModule } from './ordenes-routing.module';
 import { CompraComponent } from './compra/compra.component';
 import { NuevaOrdenComponent } from './compra/nueva-orden/nueva-orden.component';
@@ -13,6 +13,10 @@ import { ResizableModule } from 'angular-resizable-element';
 import { ClientesComponent } from './clientes/clientes.component';
 import { NewClienteComponent } from './clientes/new-cliente/new-cliente.component';
 import { NuevaGestionComponent } from './nueva-gestion/nueva-gestion.component';
+import { PlanificacionComponent } from './produccion/planificacion/planificacion.component';
+import { DevolucionesComponent } from './produccion/devoluciones/devoluciones.component';
+import { ComentariosComponent } from '../almacen/recepcion/comentarios/comentarios.component';
+import { AlmacenModule } from '../almacen/almacen.module';
 
 
 
@@ -24,7 +28,9 @@ import { NuevaGestionComponent } from './nueva-gestion/nueva-gestion.component';
     NuevaOPComponent,
     ClientesComponent,
     NewClienteComponent,
-    NuevaGestionComponent
+    NuevaGestionComponent,
+    PlanificacionComponent,
+    DevolucionesComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +40,9 @@ import { NuevaGestionComponent } from './nueva-gestion/nueva-gestion.component';
     FormsModule,
     DragDropModule,
     ReactiveFormsModule,
-    ResizableModule
+    ResizableModule,
+    AlmacenModule,
+    ReactiveFormsModule
   ]
 })
 export class OrdenesModule { }

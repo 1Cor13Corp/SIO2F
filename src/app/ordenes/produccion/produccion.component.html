@@ -8,8 +8,15 @@
 [orden]="orden_selected"
 [fase]="fase_selected"
 (onCloseModal)="cerrar_nueva_gestion()">
-
 </app-nueva-gestion>
+
+<app-devoluciones
+(onCloseModal)="devolucion = false"
+[op]="op"
+[devolucion]="devolucion"
+>
+
+</app-devoluciones>
 
 <!-- <app-nueva-op></app-nueva-op> -->
 
@@ -28,7 +35,7 @@
                 <ng-container *ngFor="let fases of orden_selected.fases; index as index_fase">
                     <div class="card">
                         <div class="card-header dark">
-                        <div class="card-header-title">
+                            <div class="card-header-title">
                             <b style="font-family: 'Gilroy';">{{fases.nombre}}</b> - {{fases.maquina.nombre}} {{fases.maquina.marca}} {{fases.maquina.modelo}}
                         </div>
                     </div>
@@ -38,17 +45,14 @@
                         <div class="top_Banner">
                             <div class="field is-grouped">
                                 <div class="control">
-                                    <button class="button is-info" (click)="nueva_gestion = true; gestiones = false; fase_selected=index_fase">
-                                        <span class="icon"><i class="fas fa-plus"></i></span>
-                                        <!-- <span>Gestion</span> -->
-                                    </button>
+                                        <span class="icon" style="color: #3488ce; font-size: 30px;" (click)="nueva_gestion = true; gestiones = false; fase_selected=index_fase"><i class="fas fa-plus-circle"></i></span>
                                 </div>
                             </div>
 
                             <div class="progress-container" *ngIf="!loading">
                                 <div class="progress-bar" [style.width.%]="progressPercentage[index_fase]"></div>
                                 <div class="progress-text" [ngClass]="{'highlight': progressPercentage[index_fase] > 50}">
-                                    {{current[index_fase] | number}}/{{target[index_fase] | number}}
+                                    {{current[index_fase] | number}} / <span style="font-family: 'Gilroy';">{{target[index_fase] | number}}</span>
                                 </div>
                             </div>
                         </div>
@@ -56,20 +60,21 @@
                     <table class="table is-fullwidth is-striped" *ngIf="!loading">
                         <thead>
                             <tr>
-                                <th><i class="fas fa-calendar-day"></i> Fecha registro</th>
-                                <th><i class="fas fa-user"></i> Usuario</th>
-                                <th><i class="fas fa-list-ol"></i> Cantidad</th>
-                                <th><i class="fas fa-calendar-day"></i> Fecha de Gestión</th>
-                                <th><i class="far fa-clock"></i> Inicio</th>
-                                <th><i class="far fa-clock"></i> Fin</th>
-                                <th><i class="fas fa-boxes"></i></th>
-                                <th><i class="fas fa-users"></i></th>
+                                <th style="text-align: center;"><i class="fas fa-calendar-day"></i> Fecha registro</th>
+                                <th style="text-align: center;"><i class="fas fa-user"></i> Usuario</th>
+                                <th style="text-align: center;"><i class="fas fa-list-ol"></i> Cantidad</th>
+                                <th style="text-align: center;"><i class="fas fa-calendar-day"></i> Fecha de Gestión</th>
+                                <th style="text-align: center;"><i class="far fa-clock"></i> Inicio</th>
+                                <th style="text-align: center;"><i class="far fa-clock"></i> Fin</th>
+                                <th style="text-align: center;"><i class="fas fa-boxes"></i></th>
+                                <th style="text-align: center;"><i class="fas fa-users"></i></th>
+                                <th style="text-align: center;"><i class="far fa-comment"></i> Comentarios</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let gestion of api.GestionesDeFase(orden_selected, index_fase);index as index_gestion">
-                                <td>{{gestion.createdAt | date: 'dd/MM/YYYY - hh:mm a'}}</td>
-                                <td>{{gestion.usuario}}</td>
+                                <td style="text-align: center;">{{gestion.createdAt | date: 'dd/MM/YYYY - hh:mm a'}}</td>
+                                <td style="text-align: center;">{{gestion.usuario}}</td>
                                 <td>
                                     <ng-container *ngIf="visibilityFlags[index_fase]">
                                         <i class="fas fa-random"
@@ -86,10 +91,10 @@
 
                                     </ng-container>
                                 </td>
-                                <td>{{gestion.fecha | date :'dd/MM/YYYY'}}</td>
-                                <td>{{formatearHora(gestion.inicio)}}</td>
-                                <td>{{formatearHora(gestion.fin)}}</td>
-                                <td>
+                                <td style="text-align: center;">{{gestion.fecha | date :'dd/MM/YYYY'}}</td>
+                                <td style="text-align: center;">{{formatearHora(gestion.inicio)}}</td>
+                                <td style="text-align: center;">{{formatearHora(gestion.fin)}}</td>
+                                <td style="text-align: center;">
                                     <div class="container">
                                         <div class="number" style="cursor: pointer;" (click)="togglePaletteList(index_fase,index_gestion)">{{gestion.paletas}}</div>
                                         <ng-container>
@@ -100,7 +105,7 @@
                                                 <thead style="background-color: #9fadbc;">
                                                     <tr>
                                                         <th>Nº</th>
-                                                        <th>T.A</th>
+                                                        <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -124,7 +129,45 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><i class="fas fa-eye"></i></td>
+                                <td style="text-align: center;">
+                                    <i class="fas fa-eye" style="cursor: pointer;" (click)="showTeam(index_fase, index_gestion)"></i>
+                                    <div class="team-list" *ngIf="team_selected[index_fase][index_gestion]">
+                                        <!-- <div class="palette-list" *ngIf="team_selected[index_fase][index_gestion]"> -->
+                                        <table class="table is-fullwidth is-striped">
+                                            <thead style="background-color: #9fadbc;">
+                                                <tr>
+                                                    <th>Team work</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let empleado of gestion.team;index as i_">
+                                                    <td style="text-align: center;">
+                                                        {{empleado}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td style="text-align: center;"><i class="fas fa-comment" (click)="comentarios = true; unique_id = gestion._id"></i></td>
+                            </tr>
+                            <tr *ngIf="totales[index_fase].hojas > 0">
+                                <th style="background-color: rgb(190, 190, 190);"></th>
+                                <th style="background-color: rgb(190, 190, 190); text-align: right;" >Total</th>
+                                <th style="background-color: rgb(190, 190, 190);">{{totales[index_fase].hojas | number: '2.0-0'}} hojas</th>
+                                <th style="background-color: rgb(190, 190, 190); text-align: right;"> Tiempo invertido</th>
+                                <th style="background-color: rgb(190, 190, 190);">{{totales[index_fase].horas | number: '2.2-2'}}h</th>
+                                <th style="background-color: rgb(190, 190, 190); text-align: right;">Paletas</th>
+                                <th style="background-color: rgb(190, 190, 190);">
+                                    <span style="display: flex; gap: 5px;">
+                                        <span>    
+                                            {{totales[index_fase].paletas}} 
+                                        </span>
+                                        <span class="card_yellow" style="cursor: pointer;">{{totales[index_fase].tickets}}</span>
+                                    </span>
+                                </th>
+                                <th style="background-color: rgb(190, 190, 190);"></th>
+                                <th style="background-color: rgb(190, 190, 190);"></th>
                             </tr>
                         </tbody>
                     </table>
@@ -133,8 +176,8 @@
             <br>
         </ng-container>
     </ng-container>
-        </div>
-    </div>
+</div>
+</div>
 </div>
 
 <div class="container_ mt-5">
@@ -145,11 +188,11 @@
                 <div class="card-content">
                   <h1 class="title blancas">
                     Ordenes de producción
-                  </h1>
-                  <h2 class="subtitle description blancas">
+                </h1>
+                <h2 class="subtitle description blancas">
                     Descripción
-                  </h2>
-                </div>
+                </h2>
+            </div>
                 <div class="iconos">
                     <i class="fas fa-file-invoice-dollar"></i>
                 </div>
@@ -182,7 +225,7 @@
                                         <td>{{orden.cliente.nombre}}</td>
                                         <td>{{orden.solicitud | date:'dd/MM/yyyy'}}</td>
                                         <td>
-                                            <button class="button" style="border: none;background: transparent;">
+                                            <button class="button" style="border: none;background: transparent;" (click)="descargarOrden(orden)">
                                                 <span class="icon">
                                                     <i class="fas fa-info-circle blue_"></i>
                                                 </span>
@@ -190,6 +233,11 @@
                                             <button class="button" style="border: none;background: transparent;" (click)="Gestiones(orden)">
                                                 <span class="icon">
                                                     <i class="fas fa-tasks"></i>
+                                                </span>
+                                            </button>
+                                            <button class="button" style="border: none;background: transparent;" (click)="devolucion = true; op = orden">
+                                                <span class="icon">
+                                                    <i class="fas fa-undo"></i>
                                                 </span>
                                             </button>
                                         </td>
@@ -221,7 +269,7 @@
                         <div class="position__">
                             <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                             viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
-                              <defs>
+                            <defs>
                                 <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
                               </defs>
                               <g class="moving-waves">
@@ -294,7 +342,7 @@
                             <div class="position_" style="margin-left: -30px;">
                                 <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                 viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
-                                  <defs>
+                                <defs>
                                     <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
                                   </defs>
                                   <g class="moving-waves">
@@ -379,7 +427,7 @@
                               <span class="icon"><i class="fas fa-search"></i></span>
                               <span>Buscar</span>
                             </button>
-                          </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -414,7 +462,15 @@
             </div>
 
 
-
+            
         </div>
     </div>
 </div>
+
+<app-comentarios
+[comentarios]="comentarios"
+[recepcion_id]="unique_id"
+(onCloseModal)="comentarios = false"
+>
+
+</app-comentarios>
