@@ -10,7 +10,7 @@ import * as moment from 'moment';
 
 
 // Import pdfmake-wrapper and the fonts to use
-import { Cell, Img, PdfMakeWrapper, Stack, Table, Txt } from 'pdfmake-wrapper';
+import { Cell, ICell, Img, PdfMakeWrapper, Stack, Table, Txt } from 'pdfmake-wrapper';
 import pdfFonts from "../../../assets/fonts/custom";
 // import * as pdfFonts from "pdfmake/build/vfs_fonts"; // fonts provided for pdfmake
 
@@ -91,15 +91,18 @@ export class ProduccionComponent implements OnInit {
     PdfMakeWrapper.useFont('Gilroy');
 
     // Array de pasos (steps) que puede variar en cantidad
-    const steps = [
-      { title: 'Roland 700', subtitle: 'Impresión', date: '18/03/2025' },
-      { title: 'Barnizadora', subtitle: 'Barnizado', date: '19/03/2025' },
-      { title: 'Troqueladora', subtitle: 'Troquelado', date: '20/03/2025' },
-      { title: 'Pegadora', subtitle: 'Pegado', date: '21/03/2025' },
-      { title: 'Entrega', subtitle: 'Final', date: '22/03/2025' },
-      { title: 'Pegadora', subtitle: 'Pegado', date: '21/03/2025' },
-      { title: 'Entrega', subtitle: 'Final', date: '22/03/2025' }
-    ];
+    let steps:any = [];
+
+
+    for(let i=0;i< orden.fases.length;i++){
+      steps.push(
+        {
+          title:orden.fases[i].maquina.nombre,
+          subtitle:orden.fases[i].nombre,
+          date:moment(orden.fases[i].fases[0].fecha).format('DD/MM/YYYY')
+        }
+      )
+    }
 
     const stepsCount = steps.length;
     const columnWidth = 514 / steps.length;               // ancho fijo de cada columna
@@ -175,7 +178,7 @@ export class ProduccionComponent implements OnInit {
     pdf.add(
       new Table([
         [
-          new Cell(await new Img('../../assets/poli_cintillo.png').width(60).margin([0, 5, 0, -5]).build()).alignment('center').rowSpan(4).end,
+          new Cell(await new Img('../../assets/poli_cintillo.png').width(60).margin([0, 5, 0, -10]).build()).alignment('center').rowSpan(4).end,
           new Cell(new Txt(`
                 ORDEN DE PRODUCCIÓN
                 `).bold().end).alignment('center').fontSize(11).rowSpan(4).end,
@@ -357,40 +360,64 @@ export class ProduccionComponent implements OnInit {
       pedido.cantidadFormateada = Number(pedido.cantidad).toLocaleString('es-ES');
     });
 
-    // Creamos las filas de la tabla con los datos formateados
-    const filasTabla = pedidosFiltrados.map(pedido => [
-      new Cell(new Stack([pedido.cantidadFormateada]).fontSize(11).end)
-        .margin([0, -3, 0, 0])
-        .border([true, false, true, true])
-        .end,
-      new Cell(new Stack([pedido.solicitud]).fontSize(11).end)
-        .margin([0, -3, 0, 0])
-        .border([true, false, true, true])
-        .end,
-      // Aquí puedes mantener o modificar el valor del lugar, por ejemplo:
-      new Cell(new Stack(['Planta San Joaquin']).fontSize(11).end)
-        .margin([0, -3, 0, 0])
-        .border([true, false, true, true])
-        .end
-    ]);
+  //   // Creamos las filas de la tabla con los datos formateados
+  //   const filasTabla:ICell = 
+  //     new Cell(new Stack([pedidosFiltrados.cantidadFormateada]).fontSize(11).end)
+  //       .margin([0, -3, 0, 0])
+  //       .border([true, false, true, true])
+  //       .end,
+  //     new Cell(new Stack([pedidosFiltrados.solicitud]).fontSize(11).end)
+  //       .margin([0, -3, 0, 0])
+  //       .border([true, false, true, true])
+  //       .end,
+  //     // Aquí puedes mantener o modificar el valor del lugar, por ejemplo:
+  //     new Cell(new Stack(['Planta San Joaquin']).fontSize(11).end)
+  //       .margin([0, -3, 0, 0])
+  //       .border([true, false, true, true])
+  //       .end
+  // ;
 
 
-    let total = pedidosFiltrados.reduce((acumulador, pedido) => acumulador + pedido.cantidad, 0);
+    let total = pedidosFiltrados.reduce((acumulador, pedido) => acumulador + Number(pedido.cantidad), 0);
     total = Number(total).toLocaleString('es-ES')
 
-    // Agregamos la tabla al PDF
+    let celdas:any = []
+    for (let i = 0; i < pedidosFiltrados.length; i++) {
+      let l = pedidosFiltrados.length -1;
+
+      celdas.push(
+        [
+          new Cell(new Txt(pedidosFiltrados[i].cantidadFormateada).fontSize(11).end).margin([0, 0, 0, 0]).border(i != l ?[true, false, true, false] : [true, false, true, true]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end,
+          new Cell(new Txt(pedidosFiltrados[i].solicitud).fontSize(11).end).margin([0, 0, 0, 0]).border(i != l ?[false, false, true, false] : [false, false, true, true]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end,
+          new Cell(new Txt('Planta San Joaquin').fontSize(11).end).margin([0, 0, 0, 0]).border(i != l ?[true, false, true, false]: [true, false, true, true]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end, 
+        ]
+      )
+    }
     pdf.add(
-      new Table(filasTabla)
-        .layout({
-          hLineWidth: (rowIndex, node, columnIndex) => 0.5,
-          vLineWidth: (rowIndex, node, columnIndex) => 0.5,
-          hLineColor: (rowIndex, node, columnIndex) => '#555',
-          vLineColor: (rowIndex, node, columnIndex) => '#555'
-        })
-        .widths(['30%', '30%', '40%'])
-        .heights(38)
-        .end
-    );
+      new Table(celdas)
+          .layout({
+            hLineWidth: (rowIndex?: number, node?: any, columnIndex?: number) => 0.5,
+            vLineWidth: (rowIndex?: number, node?: any, columnIndex?: number) => 0.5,
+            hLineColor: (rowIndex?: number, node?: any, columnIndex?: number) => '#555',
+            vLineColor: (rowIndex?: number, node?: any, columnIndex?: number) => '#555',
+          })
+          .widths(['30%', '30%', '40%'])
+          .end
+      )
+
+    // Agregamos la tabla al PDF
+    // pdf.add(
+    //   new Table(filasTabla)
+    //     .layout({
+    //       hLineWidth: (rowIndex, node, columnIndex) => 0.5,
+    //       vLineWidth: (rowIndex, node, columnIndex) => 0.5,
+    //       hLineColor: (rowIndex, node, columnIndex) => '#555',
+    //       vLineColor: (rowIndex, node, columnIndex) => '#555'
+    //     })
+    //     .widths(['30%', '30%', '40%'])
+    //     .heights(38)
+    //     .end
+    // );
 
     pdf.add(
       new Table([
@@ -538,25 +565,30 @@ export class ProduccionComponent implements OnInit {
         }).widths(['3%', '22%', '20%', '45%', '10%']).end
     )
 
-    let data =
-    {
-      seq: '01',
-      colores: 'PANTONE 3435-C',
-      peliculas: 'PC-006-3-A-1',
-      tinta: 'Amarillo Fondo Mavesa (Huada)',
-      cantidad: '1,50'
+    let data:any = []
+
+    for(let i=0; i< orden.producto[0].impresion.secuencia[0].length; i++){
+
+      console.log(orden.tinta[i].tinta)
+
+      data.push({
+        seq:i+1,
+        color:orden.producto[0].impresion.secuencia[0][i],
+        tinta:`${orden.tinta[i].tinta.nombre} (${orden.tinta[i].tinta.fabricante.alias})`,
+        cantidad:Number(orden.tinta[i].cantidad).toLocaleString('es-ES')
+      })
     }
 
 
-    for (let i = 0; i < orden.producto[0].impresion.secuencia[0].length; i++) {
+    for (let i = 0; i < data.length; i++) {
       pdf.add(
         new Table([
           [
-            new Cell(new Txt(`${i+1}`).fontSize(11).end).margin([0, 0, 0, 0]).border([true, false, false, false]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end,
-            new Cell(new Txt(orden.producto[0].impresion.secuencia[0][i]).fontSize(11).end).margin([0, 0, 0, 0]).border([false, false, true, false]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end,
-            new Cell(new Txt(data.peliculas).fontSize(11).end).margin([0, 0, 0, 0]).border([true, false, true, false]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end,
-            new Cell(new Txt(data.tinta).fontSize(11).end).margin([0, 0, 0, 0]).border([true, false, true, false]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end,
-            new Cell(new Txt(data.cantidad).fontSize(11).end).margin([0, 0, 0, 0]).border([true, false, true, false]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end,
+            new Cell(new Txt(data[i].seq).fontSize(11).end).margin([0, 0, 0, 0]).border([true, false, false, false]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end,
+            new Cell(new Txt(data[i].color).fontSize(11).end).margin([0, 0, 0, 0]).border([false, false, true, false]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end,
+            new Cell(new Txt(data.peliculas).fontSize(11).end).margin([0, 0, 0, 0]).border([true, false, true, false]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end, 
+            new Cell(new Txt(data[i].tinta).fontSize(11).end).margin([0, 0, 0, 0]).border([true, false, true, false]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end,
+            new Cell(new Txt(data[i].cantidad).fontSize(11).end).margin([0, 0, 0, 0]).border([true, false, true, false]).fillColor(i % 2 === 0 ? '#F2F2F2' : '#FFFFFF').end,
           ],
         ])
           .layout({
@@ -607,13 +639,13 @@ export class ProduccionComponent implements OnInit {
                 new Cell(new Txt('BARNIZ ACUOSO / UV / ESPECIAL:').fontSize(5.7).end).border([true, false, true, false]).end,
               ],
               [
-                new Cell(new Txt('Barniz Acuoso Alto Brillo (Prisco)').fontSize(11).end).margin([0, -3, 0, 0]).border([true, false, true, true]).end,
+                new Cell(new Txt(orden.barniz.barniz.nombre).fontSize(11).end).margin([0, -3, 0, 0]).border([true, false, true, true]).end,
               ],
               [
                 new Cell(new Txt('PEGAMENTO:').fontSize(5.7).end).border([true, false, true, false]).end,
               ],
               [
-                new Cell(new Txt('PEGA HV 104 -15P (Pegadhex)').fontSize(11).end).margin([0, -3, 0, 0]).border([true, false, true, true]).end,
+                new Cell(new Txt(orden.pega.pega.nombre).fontSize(11).end).margin([0, -3, 0, 0]).border([true, false, true, true]).end,
               ]
             ]).margin([0, -4])
               .layout({
