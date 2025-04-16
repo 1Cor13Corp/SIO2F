@@ -46,6 +46,15 @@
 
             <hr>
 
+            <div class="field">
+                <div class="control">
+                    <label for="" class="label">Observación</label>
+                    <textarea name="" id="" class="textarea" [(ngModel)]="observaciones"></textarea>
+                </div>
+            </div>
+
+            <hr>
+
             <button class="button is-success" (click)="enviar()" [disabled]="ExistenErrores()">
                 <span class="icon"><i class="fas fa-undo"></i></span>
                 <span>Devolver</span>

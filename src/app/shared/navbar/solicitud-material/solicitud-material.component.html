@@ -248,36 +248,26 @@
                                     <div class="control">
                                         <label for="" class="label">Grupo:</label>
                                         <div class="select">
-                                            <select name="" id="" [(ngModel)]="grupo" (change)="ver()">
-                                                <option value="Grupo 1">Grupo 1</option>
-                                                <option value="Grupo 2">Grupo 2</option>
-                                                <option value="Grupo 3">Grupo 3</option>
-                                                <option value="Grupo 4">Grupo 4</option>
-                                                <option value="Grupo 5">Grupo 5</option>
+                                            <select name="" id="" [(ngModel)]="grupo" (change)="ver($event)">
+                                                <option value="{{grupo_._id}}" *ngFor="let grupo_ of grupos.grupos">{{grupo_.nombre}}</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="control" *ngIf="grupo">
                                         <label for="" class="label">Material:</label>
                                         <div class="select">
-                                            <select name="" id="" [(ngModel)]="material">
-                                                <option value="Material 1">Material 1</option>
-                                                <option value="Material 2">Material 2</option>
-                                                <option value="Material 3">Material 3</option>
-                                                <option value="Material 4">Material 4</option>
-                                                <option value="Material 5">Material 5</option>
+                                            <select name="" id="" [(ngModel)]="material" (change)="ver_($event)">
+                                                <option value="{{material_._id}}" *ngFor="let material_ of materiales.filtrarGrupos(grupo)">{{material_.nombre}}</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="control">
-                                        <label for="" class="label">.</label>
-                                        <button class="button is-success">
-                                            <span class="icon">
-                                                <i class="fas fa-plus"></i>
-                                            </span>
-                                        </button>
-                                    </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <label for="" class="label">Motivo</label>
+                                <textarea name="" id="" class="textarea" [(ngModel)]="motivo_" placeholder="Motivo de la solicitud"></textarea>
                             </div>
                         </div>
                     </div>
@@ -405,34 +395,37 @@
                 </div>
             </div>
         </div>
-        <div class="modal-card added animate__animated animate__fadeInUp longest" *ngIf="secciones[1]">
+        <div class="modal-card added animate__animated animate__fadeInUp longest" *ngIf="secciones[1] && materiales.filtrarPorMateriales(materiales_id).length > 0">
             <div class="modal-card-body bg">
                 <table class="table is-fullwidth bg">
                     <tr>
-                        <th class="bg">Material</th>
-                        <th class="bg">Almacenado</th>
+                        <th class="bg" style="width: 400px;">Material</th>
+                        <!-- <th class="bg">Almacenado</th> -->
                         <th class="bg">Solicitado</th>
                         <th class="bg">Eliminar</th>
                     </tr>
-                    <tr>
-                        <td>Cartón Rev Gris 300g 50pt</td>
-                        <td>50.000 Und</td>
-                        <td><input type="text" class="input right-aligned-input" (keyup)="onInputChange($event)" (keydown)="keyDownEvent($event)"></td>
+                    <tr *ngFor="let material of materiales.filtrarPorMateriales(materiales_id);index as i">
+                        <td>{{material.nombre}}</td>
+                        <!-- <td>{{almacen.BuscarCantidadEnAlmacen(material._id)}}</td> -->
                         <td>
-                            <i class="fas fa-trash-alt red"></i>
+                            <input 
+                            style="width: 130px;"
+                            type="text" 
+                            class="input right-aligned-input" 
+                            (keyup)="onInputChange_($event, material)" 
+                            (keydown)="keyDownEvent($event)"
+                            (change)="AgregarCantidades(i, $event)"
+                            [(ngModel)]="inputValue"
+                            [ngClass]="{'error-input':showError}">
+                        <div *ngIf="showError" class="error-message">Cantidad solicitada supera cantidad en el almacén.</div>
                         </td>
-                    </tr>
-                    <tr>
-                        <td>Amarillo proceso Apache (Olin)</td>
-                        <td>0 kg</td>
-                        <td><input type="text" class="input right-aligned-input" (keyup)="onInputChange($event)" (keydown)="keyDownEvent($event)"></td>
                         <td>
-                            <i class="fas fa-trash-alt red"></i>
+                            <i class="fas fa-trash-alt red" style="cursor: pointer;" (click)="eliminarMaterial(material._id)"></i>
                         </td>
                     </tr>
                 </table>
                 <br>
-                <button class="button is-success">
+                <button class="button is-success" [disabled]="showError || motivo_.length < 1" (click)="generarSolicitud()" >
                     <span class="icon"><i class="fas fa-hand-holding"></i></span>
                     <span>Solicitar</span>
                 </button>

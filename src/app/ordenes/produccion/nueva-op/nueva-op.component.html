@@ -422,10 +422,6 @@
                           <div *ngFor="let despacho of despachos.controls; let idx = index" [formGroupName]="idx">
                             <div class="field is-grouped">
                                 <div class="control">
-                                    <label class="label">Lugar:</label>
-                                    <input type="text" class="input" formControlName="lugar" />
-                                </div>
-                                <div class="control">
                                     <label class="label">Fecha:</label>
                                     <input type="date" class="input" formControlName="fecha" />
                                 </div>
@@ -434,19 +430,39 @@
                                     <input type="number" class="input" formControlName="cantidad" (input)="validarCantidad()" />
                                 </div>
                                 <div class="control">
-                                    <label for="" class="label">.</label>
+                                    <label for="" class="label">OC:</label>
+                                    <div class="select">
+                                        <select name="" id="">
+                                            <option value="" *ngFor="let oc of oc.BuscarPorProducto(producto._id)">{{oc.orden}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control">
+                                    <label class="label">Lugar:</label>
+                                    <input type="text" class="input" formControlName="lugar" />
+                                </div>
+                                <div class="control">
+                                    <label for="" class="label"> </label>
                                     <button type="button" class="button is-danger" (click)="eliminarDespacho(idx)" *ngIf="despachos.length > 1">
                                       Eliminar
+                                    </button>
+                                </div>
+                                <div class="control">
+                                    <label for="" class="label"> </label>
+                                    <button class="button is-info" (click)="agregarDespacho()" [disabled]="error">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </span>
                                     </button>
                                 </div>
                             </div>
                             <br>
                           </div>
                         </div>
-                      
+<!--                       
                         <button type="button" class="button is-success" (click)="agregarDespacho()" [disabled]="despachos.length >= 3">
                           Agregar despacho
-                        </button>
+                        </button> -->
                       
                         <div *ngIf="error" style="color: red">
                           {{ error }}

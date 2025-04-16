@@ -12,6 +12,8 @@ import * as moment from 'moment';
 // Import pdfmake-wrapper and the fonts to use
 import { Cell, ICell, Img, PdfMakeWrapper, Stack, Table, Txt } from 'pdfmake-wrapper';
 import pdfFonts from "../../../assets/fonts/custom";
+import { DevolucionesService } from 'src/app/services/devoluciones.service';
+import { SolicitudesService } from 'src/app/services/solicitudes.service';
 // import * as pdfFonts from "pdfmake/build/vfs_fonts"; // fonts provided for pdfmake
 
 // If any issue using previous fonts import. you can try this:
@@ -42,6 +44,7 @@ export class ProduccionComponent implements OnInit {
 
   public devolucion: boolean = false;
   public op: any
+  public informacion = false;
 
   current: number[] = [0];
   target: number[] = [1000];
@@ -64,11 +67,71 @@ export class ProduccionComponent implements OnInit {
   public comentarios = false;
   public unique_id = ''
 
+  public asignacionesYDevoluciones:any;
 
+  public solicitudes;
 
 
   ngOnInit(): void {
   }
+
+    // Aquí vas guardando los ngModel
+    orden_solicitud:any = {
+      sustrato: { id: '', cantidad: 0 },
+      tintas: [],
+      barniz: { id: '', cantidad: 0 },
+      pega: { id: '', cantidad: 0 },
+      motivo: '',
+    };
+    
+    se_prendio(){
+      // Prellenar ids si quieres
+      this.orden_solicitud.sustrato.id = this.op.sustrato.sustrato._id;
+      this.orden_solicitud.barniz.id = this.op.barniz.barniz._id;
+      this.orden_solicitud.pega.id = this.op.pega.pega._id;
+      for(let i = 0; i<this.op.tinta.length;i++){
+        this.orden_solicitud.tintas.push({
+          id:this.op.tinta[i].tinta._id, 
+          cantidad:0
+        })
+      }    
+    }
+
+    // Método para obtener los datos filtrados y ordenados
+    async obtenerDatos(op:any) {
+      try {
+        // Filtramos las asignaciones por op._id === orden._id
+        let asignaciones = await this.api.asignaciones; // Obtén tus asignaciones de alguna manera
+        asignaciones = asignaciones.filter((a: any) => a.op._id === op._id);
+        
+        // Ordenar las asignaciones por createdAt
+        asignaciones.sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    
+        // Filtrar devoluciones por .status === "Confirmado" y ordenarlas por fecha
+        let devoluciones = await this.devolucionesService.devoluciones; // Obtén tus devoluciones de alguna manera
+        devoluciones = devoluciones.filter((devolucion: any) => devolucion.op._id === op._id && devolucion.status === "Confirmado");
+        
+        // Ordenar las devoluciones por createdAt
+        devoluciones.sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
+        let solicitudes = await this.solicitudesServices.solicitudes;
+        solicitudes = solicitudes.filter((solicitud: any) => 
+            solicitud.op && solicitud.op._id === op._id && solicitud.status === 'Por Asignar'
+        );
+    
+        // Combina ambas listas (asignaciones y devoluciones)
+        const combinados = [...asignaciones, ...devoluciones, ...solicitudes];
+    
+        // Ordenar la lista combinada por fecha (createdAt)
+        combinados.sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    
+        // Almacenar la lista combinada de asignaciones y devoluciones ordenada
+        this.asignacionesYDevoluciones = combinados;
+    
+      } catch (error) {
+        console.error("Error al obtener los datos:", error);
+      }
+    }
 
 
   descargarOrden = async (orden) => {
@@ -255,7 +318,7 @@ export class ProduccionComponent implements OnInit {
         ],
         [
           new Cell(new Txt(`E-${orden.producto[0].identificacion.cliente.codigo}-${orden.producto[0].identificacion.codigo}-${orden.producto[0].identificacion.version}`).fontSize(11).end).margin([0, -3, 0, 0]).border([true, false, true, true]).end,
-          new Cell(new Txt('EEM542-02-PL').fontSize(11).end).margin([0, -3, 0, 0]).border([true, false, true, true]).end,
+          new Cell(new Txt(orden.producto[0].identificacion.codigo_cliente).fontSize(11).end).margin([0, -3, 0, 0]).border([true, false, true, true]).end,
           new Cell(new Txt('').end).border([false]).end,
           new Cell(new Txt(`${emision}`).fontSize(11).end).margin([0, -3, 0, 0]).border([true, false, true, true]).end
         ],
@@ -845,7 +908,9 @@ export class ProduccionComponent implements OnInit {
 
   constructor(public api: OproduccionService,
     public clientes: ClientesService,
-    public productos: ProductosService
+    public productos: ProductosService,
+    public devolucionesService: DevolucionesService,
+    public solicitudesServices: SolicitudesService
   ) {
     this.anoActual = new Date().getFullYear();
   }

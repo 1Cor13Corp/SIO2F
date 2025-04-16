@@ -25,7 +25,6 @@ export class OproduccionService {
 
     this.socket.io.on('SERVER:OrdenProduccion', (data) => {
       this.orden = data;
-      console.log('Ordenes:',this.orden)
     })
 
     this.socket.io.on('SERVER:Asignaciones', (data) => {
@@ -45,12 +44,13 @@ export class OproduccionService {
 
   }
 
-  buscarAsignacionPorOrden(op){
+  buscarAsignacionPorOrden(op:any){
+    console.log(op)
     return this.asignaciones.filter(a => a.op._id === op._id)
   }
 
-  guardarOrdenProduccion(data){
-    this.socket.io.emit('CLIENTE:NuevaOrdenProduccion',data)
+  guardarOrdenProduccion(data, requisicion){
+    this.socket.io.emit('CLIENTE:NuevaOrdenProduccion',data, requisicion)
   }
 
   OrdenesPorAsignar(){

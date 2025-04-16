@@ -299,3 +299,13 @@ box-shadow: 0px 0px 14px 3px rgba(122,122,122,1);
   color: #333;
   background-color: #c7f7d8;
 }
+
+.error-message{
+  font-size: small;
+  color: rgb(255, 71, 71);
+}
+
+.error-input{
+  border-color: #e74c3c; /* rojo para error */
+  background-color: #fff6f6;
+}

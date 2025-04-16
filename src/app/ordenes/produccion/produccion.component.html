@@ -18,6 +18,20 @@
 
 </app-devoluciones>
 
+<app-informacion
+[informacion]="informacion"
+[orden]="op"
+[info]="asignacionesYDevoluciones"
+(onCloseModal)="informacion = false">
+</app-informacion>
+
+<app-solicitudes
+[solicitudes]="solicitudes"
+[orden]="op"
+[orden_solicitud]="orden_solicitud"
+(onCloseModal)="solicitudes = false">
+</app-solicitudes>
+
 <!-- <app-nueva-op></app-nueva-op> -->
 
 <div class="modal" [ngClass]="{'is-active':gestiones}">
@@ -225,7 +239,7 @@
                                         <td>{{orden.cliente.nombre}}</td>
                                         <td>{{orden.solicitud | date:'dd/MM/yyyy'}}</td>
                                         <td>
-                                            <button class="button" style="border: none;background: transparent;" (click)="descargarOrden(orden)">
+                                            <button class="button" style="border: none;background: transparent;" (click)="informacion = true; op = orden; obtenerDatos(orden)">
                                                 <span class="icon">
                                                     <i class="fas fa-info-circle blue_"></i>
                                                 </span>
@@ -240,6 +254,11 @@
                                                     <i class="fas fa-undo"></i>
                                                 </span>
                                             </button>
+                                            <button class="button" style="border:none; background:transparent" (click)="solicitudes = true; op = orden; se_prendio()">
+                                                <span class="icon">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </span>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -252,7 +271,7 @@
                         <div class="card-content ty orange">
                             <div class="columns">
                                 <div class="column is-2">
-                                    <span class="number_">
+                                    <span class="number_" *ngIf="api.orden">
                                         <h1>{{api.orden.length}}</h1>
                                     </span>
                                 </div>
@@ -288,7 +307,7 @@
                         <div class="card-content ty green__">
                             <div class="columns">
                                 <div class="column is-2">
-                                    <span class="number_">
+                                    <span class="number_" *ngIf="api.orden">
                                         <h1>{{api.orden.length}}</h1>
                                     </span>
                                 </div>

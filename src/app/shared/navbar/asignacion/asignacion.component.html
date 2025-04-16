@@ -160,7 +160,14 @@
                 <ng-container *ngIf="solicitudes.status === 'Por Asignar'">
                     <div class="card">
                         <header class="card-header dark">
-                          <p class="card-header-title"><b style="font-family: 'Gilroy';">Motivo: </b> {{solicitudes.motivo}}</p>
+                            <ng-container *ngIf="solicitudes.op">
+                                <ng-container *ngIf="solicitudes.op.numero_op">
+                                    <p class="card-header-title"><b style="font-family: 'Gilroy';">{{solicitudes.op.numero_op}} </b> | {{solicitudes.op.producto[0].identificacion.producto}} ({{solicitudes.motivo}})</p>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="!solicitudes.op">
+                                <p class="card-header-title"><b style="font-family: 'Gilroy';">Motivo</b> | {{solicitudes.motivo}}</p>
+                            </ng-container>
                           <button class="card-header-icon" style="background-color: transparent;" aria-label="more options">
                             <span class="icon" (click)="control_[i] = true" *ngIf="!control_[i]">
                               <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -210,7 +217,7 @@
                             </table>
                             <br>
                             <ng-container *ngIf="_asignacion[i]">
-                                <button class="button is-success" *ngIf="_asignacion[i].length === _largo(i)">
+                                <button class="button is-success" *ngIf="_asignacion[i].length === _largo(i)" (click)="RealizarDescuento(solicitudes)">
                                     <span class="icon"><i class="fas fa-tasks"></i></span>
                                     <span>Asignar</span>
                                 </button>

@@ -14,6 +14,7 @@ export class NotificationsComponent implements OnInit{
   @Output() onCloseModal = new EventEmitter()
 
   public confirmacion:boolean = false;
+  public solicitud:boolean = false;
   public devolucion = ''
 
   constructor(public api:NotificationsService){

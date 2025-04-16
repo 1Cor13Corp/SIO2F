@@ -11,6 +11,7 @@ import { ColorMixComponent } from './solicitud-material/color-mix/color-mix.comp
 import { EtiquetasComponent } from './etiquetas/etiquetas.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ConfDevolucionesComponent } from './conf-devoluciones/conf-devoluciones.component';
+import { ConfSolicitudComponent } from './conf-solicitud/conf-solicitud.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { ConfDevolucionesComponent } from './conf-devoluciones/conf-devoluciones
     ColorMixComponent,
     EtiquetasComponent,
     NotificationsComponent,
-    ConfDevolucionesComponent
+    ConfDevolucionesComponent,
+    ConfSolicitudComponent
   ],
   imports: [
     CommonModule,

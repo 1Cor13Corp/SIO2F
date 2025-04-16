@@ -1,12 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './Auth/auth.guard';
+import { AsignacionComponent } from './shared/navbar/asignacion/asignacion.component';
 
+// canActivate: [AuthGuard],
 
 const routes: Routes = [
 {
   path:'',
   loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
+},
+{
+  path:'asignacion/:id',
+  component:AsignacionComponent
 },
 {
   path:'compras',

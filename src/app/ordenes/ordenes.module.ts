@@ -17,6 +17,11 @@ import { PlanificacionComponent } from './produccion/planificacion/planificacion
 import { DevolucionesComponent } from './produccion/devoluciones/devoluciones.component';
 import { ComentariosComponent } from '../almacen/recepcion/comentarios/comentarios.component';
 import { AlmacenModule } from '../almacen/almacen.module';
+import { InformacionComponent } from './produccion/informacion/informacion.component';
+import { AsignacionesComponent } from './produccion/asignaciones/asignaciones.component';
+import { DevolucionesProfileComponent } from './produccion/devoluciones-profile/devoluciones-profile.component';
+import { SolicitudesComponent } from './produccion/solicitudes/solicitudes.component';
+import { SolicitudesProfileComponent } from './produccion/solicitudes-profile/solicitudes-profile.component';
 
 
 
@@ -30,7 +35,13 @@ import { AlmacenModule } from '../almacen/almacen.module';
     NewClienteComponent,
     NuevaGestionComponent,
     PlanificacionComponent,
-    DevolucionesComponent
+    DevolucionesComponent,
+    InformacionComponent,
+    AsignacionesComponent,
+    DevolucionesProfileComponent,
+    SolicitudesComponent,
+    AsignacionesComponent,
+    SolicitudesProfileComponent
   ],
   imports: [
     CommonModule,
@@ -42,7 +53,7 @@ import { AlmacenModule } from '../almacen/almacen.module';
     ReactiveFormsModule,
     ResizableModule,
     AlmacenModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ]
 })
 export class OrdenesModule { }

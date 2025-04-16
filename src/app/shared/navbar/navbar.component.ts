@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { DevolucionesService } from 'src/app/services/devoluciones.service';
 import { LoginService } from 'src/app/services/login.service';
 import { NotificacionesService } from 'src/app/services/notificaciones.service';
 import { NotificationsService } from 'src/app/services/notifications.service';
@@ -23,7 +24,8 @@ export class NavbarComponent implements OnInit {
               public titleService:Title,
               public solicitudes:SolicitudesService,
               public socket:WebSocketService,
-              public notification:NotificationsService
+              public notification:NotificationsService,
+              public devolucuiones:DevolucionesService
   ) {
     this.usuario = Login.usuario;
     console.log(this.usuario)
@@ -42,7 +44,6 @@ export class NavbarComponent implements OnInit {
   public Etiquetas:boolean = false;
   public notificaciones:any = []
   public confirmacion:boolean = false;
-  public devolucion = ''
 
 
 
@@ -166,7 +167,8 @@ export class NavbarComponent implements OnInit {
 
   abrirAsignacion(){
     let n = this.ordenes.orden.filter(orden => orden.status === 'Por asignar').length ;
-    if(n>0){
+    let x = this.solicitudes.solicitudes.filter(solic => solic.status === 'Por Asignar').length
+    if((n+x)>0){
       this.asignacion = true;
     }
   }

@@ -43,5 +43,9 @@ export class SolicitudesService {
     this.socket.io.emit('CLIENTE:EtiquetarRequisicion', id);
   }
 
+  buscarSolicitudPorID(id){
+    return this.solicitudes.find((s:any) => s._id == id)
+  }
+
 
 }

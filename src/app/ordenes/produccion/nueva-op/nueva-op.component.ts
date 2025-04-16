@@ -56,6 +56,13 @@ export class NuevaOPComponent implements OnInit{
   }
 
   agregarDespacho() {
+
+    let cantidades = this.despachos.controls.reduce((total, control) => {
+      return total + (control.get('cantidad')?.value || 0);
+    }, 0);
+
+    console.log(cantidades)
+    
     if (this.despachos.length < 3) {
       this.despachos.push(this.crearDespacho());
     }
@@ -882,7 +889,33 @@ GuardarTrabajo = async ()=>{
     }
   }
 
-  await this.api.guardarOrdenProduccion(this.OP)
+  let requisicion = {
+    status:'Por Asignar',
+    materiales:[
+      {
+      material:this.OP.sustrato.sustrato,
+      cantidad:this.OP.sustrato.cantidad
+      },
+      {
+        material:this.OP.barniz.barniz,
+        cantidad:this.OP.barniz.cantidad
+      },
+      {
+        material:this.OP.pega.pega,
+        cantidad:this.OP.pega.cantidad,
+      },
+       // Agregar las tintas
+    ...this.OP.tinta.map(tinta => ({
+      material: tinta.tinta,
+      cantidad: tinta.cantidad
+    })),
+    ].filter(m => m !== null), // Filtrar los null,
+    motivo:'Nueva orden de producción',
+  }
+
+  await this.api.guardarOrdenProduccion(this.OP, requisicion)
+
+
   this.OP = {
     cliente: '',
     oc:'',

@@ -55,6 +55,11 @@ export class MaterialesService {
     return this.materiales.filter((x: any) => ids.some((groupId: string) => groupId.includes(x.grupo._id)));
   }
 
+  filtrarPorMateriales(materiales_id: string[]): any[] {
+    return this.materiales.filter((x: any) => materiales_id.some((grupoIds: string) => grupoIds.includes(x._id)));
+  }
+  
+
   notificarMaterial(id:string) {
     this.socket.io.emit('CLIENTE:NotificarNuevoMaterial', id);
   }

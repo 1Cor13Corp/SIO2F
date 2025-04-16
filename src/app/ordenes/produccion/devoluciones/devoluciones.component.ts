@@ -10,14 +10,17 @@ import Swal from 'sweetalert2';
   styleUrls: ['./devoluciones.component.scss']
 })
 export class DevolucionesComponent {
-
   @Input() devolucion:any
   @Input() op:any
   @Output() onCloseModal = new EventEmitter()
 
-  public api_devoluciones = inject(DevolucionesService)
+  public observaciones = ''
 
-  constructor(public api:OproduccionService){
+  // public api_devoluciones = inject(DevolucionesService)
+
+  constructor(public api:OproduccionService,
+              public api_devoluciones:DevolucionesService
+  ){
 
   }
 
@@ -56,10 +59,13 @@ enviar() {
 
   let data = {
     op:this.op._id,
+    observaciones:this.observaciones,
     material:Materiales,
   }
 
   this.api_devoluciones.guardarDevolucion(data)
+  this.observaciones = ''
+  this.valoresAsignados = {}
   this.onCloseModal.emit();
 
   setTimeout(() => {

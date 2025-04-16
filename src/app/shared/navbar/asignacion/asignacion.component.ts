@@ -85,12 +85,22 @@ export class AsignacionComponent {
   }
 
 
-  RealizarDescuento(orden){
-    console.log(orden)
-    console.log(this.descuentos)
-    let asignacion:any = {
-      op:orden._id,
-      material:[],
+  RealizarDescuento(solicitud){
+
+    let asignacion:any = {}
+
+    if(solicitud.op){
+      asignacion = {
+        op:solicitud.op._id || 'Otros materiales',
+        material:[],
+        solicitud:solicitud.numero
+      }
+    }else{
+      asignacion = {
+        op:'Otros materiales',
+        material:[],
+        solicitud:solicitud.numero
+      }
     }
 
     for(let i=0;i<this.descuentos.length;i++){
@@ -101,7 +111,9 @@ export class AsignacionComponent {
     }
 
     this.almacen.AsignacionDeMaterial(this.descuentos, asignacion);
-    this.orden.EditarOrden(orden)
+    if(solicitud.op){
+      this.orden.EditarOrden(solicitud.op._id)
+    }
     this.asignacion = false;
   }
 

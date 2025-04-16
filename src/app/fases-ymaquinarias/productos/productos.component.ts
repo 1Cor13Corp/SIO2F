@@ -68,6 +68,7 @@ export class ProductosComponent implements OnInit{
     cliente:'',
     producto:'',
     codigo:'',
+    codigo_cliente:'',
     tamano_desplegado:[],
     tamano_cerrado:[],
     diseno:'',
@@ -108,6 +109,7 @@ export class ProductosComponent implements OnInit{
       producto :'',
       codigo   :'',
       version  :'',
+      codigo_cliente: ''
     },
     dimensiones:{
       desplegado:{
@@ -306,6 +308,7 @@ export class ProductosComponent implements OnInit{
         producto :'',
         codigo   :'',
         version  :'',
+        codigo_cliente:''
       },
       dimensiones:{
         desplegado:{

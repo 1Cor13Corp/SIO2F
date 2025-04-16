@@ -1,4 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { AlmacenService } from 'src/app/services/almacen.service';
+import { GruposService } from 'src/app/services/grupos.service';
+import { MaterialesService } from 'src/app/services/materiales.service';
 import { SolicitudesService } from 'src/app/services/solicitudes.service';
 import Swal from 'sweetalert2';
 
@@ -10,7 +13,15 @@ import Swal from 'sweetalert2';
 export class SolicitudMaterialComponent implements OnInit{
 
 
-  constructor(public solicitudes:SolicitudesService){}
+
+  // public grupos = Inject(GruposService)
+
+  constructor(public solicitudes:SolicitudesService,
+              public grupos:GruposService,
+              public materiales:MaterialesService,
+              public almacen:AlmacenService,
+              public solicitud:SolicitudesService
+  ){}
 
 
   ngOnInit(): void {
@@ -25,10 +36,82 @@ export class SolicitudMaterialComponent implements OnInit{
   material = ''
   grupo = ''
 
+  materiales_id:any = []
 
-  ver(){
-    this.grupo
+  inputValue_: string = '';  // Para enlazar el valor del input
+  showError: boolean = false;  // Para controlar la visibilidad del mensaje de error
+  cantidades:any = []
+  motivo_:any = ''
+
+
+  AgregarCantidades(id:any, cantidad:any){
+    this.cantidades[id] = cantidad.target.value;
   }
+
+  generarSolicitud(){
+
+
+    let data:any = {
+      materiales: [],
+      motivo:this.motivo_
+    }
+
+    for(let i = 0; i< this.materiales.filtrarPorMateriales(this.materiales_id).length; i++){
+
+      let material = this.materiales.filtrarPorMateriales(this.materiales_id)[i]
+
+      data.materiales.push(
+        {
+          material:material._id,
+          cantidad:parseFloat(this.cantidades[i].replace(',','.#'))
+        }
+      )
+
+      if(i === this.materiales.filtrarPorMateriales(this.materiales_id).length - 1){
+        // console.log(data)
+        this.solicitud.NuevaSolicitud(data)
+        this.motivo_ ='',
+        this.cantidades = []
+        this.materiales_id = []
+        this.home();
+        setTimeout(() => {
+          Swal.fire({
+            text:this.solicitud.mensaje.mensaje,
+            icon:this.solicitud.mensaje.icon,
+            showConfirmButton:false,
+            timer:5000,
+            timerProgressBar:true,
+            toast:true,
+            position:'top-end'
+          })
+        }, 1000);
+      }
+
+    }
+  
+  }
+
+  ver(event:any){
+    // this.materiales_id.push(event.target.value)
+  }
+
+  ver_(event: any) {
+    const materialId = event.target.value;
+    
+    // Añadir el ID solo si no está ya en materiales_id
+    if (!this.materiales_id.includes(materialId)) {
+      this.materiales_id.push(materialId);
+    }
+  }
+  
+  eliminarMaterial(id: string) {
+    // Elimina el ID de materiales_id si existe
+    const index = this.materiales_id.indexOf(id);
+    if (index !== -1) {
+      this.materiales_id.splice(index, 1);
+    }
+  }
+
 
   otros(){
     if(this.otro){
@@ -130,6 +213,34 @@ inputValue: string = '0,00';
     this.inputValue = newValue;
   }
 
+  onInputChange_(event: any, material:any) {
+    let newValue = event.target.value.replace(/\D/g, ''); // Eliminar caracteres no numéricos
+    if (newValue.charAt(0) === '0' && newValue.charAt(1) !== '.') {
+      newValue = newValue.slice(1);
+    }
+    if (newValue.length > 2) {
+      let format = newValue.slice('0', -2)
+      format = format.replace(/\D/g, '')
+      format = format.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      console.log(format)
+      newValue = format + ',' + newValue.slice(-2); // Agregar el punto decimal
+    } else if (newValue.length === 2) {
+      newValue = '0,' + newValue; // Agregar el punto decimal al inicio si solo hay 2 dígitos
+    } else {
+      newValue = '0,0' + newValue; // Agregar ceros adicionales si solo hay 1 dígito
+    }
+    this.inputValue = newValue;
+
+    const inputValue = parseFloat(this.inputValue.replace(',','.')); // Convertir el valor a número
+    if (!isNaN(inputValue)) {
+      const cantidadDisponible = this.almacen.BuscarCantidadEnAlmacen(material._id);
+      if (inputValue > cantidadDisponible) {
+        this.showError = true;  // Muestra el error si el valor es mayor
+      } else {
+        this.showError = false;  // Oculta el error si el valor es válido
+      }
+    }
+  }
 
   NoHayPorAceptar(): boolean { 
     return !this.solicitudes.solicitudes.some(s => s.status === 'Por Aceptar');

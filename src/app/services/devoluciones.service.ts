@@ -20,7 +20,7 @@ export class DevolucionesService {
 
     this.socket.io.on('SERVER:devoluciones', (data) => {
       this.devoluciones = data 
-      console.log(data)
+      console.warn(data)
     })
 
     this.socket.io.on('SERVIDOR:enviaMensaje', (data) => {

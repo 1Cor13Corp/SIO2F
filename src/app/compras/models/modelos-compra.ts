@@ -288,7 +288,8 @@ export class Mensaje {
         public categoria: string,
         public producto: string,
         public codigo: string,
-        public version: string
+        public version: string,
+        public codigo_cliente:string,
     ) {}
 }
 
@@ -364,6 +365,7 @@ export class Producto_ {
         public cliente: string,
         public producto: string,
         public codigo: string,
+        public codigo_cliente:string,
         public tamano_desplegado: number[],
         public tamano_cerrado: number[],
         public diseno: string,

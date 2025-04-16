@@ -19,7 +19,6 @@ export class OcompraService {
   
     this.socket.io.on('SERVER:OrdenesCompra', (data)=>{
       this.orden = data;
-      console.error(this.orden);
     })
 
     this.socket.io.on('SERVIDOR:enviaMensaje', (data) => {
@@ -29,6 +28,12 @@ export class OcompraService {
 
   guardarOrden(data){
     this.socket.io.emit('CLIENTE:NuevaOrdenCompra', data)
+  }
+
+  BuscarPorProducto(producto_ID: any) {
+    return this.orden.filter(o =>
+      o.pedido.some(p => p.producto._id === producto_ID)
+    );
   }
 
   separarPorCliente<T>():[string, []] | any{
