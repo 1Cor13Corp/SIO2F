@@ -9,11 +9,11 @@
 }
 
 .long{
-    width: 70%;
+    width: 50%;
 }
 
 .long_{
-    width: 40%;
+    width: 50%;
 }
 
 .square{
@@ -29,8 +29,22 @@
     left: -25px;
 }
 
+.modal .modal-card .bg{
+    background-color:rgb(38, 52, 61);
+    color: white;
+}
+
+.modal .modal-card strong{
+    color: white;
+}
+
+// table tr td{
+//     background-color: rgb(38, 52, 61);
+//     color: white;
+// }
+
   
-  .muestra {
+  .estandar {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,7 +58,7 @@
     border-radius: 300px 300px 0 0;
     }
   
-    .estandar {
+    .muestra {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -72,3 +86,21 @@
     right: 10px;
     cursor: pointer;
 }
+
+.cintillo {
+    position: fixed;
+    width: 47.6%;
+    font-family: 'Gilroy';
+    color: white;
+    padding: 10px 10px;
+    border-radius: 4px;
+    z-index: 1000000;
+  }
+  
+  .aprobado {
+    background-color: #48c78e;
+  }
+  
+  .rechazado {
+    background-color: #f14668;
+  }

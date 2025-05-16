@@ -16,6 +16,9 @@ import { InventarioComponent } from './almacenado/inventario/inventario.componen
 import { ComentariosComponent } from './recepcion/comentarios/comentarios.component';
 import { InventariosComponent } from './almacenado/inventarios/inventarios.component';
 import { NoConformeComponent } from './recepcion/no-conforme/no-conforme.component';
+import { BobinasComponent } from './bobinas/bobinas.component';
+import { NewConvertidoraComponent } from './bobinas/new-convertidora/new-convertidora.component';
+import { NewBobinaComponent } from './bobinas/new-bobina/new-bobina.component';
 
 
 
@@ -32,7 +35,10 @@ import { NoConformeComponent } from './recepcion/no-conforme/no-conforme.compone
     InventarioComponent,
     ComentariosComponent,
     InventariosComponent,
-    NoConformeComponent
+    NoConformeComponent,
+    BobinasComponent,
+    NewConvertidoraComponent,
+    NewBobinaComponent
   ],
   imports: [
     CommonModule,

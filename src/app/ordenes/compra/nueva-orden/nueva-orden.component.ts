@@ -28,6 +28,7 @@ export class NuevaOrdenComponent {
   public cantidad_selected:any = ''
   public cantidad_selected_:any = ''
   public fecha_selected:any = ''
+  public entrega:any = ''
 
 
   SeleccionarProducto(e){
@@ -42,7 +43,8 @@ export class NuevaOrdenComponent {
       nombre:this.producto_selected.identificacion.producto,
       producto:this.producto_selected._id,
       cantidad:this.cantidad_selected_,
-      solicitud:this.fecha_selected
+      solicitud:this.fecha_selected,
+      entrega:this.entrega
     }
 
     this.orden.pedido.push(data);
@@ -52,6 +54,7 @@ export class NuevaOrdenComponent {
     this.cantidad_selected = ''
     this.cantidad_selected_ = ''
     this.fecha_selected = ''
+    this.entrega = ''
 
   }
 

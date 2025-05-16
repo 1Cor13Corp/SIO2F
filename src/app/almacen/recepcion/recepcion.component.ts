@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import { Cell, Img, PdfMakeWrapper, Table, Txt } from 'pdfmake-wrapper';
 import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import { AlmacenService } from 'src/app/services/almacen.service';
+import { BobinasService } from 'src/app/services/bobinas.service';
 import { RecepcionService } from 'src/app/services/recepcion.service';
 import Swal from 'sweetalert2';
 import Swall from 'sweetalert2'
@@ -20,9 +21,12 @@ export class RecepcionComponent {
   public n_word!: any
   public comentarios = false;
   public recepcion_id = ''
+  public convertidora = ''
+  public almacenar = false;
 
   constructor(public api: RecepcionService,
-              public almacen:AlmacenService) {
+              public almacen:AlmacenService,
+              public bobinas:BobinasService) {
 
   }
 
@@ -32,7 +36,7 @@ export class RecepcionComponent {
   }
 // Función para verificar si un lote tiene análisis en el almacén y devuelve la información
 poseeAnalisis(lote){
-  console.log(this.almacen.buscarPorLote(lote)); // Imprime en consola la información del análisis del lote
+  // console.log(this.almacen.buscarPorLote(lote)); // Imprime en consola la información del análisis del lote
   return this.almacen.buscarPorLote(lote); // Retorna la información del análisis del lote
 }
 
@@ -542,6 +546,41 @@ checkar(id: string) {
     }
 
     generarPDF()
+  }
+
+
+  public bobinas_:any = []
+  informacion_bobinas(materiales:any){
+    const itemsModificados = materiales.map(item => ({
+      ...item,
+      material: item.material._id,
+      oc: item.oc._id,
+      convertidora: this.convertidora
+    }));
+    this.bobinas_ = itemsModificados;
+  }
+
+  guardar_Bobinas(){
+    let data = this.bobinas_.map(item => ({
+      ...item,
+      convertidora:this.convertidora
+    }))
+
+    this.bobinas.guardarBobina(data)
+    
+    setTimeout(() => {
+      Swal.fire({
+        text:this.bobinas.mensaje.mensaje,
+        icon:this.bobinas.mensaje.icon,
+        position:'top-end',
+        toast:true,
+        showConfirmButton:false,
+        timerProgressBar:true,
+        timer:5000
+      })
+      this.almacenar = false;
+    }, 1000);
+    // console.log(data)
   }
 
 }

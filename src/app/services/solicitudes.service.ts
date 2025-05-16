@@ -44,7 +44,9 @@ export class SolicitudesService {
   }
 
   buscarSolicitudPorID(id){
-    return this.solicitudes.find((s:any) => s._id == id)
+    if(this.solicitudes){
+      return this.solicitudes.find((s:any) => s._id == id)
+    }
   }
 
 

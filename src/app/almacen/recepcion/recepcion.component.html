@@ -115,7 +115,16 @@
                                                 <td>{{materiales[0].lote}}</td>
                                                 <td>
                                                     <div class="circle_"></div>
-                                                    {{materiales[0].material.nombre}} ({{materiales[0].material.fabricante.alias}})
+                                                    {{materiales[0].material.nombre}} ({{materiales[0].material.fabricante.alias}}) 
+                                                    <ng-container *ngIf="materiales[0].material.gramaje">
+                                                        {{materiales[0].material.gramaje}}g {{materiales[0].material.calibre}}pt 
+                                                        <ng-container *ngIf="materiales[0].alto">
+                                                            {{materiales[0].alto}} x {{materiales[0].ancho}}
+                                                        </ng-container>
+                                                        <ng-container *ngIf="!materiales[0].alto">
+                                                            Ancho: {{materiales[0].ancho}}
+                                                        </ng-container>
+                                                    </ng-container>
                                                 </td>
                                                 <td>
                                                     <p>
@@ -133,6 +142,12 @@
                                                             <i class="fas fa-ban"></i>
                                                         </span>
                                                     </button>
+                                                    <ng-container *ngIf="materiales[0].unidad === 't'">
+                                                        <button class="button is-info is-small" (click)="almacenar = true; informacion_bobinas(materiales)">
+                                                            <span class="icon"><i class="fas fa-plus"></i></span>
+                                                            <span>Bobinas</span>
+                                                        </button>
+                                                    </ng-container>
                                                     <button class="button is-success is-small" (click)="EnviarAlmacen(index, i)" *ngIf="materiales[0].material.grupo.otro || poseeAnalisis(materiales[0].lote)">
                                                     <span class="icon"><i class="fas fa-check"></i></span>
                                                     </button>
@@ -147,6 +162,37 @@
                     </ng-container>
                 </ng-container>
             <br>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" [ngClass]="{'is-active':almacenar}">
+    <div class="modal-background"></div>
+    <div class="modal-card long animate__animated animate__fadeInUp">
+        <div class="modal-card-head">
+            <p class="modal-card-title fuente">
+                Enviar bobinas a almacén
+            </p>
+            <button class="delete red_cross" aria-label="close" (click)="almacenar = false"></button>
+        </div>
+        <div class="modal-card-body">
+            <div class="field is-grouped">
+                <div class="control">
+                    <label for="" class="label">Convertidora</label>
+                    <div class="select">
+                        <select [(ngModel)]="convertidora">
+                            <option value="{{convertidora._id}}" *ngFor="let convertidora of bobinas.convertidora">{{convertidora.nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control">
+                    <label for="" class="label">⠀</label>
+                    <button class="button is-success" (click)="guardar_Bobinas()" [disabled]="!convertidora">
+                        <span>Guardar</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

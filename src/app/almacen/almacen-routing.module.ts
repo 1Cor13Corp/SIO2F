@@ -4,6 +4,7 @@ import { AlmacenComponent } from './almacen.component';
 import { RouterModule, Routes } from '@angular/router';
 import { RecepcionComponent } from './recepcion/recepcion.component';
 import { AlmacenadoComponent } from './almacenado/almacenado.component';
+import { BobinasComponent } from './bobinas/bobinas.component';
 
 const routes: Routes =[
   {
@@ -17,6 +18,10 @@ const routes: Routes =[
       {
         path:'inventario',
         component:AlmacenadoComponent
+      },
+      {
+        path:'bobinas',
+        component:BobinasComponent
       }
     ]
 }]

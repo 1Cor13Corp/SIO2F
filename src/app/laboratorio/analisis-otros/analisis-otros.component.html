@@ -8,7 +8,7 @@
             <button class="delete red_cross" aria-label="close" (click)="cerrar()"></button>
         </div>
         <div class="modal-card-body">
-            <span class="titles">
+            <span class="subtitles">
                 Análisis cualitativo
             </span>
             <br>
@@ -23,7 +23,7 @@
                     </thead>
                 </table>
             </div>
-            <span class="titles">
+            <span class="subtitles">
                 Análisis cuantitativo
             </span>
             <table class="table is-fullwidth" *ngIf="Materiales">
@@ -48,7 +48,7 @@
                     </tr>
                 </thead>
             </table>
-            <span class="titles">
+            <span class="subtitles">
                 Pruebas o ensayos adicionales
             </span>
             <table class="table is-fullwidth" *ngIf="Materiales">
@@ -80,14 +80,14 @@
 
             <br>
             <br>
-            <div class="columns">
+            <div class="columns is-mobile is-flex is-justify-content-flex-end">
                 <div class="column">
-                    <button class="button is-success" (click)="guardar()">
+                    <button class="button is-info" (click)="guardar()">
                         <span class="icon"><i class="fas fa-save"></i></span>
-                        <span>Guardar</span>
+                        <span>Guardar progreso</span>
                     </button>
                 </div>
-                <div class="column">
+                <!-- <div class="column">
                     <table class="table is-fullwidth">
                         <tr>
                             <th>Resultado</th>
@@ -109,6 +109,39 @@
                             </td>
                         </tr>
                     </table>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="modal-card added animate__animated animate__fadeInUp longer">
+        <div class="modal-card-body bg" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <div class="field is-grouped" style="display: flex; justify-content: center; gap: 1rem;" *ngIf="!analisis.resultado.resultado">
+                <div class="control">
+                    <button class="button is-success" (click)="guardar('APROBADO')">
+                        <span class="icon"><i class="fa-solid fa-check"></i></span>
+                        <span>Aprobado</span>
+                    </button>
+                </div>
+                <div class="control">
+                    <button class="button is-danger" (click)="guardar('RECHAZADO')">
+                        <span class="icon"><i class="fa-solid fa-ban"></i></span>
+                        <span>Rechazado</span>
+                    </button>
+                </div>
+            </div> <br>
+    
+            <div class="field is-grouped" style="display: flex; justify-content: center; gap: 1rem;" *ngIf="analisis.resultado.resultado">
+                <div class="control">
+                    <button class="button is-success">
+                        <span class="icon"><i class="fa-solid fa-check"></i></span>
+                        <span>Validar</span>
+                    </button>
+                </div>
+                <div class="control">
+                    <button class="button is-danger">
+                        <span class="icon"><i class="fa-solid fa-ban"></i></span>
+                        <span>Re analizar</span>
+                    </button>
                 </div>
             </div>
         </div>

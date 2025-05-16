@@ -65,9 +65,12 @@ cerrar(){
   this.onCloseModal.emit();
 }
 
-guardar(){
+guardar(resultado?:string){
   this.analisis.resultado.guardado.fecha = moment().format('DD/MM/YYYY')
-  this.analisis.resultado.guardado.usuario = `${this.login.usuario.Nombre} ${this.login.usuario.Apellido}`
+  if(resultado){
+    this.analisis.resultado.resultado = resultado
+    this.analisis.resultado.guardado.usuario = `${this.login.usuario.Nombre} ${this.login.usuario.Apellido}`
+  }
   this.api.EnviarAnalisisOtros(this.analisis, this.Recepcion, this.Index);
   this.onCloseMensaje.emit();
 }

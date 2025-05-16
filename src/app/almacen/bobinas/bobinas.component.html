@@ -1,0 +1,89 @@
+<app-new-convertidora
+[nueva]="convertidora"
+(onCloseModal)="convertidora = false">
+</app-new-convertidora>
+
+<app-new-bobina
+[nueva]="bobina"
+(onCloseModal)="bobina = false">
+
+</app-new-bobina>
+
+<div class="container_ mt-5">
+    <div class="card">
+        <div class="card-content darker">
+            <div class="card mt-5 title_">
+                <!-- <span class="red-bar"></span> -->
+                <div class="card-content">
+                  <h1 class="title blancas">
+                   Almacén de bobinas
+                  </h1>
+                  <h2 class="subtitle description blancas">
+                    Descripción
+                  </h2>
+                  <div class="iconos">
+                    <i class="fas fa-box-open"></i>
+                  </div>
+                </div>
+            </div>
+            <br>
+
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-info" (click)="convertidora = true">
+                        <span class="icon"><i class="fas fa-plus"></i></span>
+                        <span>Convertidora</span>
+                    </button>
+                </div>
+                <div class="control">
+                    <button class="button is-info" (click)="bobina = true">
+                        <span class="icon"><i class="fas fa-plus"></i></span>
+                        <span>Conversión</span>
+                    </button>
+                </div>
+            </div>
+
+            <br>
+
+            <ng-container *ngFor="let convertidora of api.convertidora;index as i">
+                <div class="card animate__animated animate__fadeInUp">
+                    <div class="card-header dark">
+                        <p class="card-header-title">
+                            {{convertidora.nombre}} 
+                            </p>
+                        <button class="card-header-icon" aria-label="more options" [ngClass]="{'clicked':clicked[i]}" (click)="showInfo(i)">
+                            <span class="icon">
+                              <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </div>
+                        <div class="card-content info" [ngClass]="{'hidden': !clicked[i], 'show': clicked[i]}">
+                            <div class="table-wrapper">
+                              <table class="table is-fullwidth is-striped fixed-header-table">
+                                <thead>
+                                  <tr>
+                                    <th>#</th>
+                                    <th>Lote</th>
+                                    <th>Peso (t)</th>
+                                    <th>Ancho</th>
+                                    <th>Material</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let bobina of api.bobinaPorConvertidora(convertidora._id); index as i">
+                                    <td>{{bobina.codigo}}</td>
+                                    <td>{{bobina.lote}}</td>
+                                    <td>{{bobina.neto}}</td>
+                                    <td>{{bobina.ancho}}</td>
+                                    <td>{{bobina.material.nombre}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                        </div>
+                </div>
+                <br><br>
+            </ng-container>
+        </div>
+    </div>
+</div>

@@ -20,7 +20,7 @@
                 <div class="control" *ngIf="Orden.proveedor">
                     <label class="label">Fabricante</label>
                     <div class="select">
-                        <select [(ngModel)]="Orden.fabricante">
+                        <select [(ngModel)]="Orden.fabricante" (change)="condiciones($event.target)">
                             <option value="{{fabricante._id}}" *ngFor="let fabricante of fabricantes.buscarFabricantesPorId(fabricantesIDs)">{{fabricante.nombre}}</option>
                         </select>
                     </div>
@@ -35,7 +35,11 @@
                     <label class="label">Material</label>
                     <div class="select">
                         <select (change)="llenarMaterial($event.target)" [(ngModel)]="material__">
-                            <option value="{{material._id}}&{{material.nombre}}({{material.fabricante.alias}})" *ngFor="let material of materiales.filtrarPorFabricante(Orden.fabricante)">{{material.nombre}}</option>
+                            <option value="{{material._id}}&{{material.nombre}}({{material.fabricante.alias}})" *ngFor="let material of materiales.filtrarPorFabricante(Orden.fabricante)">{{material.nombre}} 
+                                <ng-container *ngIf="material.gramaje">
+                                    {{material.gramaje}}g {{material.calibre}}pt
+                                </ng-container>
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -46,6 +50,7 @@
                             <option value="kg">kg</option>
                             <option value="L">L</option>
                             <option value="Und">Und</option>
+                            <option value="t">t</option>
                         </select>
                     </div>
                 </div>
@@ -57,7 +62,29 @@
                     <label class="label">Costo Unitario (USD)</label>
                     <input type="number" name="" id="" class="input" [(ngModel)]="material.precio" min="0">
                 </div>
+                <div class="control" *ngIf="material.precio && !Fabricant_Sustrato && Number_(material.precio) > 0">
+                    <label for="" class="label"> </label>
+                    <button class="button is-info" (click)="addMaterial()">
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="field is-grouped" *ngIf="Fabricant_Sustrato">
+                <div class="control" *ngIf="material.unidad === 't' && material.cantidad && Number_(material.cantidad) > 0">
+                    <label for="" class="label">.</label>
+                    <input type="checkbox" name="" id="" class="checkbox" [(ngModel)]="material.bobina"> Bobina
+                </div>
                 <div class="control" *ngIf="material.precio && Number_(material.precio) > 0">
+                    <label for="" class="label">Ancho (cm)</label>
+                    <input type="number" class="input" [(ngModel)]="material.ancho">
+                </div>
+                <div class="control" *ngIf="(material.ancho) && !material.bobina ">
+                    <label for="" class="label">Alto (cm)</label>
+                    <input type="number" class="input" [(ngModel)]="material.alto">
+                </div>
+                <div class="control" *ngIf="material.ancho">
                     <label for="" class="label"> </label>
                     <button class="button is-info" (click)="addMaterial()">
                         <span class="icon">
@@ -83,9 +110,9 @@
                 <tbody>
                     <tr *ngFor="let pedido of Orden.pedido;index as i">
                         <td>{{pedido.nombre}}</td>
-                        <td>{{pedido.cantidad}}{{pedido.unidad}}</td>
-                        <td>{{pedido.precio}}</td>
-                        <td>{{(pedido.precio * pedido.cantidad).toFixed(2)}}</td>
+                        <td>{{pedido.cantidad | number:'2.2-2'}}{{pedido.unidad}}</td>
+                        <td>{{Number_(pedido.precio) | number:'2.2-2'}}</td>
+                        <td>{{Number_((pedido.precio * pedido.cantidad).toFixed(2)) | number: '2.2-2'}}</td>
                         <td><i class="fas fa-trash-alt red" style="cursor: pointer;" (click)="borrar(i)"></i></td>
                     </tr>
                 </tbody>
@@ -94,19 +121,19 @@
                         <th></th>
                         <th></th>
                         <th>Sub-total:</th>
-                        <th colspan="2">{{calcularTotalNeto(Orden).toFixed(2)}}</th>
+                        <th colspan="2">{{Number_(calcularTotalNeto(Orden).toFixed(2)) | number: '2.2-2'}}</th>
                     </tr>
                     <tr>
                         <th></th>
                         <th></th>
                         <th>I.V.A:</th>
-                        <th colspan="2">{{calcularTotalIva(Orden).toFixed(2)}}</th>
+                        <th colspan="2">{{Number_(calcularTotalIva(Orden).toFixed(2)) | number: '2.2-2'}}</th>
                     </tr>
                     <tr>
                         <th></th>
                         <th></th>
                         <th>Total:</th>
-                        <th colspan="2">{{(calcularTotalNeto(Orden) + calcularTotalIva(Orden)).toFixed(2)}}</th>
+                        <th colspan="2">{{Number_((calcularTotalNeto(Orden) + calcularTotalIva(Orden)).toFixed(2)) | number:'2.2-2'}}</th>
                     </tr>
                 </tfoot>
             </table>

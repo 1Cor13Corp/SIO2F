@@ -48,9 +48,19 @@
                     <label for="" class="label">Fecha Solicitada:</label>
                     <input type="date" name="" id="" class="input" [(ngModel)]="fecha_selected" min="{{today | date:'yyyy-MM-dd'}}">
                 </div>
+            </div>
+            <div class="field is-grouped">
                 <div class="control" *ngIf="fecha_selected">
+                    <label for="" class="label">Entrega:</label>
+                    <div class="select">
+                        <select [(ngModel)]="entrega">
+                            <option value="{{almacen.nombre}}" *ngFor="let almacen of clientes.buscarAlmacenesPorCliente(orden.cliente)">{{almacen.nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control" *ngIf="entrega">
                     <label class="label"> </label>
-                    <button class="button button-hidde" (click)="addProducto()">
+                    <button class="button info" (click)="addProducto()">
                         <span class="icon"><i class="fas fa-plus"></i></span>
                     </button>
                 </div>
@@ -65,6 +75,7 @@
                         <th>Producto</th>
                         <th>Cantidad</th>
                         <th>Solicitado</th>
+                        <th>Lug. entrega</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -73,6 +84,7 @@
                         <td>{{producto.nombre}}</td>
                         <td>{{formatNumberWithDotSeparator(producto.cantidad)}}</td>
                         <td>{{producto.solicitud}}</td>
+                        <td>{{producto.entrega}}</td>
                         <td>
                             <button class="button button-hidde_" (click)="orden.pedido.splice(i,1)">
                                 <span class="icon">

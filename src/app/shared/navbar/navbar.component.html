@@ -53,13 +53,10 @@
             <ul class="menu-list">
                 <li>
                     <a (click)="showInventario()" >Inventario</a>
-                    <ul *ngIf="inventario || router.url == '/almacen/inventario' || router.url == '/almacen/recepcion'">
-                        <li>
-                            <a [ngClass]="{'is-active':router.url == '/almacen/inventario'}" routerLink="/almacen/inventario">Inventario</a>
-                        </li>
-                        <li>
-                            <a [ngClass]="{'is-active':router.url == '/almacen/recepcion'}" routerLink="/almacen/recepcion">Recepción</a>
-                        </li>
+                    <ul *ngIf="inventario || router.url == '/almacen/inventario' || router.url == '/almacen/recepcion' || router.url == '/almacen/bobinas'">
+                        <li> <a [ngClass]="{'is-active':router.url == '/almacen/inventario'}" routerLink="/almacen/inventario">Inventario</a> </li>
+                        <li> <a [ngClass]="{'is-active':router.url == '/almacen/recepcion'}" routerLink="/almacen/recepcion">Recepción</a> </li>
+                        <li> <a [ngClass]="{'is-active':router.url == '/almacen/bobinas'}" routerLink="/almacen/bobinas">Bobinas</a> </li>
                     </ul>
                 </li>
             </ul>

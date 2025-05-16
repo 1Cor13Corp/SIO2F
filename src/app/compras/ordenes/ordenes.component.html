@@ -151,7 +151,11 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let material of ordenes.pedido;index as x">
-                                                        <td>{{material.material.nombre}} ({{material.material.fabricante.alias}})</td>
+                                                        <td>{{material.material.nombre}} ({{material.material.fabricante.alias}})
+                                                            <ng-container *ngIf="material.material.calibre">
+                                                                {{material.material.gramaje}}g {{material.material.calibre}}pt
+                                                            </ng-container>
+                                                        </td>
                                                         <td>{{material.material.modelo}}</td>
                                                         <td>{{material.cantidad | number:'1.0-2'}}{{material.unidad}}</td>
                                                         <td>{{formatear_cifras(material.precio)}}</td>

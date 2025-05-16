@@ -3,6 +3,7 @@ import { FabricantesService } from 'src/app/services/fabricantes.service';
 import { MaterialesService } from 'src/app/services/materiales.service';
 import { OpoligraficaService } from 'src/app/services/opoligrafica.service';
 import { ProveedoresService } from 'src/app/services/proveedores.service';
+import { TrabajadoresService } from 'src/app/services/trabajadores.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -29,6 +30,7 @@ export class NuevoOrdenComponent {
   public proveedor = ''
   public material__ = ''
   public loading = false;
+  public Fabricant_Sustrato
 
   proveedores_(e){
     this.onChangeProv.emit()
@@ -36,6 +38,18 @@ export class NuevoOrdenComponent {
       this.Orden.proveedor = this.proveedores.proveedores[e.value]._id;
       this.fabricantesIDs = this.proveedores.proveedores[e.value].fabricantes.map(fabricante => fabricante._id);
     }, 500);
+  }
+
+  condiciones(e:any){
+    let grupo = this.fabricantes.buscarFabricantesPorId(e.value)[0].grupo;
+    const tieneTrato = grupo.some(item => item.trato === true);
+
+    if(tieneTrato){
+      this.Fabricant_Sustrato = true
+    }else{
+      this.Fabricant_Sustrato = false
+    }
+
   }
 
   llenarMaterial(e){
@@ -51,7 +65,12 @@ export class NuevoOrdenComponent {
       material:'',
       precio:'',
       cantidad:'',
-      unidad:''
+      unidad:'',
+      alto:'',
+      ancho:'',
+      gramaje:'',
+      calibre:'',
+      bobina:false
     }
     this.material__ = ''
   }
@@ -61,7 +80,12 @@ export class NuevoOrdenComponent {
     material:'',
     precio:'',
     cantidad:'',
-    unidad:''
+    unidad:'',
+    alto:'',
+    ancho:'',
+    gramaje:'',
+    calibre:'',
+    bobina:false
   }
 
   guardar(){

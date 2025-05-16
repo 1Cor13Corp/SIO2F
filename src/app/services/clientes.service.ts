@@ -27,6 +27,10 @@ export class ClientesService {
     return this.clientes.find(cliente => cliente._id === id);
   }
 
+  buscarAlmacenesPorCliente(cliente_id) {
+    return this.clientes.find(cliente => cliente._id === cliente_id).almacenes
+  }
+
   onClientes(){
     this.socket.io.emit('CLIENTE:buscarCliente')
   

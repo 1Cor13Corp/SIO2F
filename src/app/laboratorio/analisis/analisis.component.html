@@ -91,7 +91,7 @@
                                 <table class="table is-fullwidth is-striped" *ngIf="recepciones.recepciones && recepciones.recepciones.length > 0">
                                     <thead>
                                         <tr>
-                                            <th>Tipo</th>
+                                            <th>Estado</th>
                                             <th>Lote</th>
                                             <th>Material</th>
                                             <th>Cantidad</th>
@@ -103,7 +103,19 @@
                                             <ng-container *ngIf="recepcion.status === 'En observacion'">
                                                 <ng-container *ngFor="let material of recepcion.materiales;index as i">
                                                     <tr *ngIf="verificarSiSerealizoAnalisis(material)">
-                                                        <td>{{material[0].material.grupo.nombre}}</td>
+                                                        <td>
+                                                            <ng-container *ngIf="!material[0].analisis">
+                                                                <span class="tag is-danger">PENDIENTE</span>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="material[0].analisis">
+                                                                <ng-container *ngIf="!analisis.BuscarAnalisis(material[0].analisis).resultado.resultado">
+                                                                    <span class="tag is-warning">EN PROCESO</span>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="analisis.BuscarAnalisis(material[0].analisis).resultado.resultado">
+                                                                    <span class="tag is-success">POR VALIDAR</span>
+                                                                </ng-container>
+                                                            </ng-container>
+                                                        </td>
                                                         <td>{{material[0].lote}}</td>
                                                         <td>{{material[0].material.nombre}}
                                                             <ng-container *ngIf="material[0].material.gramaje">
@@ -121,7 +133,9 @@
                                         <ng-container *ngIf="PreparacionesTinta().length > 0">
                                             <ng-container *ngFor="let preparacion of PreparacionesTinta();index as i">
                                                 <tr>
-                                                    <td>Tinta preparada</td>
+                                                    <td>
+                                                        <span class="tag is-danger">PENDIENTE</span>
+                                                    </td>
                                                     <td></td>
                                                     <td>{{preparacion.material.nombre}}</td>
                                                     <td>{{preparacion.cantidad | number:'1.0-2'}} Kg.</td>

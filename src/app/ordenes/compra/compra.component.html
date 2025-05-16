@@ -150,6 +150,7 @@
                                                         <th>Producto</th>
                                                         <th>Cantidad</th>
                                                         <th>F. Solic.</th>
+                                                        <th>Lug. Entrega</th>
                                                         <th>OP</th>
                                                     </tr>
                                                 </thead>
@@ -158,6 +159,11 @@
                                                         <td>{{producto.producto.identificacion.producto}}</td>
                                                         <td>{{formatNumberWithDotSeparator(producto.cantidad)}}</td>
                                                         <td>{{producto.solicitud | date:'dd/mm/yyyy'}}</td>
+                                                        <td>
+                                                            <ng-container *ngIf="producto.entrega">
+                                                                {{producto.entrega}}
+                                                            </ng-container>
+                                                        </td>
                                                         <td></td>
                                                     </tr>
                                                 </tbody>

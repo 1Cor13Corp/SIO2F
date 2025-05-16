@@ -314,6 +314,8 @@ calcularLatasYSobrante(cantidadTotal: number, pesoNetoPorLata: number){
       codigo: 1,
       neto: sobrante.toFixed(2),
       unidad:this.Poligrafica_OC.pedido[this.material_selected_in_OC].unidad,
+      ancho:this.Poligrafica_OC.pedido[this.material_selected_in_OC].ancho,
+      largo:this.Poligrafica_OC.pedido[this.material_selected_in_OC].largo,
       oc:this.Poligrafica_OC
     });
   }
@@ -328,6 +330,8 @@ calcularLatasYSobrante(cantidadTotal: number, pesoNetoPorLata: number){
       codigo: 1 + datosLatas.length, // Ajustar el número para la lata con sobrante
       neto: pesoNetoPorLata,
       unidad:this.Poligrafica_OC.pedido[this.material_selected_in_OC].unidad,
+      ancho:this.Poligrafica_OC.pedido[this.material_selected_in_OC].ancho,
+      largo:this.Poligrafica_OC.pedido[this.material_selected_in_OC].largo,
       oc:this.Poligrafica_OC
     });
   }
@@ -357,6 +361,8 @@ NuevoGuardarRegistro = async() =>{
       nombre: lote.nombre,
       presentacion: lote.presentacion,
       lote: lote.lote,
+      ancho:lote.ancho,
+      largo:lote.largo,
       codigo: lote.codigo,
       neto: lote.neto,
       unidad: lote.unidad,
@@ -364,6 +370,8 @@ NuevoGuardarRegistro = async() =>{
     }));
   }),
 };
+
+console.log(data)
 
 proveedor: this.proveedor_,
   this.tipo_documento = 'F - '
@@ -442,6 +450,8 @@ calcularRecepcion(){
 
     const materiales = GrupoDeMateriales.map((materiales:any)=>materiales.materiales)
     const condicion = GrupoDeMateriales.map((materiales:any)=>materiales.condicion)
+
+    console.log(materiales)
 
   
     const data = {

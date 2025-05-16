@@ -432,8 +432,8 @@
                                 <div class="control">
                                     <label for="" class="label">OC:</label>
                                     <div class="select">
-                                        <select name="" id="">
-                                            <option value="" *ngFor="let oc of oc.BuscarPorProducto(producto._id)">{{oc.orden}}</option>
+                                        <select formControlName="oc">
+                                            <option value="{{oc.orden}}" *ngFor="let oc of oc.BuscarPorProducto(producto._id)">{{oc.orden}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -447,7 +447,7 @@
                                       Eliminar
                                     </button>
                                 </div>
-                                <div class="control">
+                                <div class="control" *ngIf="idx === despachos.controls.length - 1">
                                     <label for="" class="label"> </label>
                                     <button class="button is-info" (click)="agregarDespacho()" [disabled]="error">
                                         <span class="icon">

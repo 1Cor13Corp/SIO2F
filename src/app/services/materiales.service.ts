@@ -30,8 +30,11 @@ export class MaterialesService {
     })  
   }
 
+  buscarSoloSustrato(){
+    return this.materiales.filter((mat:any) => mat.grupo.trato === true)
+  }
+  
   buscarMaterialPorId(id){
-    console.log(this.materiales.find((mat:any)=> mat._id === id))
     return this.materiales.find((mat:any)=> mat._id === id)
   }
 

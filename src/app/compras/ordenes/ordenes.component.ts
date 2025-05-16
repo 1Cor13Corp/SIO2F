@@ -36,7 +36,11 @@ export class OrdenesComponent {
     pedido:[],
     pago:'Contado',
     entrega:'',
-    descripcion:'Esta orden será cancelada en bolívares según tasa BCV del día de la emisión del pago.'
+    descripcion:'Esta orden será cancelada en bolívares según tasa BCV del día de la emisión del pago.',
+    alto:'',
+    ancho:'',
+    gramaje:'',
+    calibre:''
   }
 
   public cliente = false; // Variable para controlar si se está buscando por cliente
@@ -193,7 +197,11 @@ export class OrdenesComponent {
       pedido:[],
       pago:'Contado',
       entrega:'',
-      descripcion:'Esta orden será cancelada en bolívares según tasa BCV del día de la emisión del pago.'
+      descripcion:'Esta orden será cancelada en bolívares según tasa BCV del día de la emisión del pago.',
+      alto:'',
+      ancho:'',
+      gramaje:'',
+      calibre:''
     }
 
     this.nueva = false;
@@ -224,7 +232,11 @@ export class OrdenesComponent {
       pedido:[],
       pago:'Contado',
       entrega:'',
-      descripcion:'Esta orden será cancelada en bolívares según tasa BCV del día de la emisión del pago.'
+      descripcion:'Esta orden será cancelada en bolívares según tasa BCV del día de la emisión del pago.',
+      alto:'',
+      ancho:'',
+      gramaje:'',
+      calibre:''
     }
   }
 

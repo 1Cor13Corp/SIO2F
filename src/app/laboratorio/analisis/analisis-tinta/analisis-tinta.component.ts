@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { rgb2lab, lab2rgb, deltaE } from 'rgb-lab';
 import {Draggable} from 'Draggable'
 import { AnalisisService } from 'src/app/services/analisis.service';
@@ -9,6 +9,9 @@ import * as moment from 'moment';
 import { AlmacenService } from 'src/app/services/almacen.service';
 import { RecepcionService } from 'src/app/services/recepcion.service';
 import { SolicitudesService } from 'src/app/services/solicitudes.service';
+import { MaterialesService } from 'src/app/services/materiales.service';
+import Swal from 'sweetalert2';
+import { LoginService } from 'src/app/services/login.service';
 
 
 @Component({
@@ -16,13 +19,15 @@ import { SolicitudesService } from 'src/app/services/solicitudes.service';
   standalone: false,templateUrl: './analisis-tinta.component.html',
   styleUrls: ['./analisis-tinta.component.scss']
 })
-export class AnalisisTintaComponent{
+export class AnalisisTintaComponent implements OnChanges{
 
   constructor(public api:AnalisisService,
               public subirImagen_:SubirArchivosService,
               public almacen:AlmacenService,
               public recepcion:RecepcionService,
-              public solicitudes__:SolicitudesService){
+              public solicitudes__:SolicitudesService,
+              public materiales:MaterialesService,
+              public login:LoginService){
 
   }
 
@@ -40,6 +45,12 @@ export class AnalisisTintaComponent{
   public compare = false;
   public selecccion = 0;
 
+  ngOnChanges(): void {
+    if(this.Analisis.cuantitativo.carton != ''){
+      this.selecccion = 1
+    }
+  }
+
   public RollDown = {
     descarga_1:{
       muestra:'',
@@ -56,6 +67,18 @@ export class AnalisisTintaComponent{
   }
 
   public RollDownModal = false;
+
+
+
+  MostrarImagen(){
+    Swal.fire({
+      title: "Draw down",
+      imageUrl: `https://192.168.0.22/api/imagen/analisis/${this.Analisis.img}`,
+      imageAlt: "Draw down",
+      showConfirmButton:false
+    }
+    )
+  }
 
   isAnalisisCartonFilled(): boolean {
     const carton = this.Analisis.carton;
@@ -104,19 +127,21 @@ export class AnalisisTintaComponent{
   }
 
   Carton(event:any){
-    if(event.target.checked){
-      this.Analisis.cuantitativo.carton = true;
-    }else{
-      this.Analisis.cuantitativo.carton = false;
-    }
+    this.selecccion = 1
+    // if(event.target.checked){
+    //   this.Analisis.cuantitativo.carton = true;
+    // }else{
+    //   this.Analisis.cuantitativo.carton = false;
+    // }
   }
 
   Papel(event:any){
-    if(event.target.checked){
-      this.Analisis.cuantitativo.papel = true;
-    }else{
-      this.Analisis.cuantitativo.papel = false;
-    }
+    this.selecccion = 2
+    // if(event.target.checked){
+    //   this.Analisis.cuantitativo.papel = true;
+    // }else{
+    //   this.Analisis.cuantitativo.papel = false;
+    // }
   }
 
   comparar(dato){
@@ -192,8 +217,12 @@ export class AnalisisTintaComponent{
     this.RollDownModal = true;
   }
 
-  guardar(){
+  guardar(resultado?:string){
     this.Analisis.resultado.guardado.fecha = moment().format('DD/MM/YYYY')
+    if(resultado){
+      this.Analisis.resultado.resultado = resultado
+      this.Analisis.resultado.guardado.usuario = `${this.login.usuario.Nombre} ${this.login.usuario.Apellido}`
+    }
     this.api.EnvarAnalisis(this.Analisis, this.Recepcion, this.Index);
     
     this.onCloseModal.emit()

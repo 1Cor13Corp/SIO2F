@@ -7,6 +7,7 @@ import { AnalisisSustrato, AnalisisSustrato2 } from 'src/app/compras/models/mode
 import { AnalisisService } from 'src/app/services/analisis.service';
 import { AlmacenService } from 'src/app/services/almacen.service';
 import { RecepcionService } from 'src/app/services/recepcion.service';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-analisis-sustrato',
@@ -26,7 +27,8 @@ export class AnalisisSustratoComponent {
 
   constructor(public api:AnalisisService,
               public almacen:AlmacenService,
-              public recepcion:RecepcionService
+              public recepcion:RecepcionService,
+              public login:LoginService
   ){
     
   }
@@ -436,8 +438,15 @@ export class AnalisisSustratoComponent {
     }
   }
 
-  guardar(){
+  guardar(usuario:boolean, resultado?:string){
     this.analisis.resultado.guardado.fecha = moment().format('DD/MM/YYYY')
+    if(usuario){
+    this.analisis.resultado.guardado.usuario = `${this.login.usuario.Nombre} ${this.login.usuario.Apellido}`;
+    }
+
+    if(resultado){
+      this.analisis.resultado.resultado = resultado
+    }
     this.api.EnviarAnalisisSustrato(this.analisis, this.Recepcion, this.Index);
     this.onCloseModal.emit();
   }

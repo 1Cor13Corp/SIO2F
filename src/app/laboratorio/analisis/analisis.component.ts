@@ -50,8 +50,8 @@ export class AnalisisComponent {
       brillo:false
     },
     cuantitativo:{
-      papel:false,
-      carton:false,
+      papel:'',
+      carton:'',
       gramaje:'',
       calibre:'',
       muestra:''
@@ -532,31 +532,31 @@ export class AnalisisComponent {
   verificarSiSerealizoAnalisis(material){
     if(material[0].analisis){
       if(material[0].material.grupo.nombre === 'Tintas' || material[0].material.grupo.nombre === 'Barniz s/impresión'){
-        if(this.analisis.buscarAnalisisPorID(material[0].analisis).resultado.resultado != ''){
+        if(this.analisis.buscarAnalisisPorID(material[0].analisis).resultado.validado.usuario != ''){
           return false
         }else{
           return true
         }
       }else if(material[0].material.grupo.nombre === 'Cajas Corrugadas'){
-        if(this.analisis.buscarAnalisisCajasPorID(material[0].analisis).resultado.resultado != ''){
+        if(this.analisis.buscarAnalisisCajasPorID(material[0].analisis).resultado.validado.usuario != ''){
           return false
         }else{
           return true
         }
       }else if(material[0].material.grupo.nombre === 'Soportes de Embalaje'){
-        if(this.analisis.buscarAnalisisPadsPorID(material[0].analisis).resultado.resultado != ''){
+        if(this.analisis.buscarAnalisisPadsPorID(material[0].analisis).resultado.validado.usuario != ''){
           return false
         }else{
           return true
         }
       }else if(material[0].material.grupo.trato === true){
-        if(this.analisis.buscarAnalisisSustratoPorID(material[0].analisis).resultado.resultado != ''){
+        if(this.analisis.buscarAnalisisSustratoPorID(material[0].analisis).resultado.validado.usuario != ''){
           return false
         }else{
           return true
         }
       }else{
-        if(this.analisis.buscarAnalisisOtrosPorID(material[0].analisis).resultado.resultado != ''){
+        if(this.analisis.buscarAnalisisOtrosPorID(material[0].analisis).resultado.validado.usuario != ''){
           return false
         }else{
           return true
@@ -575,7 +575,8 @@ export class AnalisisComponent {
     this.Tinta = true;
     this.Recepcion_selected = preparacion;
     this.Preparacion = true;
-    // this.Material_selected = material;
+    this.Material_selected = preparacion.material;
+    console.log(this.Material_selected)
     // this.index_material = index_material;
     if(this.analisis.buscarAnalisisPorID(preparacion.analisis)){
       this.Analisis = this.analisis.buscarAnalisisPorID(preparacion.analisis)

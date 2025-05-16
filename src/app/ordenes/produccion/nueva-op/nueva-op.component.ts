@@ -38,7 +38,7 @@ export class NuevaOPComponent implements OnInit{
               private fb:FormBuilder
   ){
     this.despachoForm = this.fb.group({
-      despachos: this.fb.array([this.crearDespacho()])
+      despachos: this.fb.array([])
     });
 
   }
@@ -51,6 +51,7 @@ export class NuevaOPComponent implements OnInit{
     return this.fb.group({
       lugar: ['', Validators.required],
       fecha: ['', Validators.required],
+      oc:['', Validators.required],
       cantidad: [0, [Validators.required, Validators.min(1)]]
     });
   }
@@ -516,10 +517,28 @@ getColor(index: number): string {
   }
 
   public OC_SELECTED
-  findProducts(){
-    let orden = this.Ordenes.find((x:any)=> x._id === this.OP.oc)
+
+  findProducts() {
+    let orden = this.Ordenes.find((x: any) => x._id === this.OP.oc);
     this.OC_SELECTED = orden;
-    this.productos = orden.pedido;
+  
+    const agrupados = new Map();
+  
+    for (let item of orden.pedido) {
+      const id = item.producto._id;
+      if (agrupados.has(id)) {
+        agrupados.get(id).cantidad += Number(item.cantidad);
+      } else {
+        // Clonar el objeto para no modificar el original
+        agrupados.set(id, {
+          ...item,
+          cantidad: Number(item.cantidad)
+        });
+      }
+    }
+
+  
+    this.productos = Array.from(agrupados.values());
   }
 
 
@@ -667,6 +686,23 @@ crearLargos(maquinasDestino) {
   }
 
   mostrarProducto(e){
+
+    let cantidades_tal = this.OC_SELECTED.pedido.filter(p => p.producto._id === this.productos[e.value].producto._id)
+
+    for(let i =0; i<cantidades_tal.length; i++){
+
+      console.warn(this.OC_SELECTED.orden)
+
+      this.despachos.push(
+        this.fb.group({
+          lugar: [cantidades_tal[i].entrega, Validators.required],
+          fecha: [cantidades_tal[i].solicitud, Validators.required],
+          oc:[this.OC_SELECTED.orden, Validators.required],
+          cantidad: [Number(cantidades_tal[i].cantidad), [Validators.required, Validators.min(1)]]
+        })
+      )
+    }
+
     this.producto = this.productos[e.value].producto
     this.OP.producto = this.producto
     
@@ -690,7 +726,7 @@ crearLargos(maquinasDestino) {
 
            console.log(this.Tintas)
 
-           this.OP.cantidad = this.OC_SELECTED.pedido[e.value].cantidad
+           this.OP.cantidad = this.productos[e.value].cantidad
            this.calcularHojas();
 
   }
